@@ -1,0 +1,235 @@
+/*! \file   IpAp_template.h
+
+    Copyright 2014-2015 Universidad de los Andes, Bogotá, Colombia
+
+    This file is part of IP Auction Processing protocol (IPAP).
+
+    IPAP is free software; you can redistribute it and/or modify 
+    it under the terms of the GNU General Public License as published by 
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    IPAP is distributed in the hope that it will be useful, 
+    but WITHOUT ANY WARRANTY; without even the implied warranty of 
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this software; if not, write to the Free Software 
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Description:
+    temaplte class of ipap protocol
+
+    $Id: IpAp_template.h 748 2015-08-26 18:48:00Z amarentes $
+*/
+
+
+#ifndef IPAP_TEMPLATE_H
+#define IPAP_TEMPLATE_H
+
+#include "stdincpp.h"
+#include "IpAp_field.h"
+
+
+
+typedef enum 
+{
+    IPAP_SETID_AUCTION_TEMPLATE, 
+    IPAP_SETID_BID_TEMPLATE,
+    IPAP_SETID_ALLOCATION_TEMPLATE
+} ipap_templ_type_t;
+
+typedef enum
+{
+	KNOWN, 
+	UNKNOWN
+} ipap_unknown_field_t;	
+
+/**
+ * \class ipap_template_field_t
+ *
+ * \brief This class contains the list of fields belonging to a template
+ * 
+ * \author Andres Marentes
+ *
+ * \version 0.1 
+ *
+ * \date 2014/12/18 9:57:00
+ *
+ * Contact: la.marentes455@uniandes.edu.co
+ *  
+ */
+typedef struct
+{
+    uint16_t            	flength;           /* less or eq. elem->flength  */
+    ipap_unknown_field_t   unknown_f;         /* set if unknown elem */
+    int                 	relay_f;           /* just relay no, encoding (exp.) */
+    ipap_field   			elem;
+} ipap_template_field_t;
+
+/**
+ * \class ipap_template
+ *
+ * \brief This class represents a template.
+ * 
+ *  We conceptualize a template as a set of field definitions. The field set 
+ *  is composed by two subsets: a data set field and a scope field set. 
+ * 
+ * \author Andres Marentes
+ *
+ * \version 0.1 
+ *
+ * \date 2014/12/18 9:57:00
+ *
+ * Contact: la.marentes455@uniandes.edu.co
+ *  
+ */
+
+typedef vector<ipap_template_field_t> 			templateFieldList_t;
+typedef vector<ipap_template_field_t>::iterator templateFieldIterList_t;
+typedef vector<ipap_template_field_t>::const_iterator templateFieldConstIterList_t;
+
+
+ 
+class ipap_template
+{
+    private:
+		ipap_templ_type_t     				type;  			///< data or option template 
+		time_t                  			tsend; 			///< time of last transmission
+		uint16_t                			tid;			///< Template id
+		int 								maxfields; 		///< Maximum number of fields
+		templateFieldList_t			 		datafields;		///< Subset of data fields
+	public:
+		
+		/**
+		 * Constructor for the class ipap_template
+		 */
+		inline ipap_template():tsend(0){}
+		
+		/**
+		 * Constructor from the data of another template
+		 */
+		ipap_template(const ipap_template &rhs); 
+		
+		/**
+		 * Destructor for the class ipap_template
+		 */
+		inline ~ipap_template(){}
+		
+		/**
+		 * Set the id of the template
+		 * @param _tid - template id.
+		 */
+		inline void set_id(uint16_t _tid){ tid = _tid; }
+		
+		/**
+		 * Set the type of the template ( data or option)
+		 * @param _type - Template type.
+		 */
+		inline void set_type(ipap_templ_type_t _type){ type = _type; }
+		
+		/**
+		 * Set the last datetime in which it was send
+		 * @param _tsend - Send time
+		 */
+		inline void set_time_send(time_t _tsend){ tsend = _tsend; }
+		
+		/**
+		 * Set the maximum number of fields that the field set can have
+		 * @param _maxfields 	- Field maximum cardinality
+		 */
+		inline void set_maxfields(int _maxfields){ maxfields = _maxfields; }
+		
+		/**
+		 * Get the type of the template ( data or option)
+		 */
+		inline ipap_templ_type_t get_type(void)
+		{
+			return type;
+		}
+		
+		/**
+		 * Get the last datetime in which it was send
+		 */
+		inline time_t get_tsend(void)
+		{
+			return tsend;
+		}
+		
+		/**
+		 * Get the template id
+		 */
+		inline uint16_t get_template_id(void)
+		{
+			return tid;
+		}
+						
+		/**
+		 * Get the total number of fields in the template
+		 */
+		inline int get_numfields(void)
+		{
+			return (int)  ( datafields.size() );
+		}
+		
+		/**
+		 * Get the maximum number of fields that can be associated to the template
+		 */
+		inline int get_maxfields(void)
+		{
+			return maxfields;
+		}
+		
+		/**
+		 * Add a new field to the template
+		 */
+		void add_field(uint16_t _flength, 
+					   ipap_unknown_field_t _unknown_f, 
+					   int _relay_f,  
+					   ipap_field  &_field);
+		
+		/**
+		 * Get a field located in the position i
+		 * The order is scope and then data fields 
+		 * @param i - position of the field to get. 
+		 */
+		ipap_template_field_t get_field(int i);
+		
+		/**
+		 * Remove all fields market with the unknown tag.
+		 */
+		void remove_unknown_fields();
+		
+		/**
+		*  Equals to operator. 
+		*  It is equal when it has the same amount of fields and every 
+		*    field is in the same position and equal.
+		*/
+		bool operator== (const ipap_template& rhs);
+
+		/**
+		*  Not equal to operator. 
+		*  It is not equal when it does not have the same amount of fields 
+		*    and exists a different field or it has a different position.
+		*/
+		bool operator!= (const ipap_template& rhs);	
+		
+		/** Assignment operator. It sets the values for the template 
+		 * 						 from another template.
+		*  @param  the template to copy from.
+		*/
+		ipap_template& operator= (const ipap_template&);
+		
+		/** 
+		 * Creates a new object returning its pointer. 
+		 * The data to be used for the new template is taken from the
+		 * instance.
+		*/
+		ipap_template * copy(void) const;
+						
+};
+
+
+
+#endif // IPAP_TEMPLATE_H
