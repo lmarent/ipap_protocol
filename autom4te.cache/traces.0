@@ -2745,16 +2745,20 @@ m4trace:configure.ac:50: -1- m4_pattern_allow([^ENABLE_DEBUG_FALSE$])
 m4trace:configure.ac:50: -1- _AM_SUBST_NOTMAKE([ENABLE_DEBUG_TRUE])
 m4trace:configure.ac:50: -1- _AM_SUBST_NOTMAKE([ENABLE_DEBUG_FALSE])
 m4trace:configure.ac:52: -1- m4_pattern_allow([^ENABLE_DEBUG$])
-m4trace:configure.ac:60: -1- m4_pattern_allow([^DEF_SYSCONFDIR$])
-m4trace:configure.ac:63: -1- m4_pattern_allow([^DEF_STATEDIR$])
-m4trace:configure.ac:70: -1- m4_pattern_allow([^DEF_LIBDIR$])
-m4trace:configure.ac:73: -1- m4_pattern_allow([^DEF_BINDIR$])
-m4trace:configure.ac:80: -1- m4_pattern_allow([^LIB@&t@OBJS$])
-m4trace:configure.ac:80: -1- m4_pattern_allow([^LTLIBOBJS$])
-m4trace:configure.ac:80: -1- AM_CONDITIONAL([am__EXEEXT], [test -n "$EXEEXT"])
-m4trace:configure.ac:80: -1- m4_pattern_allow([^am__EXEEXT_TRUE$])
-m4trace:configure.ac:80: -1- m4_pattern_allow([^am__EXEEXT_FALSE$])
-m4trace:configure.ac:80: -1- _AM_SUBST_NOTMAKE([am__EXEEXT_TRUE])
-m4trace:configure.ac:80: -1- _AM_SUBST_NOTMAKE([am__EXEEXT_FALSE])
-m4trace:configure.ac:80: -1- _AM_OUTPUT_DEPENDENCY_COMMANDS
-m4trace:configure.ac:80: -1- _LT_PROG_LTMAIN
+m4trace:configure.ac:58: -2- _m4_warn([obsolete], [The macro `AC_HELP_STRING' is obsolete.
+You should run autoupdate.], [../../lib/autoconf/general.m4:207: AC_HELP_STRING is expanded from...
+configure.ac:58: the top level])
+m4trace:configure.ac:63: -1- m4_pattern_allow([^pkgconfigdir$])
+m4trace:configure.ac:72: -1- m4_pattern_allow([^DEF_SYSCONFDIR$])
+m4trace:configure.ac:75: -1- m4_pattern_allow([^DEF_STATEDIR$])
+m4trace:configure.ac:82: -1- m4_pattern_allow([^DEF_LIBDIR$])
+m4trace:configure.ac:85: -1- m4_pattern_allow([^DEF_BINDIR$])
+m4trace:configure.ac:94: -1- m4_pattern_allow([^LIB@&t@OBJS$])
+m4trace:configure.ac:94: -1- m4_pattern_allow([^LTLIBOBJS$])
+m4trace:configure.ac:94: -1- AM_CONDITIONAL([am__EXEEXT], [test -n "$EXEEXT"])
+m4trace:configure.ac:94: -1- m4_pattern_allow([^am__EXEEXT_TRUE$])
+m4trace:configure.ac:94: -1- m4_pattern_allow([^am__EXEEXT_FALSE$])
+m4trace:configure.ac:94: -1- _AM_SUBST_NOTMAKE([am__EXEEXT_TRUE])
+m4trace:configure.ac:94: -1- _AM_SUBST_NOTMAKE([am__EXEEXT_FALSE])
+m4trace:configure.ac:94: -1- _AM_OUTPUT_DEPENDENCY_COMMANDS
+m4trace:configure.ac:94: -1- _LT_PROG_LTMAIN

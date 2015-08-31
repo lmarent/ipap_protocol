@@ -6,7 +6,7 @@ AC_INIT([ipap], [0.1], [la.marentes455@uniandes.edu.co])
 AM_INIT_AUTOMAKE([subdir-objects])
 AM_PATH_CPPUNIT(1.9.6)
 LT_INIT
-AC_CONFIG_SRCDIR([src/main.cpp])
+AC_CONFIG_SRCDIR([src/IpAp_message.cpp])
 AC_CONFIG_MACRO_DIR([m4])
 
 
@@ -52,14 +52,26 @@ if test $debug = true ; then
   AC_DEFINE(ENABLE_DEBUG, 1, [enable debug build])
 fi
 
+# Additional arguments (and substitutions)
+# Allow the pkg-config directory to be set
+AC_ARG_WITH(pkgconfigdir,
+	AC_HELP_STRING([--with-pkgconfigdir],
+	[Use the specified pkgconfig dir (default is pkgconfig)]),
+	[pkgconfigdir=${withval}],
+	[pkgconfigdir='${exec_prefix}/lib/pkgconfig'])
 
-sysconfdir="/home/luis/IPAP_Protocol/etc"
+AC_SUBST([pkgconfigdir])
+AC_MSG_NOTICE([pkgconfig directory is ${pkgconfigdir}])
 
-#DEF_SYSCONFDIR=`eval echo ${sysconfdir}`
-DEF_SYSCONFDIR="/home/luis/IPAP_Protocol/etc"
+if test "${prefix}" = "NONE" ; then
+  prefix=${ac_default_prefix}
+fi
+
+sysconfdir="${sysconfdir}/$PACKAGE"
+DEF_SYSCONFDIR=`eval echo ${sysconfdir}`
 AC_DEFINE_UNQUOTED(DEF_SYSCONFDIR, "$DEF_SYSCONFDIR", "sysconfig dir")
 
-DEF_STATEDIR=`eval echo ${localstatedir}`
+DEF_STATEDIR=`eval echo ${prefix}/var`
 AC_DEFINE_UNQUOTED(DEF_STATEDIR, "$DEF_STATEDIR", "state dir")
 
 libdir="${libdir}/$PACKAGE"
@@ -73,7 +85,9 @@ DEF_BINDIR=`eval echo ${bindir}`
 AC_DEFINE_UNQUOTED(DEF_BINDIR, "$DEF_BINDIR", "bin dir")
 
 
+
 AC_CONFIG_FILES([Makefile
+				 libipap-0.0.pc
                  src/Makefile
                  test/Makefile])
 

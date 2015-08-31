@@ -1,0 +1,10 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib/ipap
+includedir=${prefix}/include
+
+Name:libipap
+Description: Auction processing protocol library
+Version: 0.0.0
+Cflags: -I${includedir}
+Libs: -L${libdir} -lipap

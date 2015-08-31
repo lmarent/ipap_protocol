@@ -631,11 +631,12 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_unique_file="src/main.cpp"
+ac_unique_file="src/IpAp_message.cpp"
 ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
+pkgconfigdir
 ENABLE_DEBUG_FALSE
 ENABLE_DEBUG_TRUE
 CXXCPP
@@ -779,6 +780,7 @@ with_sysroot
 enable_libtool_lock
 enable_maintainer_mode
 enable_debug
+with_pkgconfigdir
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1437,6 +1439,8 @@ Optional Packages:
   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
   --with-sysroot=DIR Search for dependent libraries within DIR
                         (or the compiler's sysroot if not specified).
+  --with-pkgconfigdir     Use the specified pkgconfig dir (default is
+                          pkgconfig)
 
 Some influential environment variables:
   CC          C compiler command
@@ -16250,18 +16254,34 @@ $as_echo "#define ENABLE_DEBUG 1" >>confdefs.h
 
 fi
 
+# Additional arguments (and substitutions)
+# Allow the pkg-config directory to be set
 
-sysconfdir="/home/luis/IPAP_Protocol/etc"
+# Check whether --with-pkgconfigdir was given.
+if test "${with_pkgconfigdir+set}" = set; then :
+  withval=$with_pkgconfigdir; pkgconfigdir=${withval}
+else
+  pkgconfigdir='${exec_prefix}/lib/pkgconfig'
+fi
 
-#DEF_SYSCONFDIR=`eval echo ${sysconfdir}`
-DEF_SYSCONFDIR="/home/luis/IPAP_Protocol/etc"
+
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: pkgconfig directory is ${pkgconfigdir}" >&5
+$as_echo "$as_me: pkgconfig directory is ${pkgconfigdir}" >&6;}
+
+if test "${prefix}" = "NONE" ; then
+  prefix=${ac_default_prefix}
+fi
+
+sysconfdir="${sysconfdir}/$PACKAGE"
+DEF_SYSCONFDIR=`eval echo ${sysconfdir}`
 
 cat >>confdefs.h <<_ACEOF
 #define DEF_SYSCONFDIR "$DEF_SYSCONFDIR"
 _ACEOF
 
 
-DEF_STATEDIR=`eval echo ${localstatedir}`
+DEF_STATEDIR=`eval echo ${prefix}/var`
 
 cat >>confdefs.h <<_ACEOF
 #define DEF_STATEDIR "$DEF_STATEDIR"
@@ -16287,7 +16307,8 @@ _ACEOF
 
 
 
-ac_config_files="$ac_config_files Makefile src/Makefile test/Makefile"
+
+ac_config_files="$ac_config_files Makefile libipap-0.0.pc src/Makefile test/Makefile"
 
 
 cat >confcache <<\_ACEOF
@@ -17425,6 +17446,7 @@ do
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+    "libipap-0.0.pc") CONFIG_FILES="$CONFIG_FILES libipap-0.0.pc" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "test/Makefile") CONFIG_FILES="$CONFIG_FILES test/Makefile" ;;
 

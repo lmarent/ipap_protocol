@@ -33,5 +33,5 @@ using namespace std;
 
 
 // Logger.h
-const string IPAP_DEFAULT_LOG_FILE = "/home/luis/temp/log/ipap.log";
+const string IPAP_DEFAULT_LOG_FILE = DEF_STATEDIR "/log/ipap.log";
 

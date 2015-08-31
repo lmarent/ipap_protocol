@@ -1,4 +1,20 @@
+ACLOCAL_AMFLAGS = -I m4
+
 lib_LTLIBRARIES = libipap.la
+
+pkginclude_HEADERS = $(top_srcdir)/include/IpAp.h \
+					 $(top_srcdir)/include/IpAp_data_record.h \
+					 $(top_srcdir)/include/IpAp_def.h \
+				     $(top_srcdir)/include/IpAp_exception.h \
+				     $(top_srcdir)/include/IpAp_field.h \
+					 $(top_srcdir)/include/IpAp_field_container.h \
+					 $(top_srcdir)/include/IpAp_field_key.h \
+				     $(top_srcdir)/include/IpAp_message.h \
+					 $(top_srcdir)/include/IpAp_reverse_fields.h \
+				     $(top_srcdir)/include/IpAp_t.h \
+				     $(top_srcdir)/include/IpAp_template.h \
+				     $(top_srcdir)/include/IpAp_template_container.h \
+				     $(top_srcdir)/include/IpAp_value_field.h				  
 
 if ENABLE_DEBUG
   AM_CXXFLAGS = -I$(top_srcdir)/include \

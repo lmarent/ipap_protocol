@@ -406,7 +406,7 @@ CXXCPP = g++ -E
 CXXDEPMODE = depmode=gcc3
 CXXFLAGS = -g -O2
 CYGPATH_W = echo
-DEFS = -DPACKAGE_NAME=\"ipap\" -DPACKAGE_TARNAME=\"ipap\" -DPACKAGE_VERSION=\"0.1\" -DPACKAGE_STRING=\"ipap\ 0.1\" -DPACKAGE_BUGREPORT=\"la.marentes455@uniandes.edu.co\" -DPACKAGE_URL=\"\" -DPACKAGE=\"ipap\" -DVERSION=\"0.1\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DHAVE_STDBOOL_H=1 -DENABLE_DEBUG=1 -DDEF_SYSCONFDIR=\"/home/luis/IPAP_Protocol/etc\" -DDEF_STATEDIR=\"NONE/var\" -DDEF_LIBDIR=\"NONE/lib/ipap\" -DDEF_BINDIR=\"NONE/bin\"
+DEFS = -DPACKAGE_NAME=\"ipap\" -DPACKAGE_TARNAME=\"ipap\" -DPACKAGE_VERSION=\"0.1\" -DPACKAGE_STRING=\"ipap\ 0.1\" -DPACKAGE_BUGREPORT=\"la.marentes455@uniandes.edu.co\" -DPACKAGE_URL=\"\" -DPACKAGE=\"ipap\" -DVERSION=\"0.1\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DHAVE_STDBOOL_H=1 -DENABLE_DEBUG=1 -DDEF_SYSCONFDIR=\"/usr/local/etc/ipap\" -DDEF_STATEDIR=\"/usr/local/var\" -DDEF_LIBDIR=\"/usr/local/lib/ipap\" -DDEF_BINDIR=\"/usr/local/bin\"
 DEPDIR = .deps
 DLLTOOL = false
 DSYMUTIL = 
@@ -479,7 +479,7 @@ datadir = ${datarootdir}
 datarootdir = ${prefix}/share
 docdir = ${datarootdir}/doc/${PACKAGE_TARNAME}
 dvidir = ${docdir}
-exec_prefix = ${prefix}
+exec_prefix = /usr/local
 host = x86_64-unknown-linux-gnu
 host_alias = 
 host_cpu = x86_64
@@ -497,13 +497,14 @@ mandir = ${datarootdir}/man
 mkdir_p = $(MKDIR_P)
 oldincludedir = /usr/include
 pdfdir = ${docdir}
+pkgconfigdir = ${exec_prefix}/lib/pkgconfig
 prefix = /usr/local
 program_transform_name = s,x,x,
 psdir = ${docdir}
 sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
 srcdir = .
-sysconfdir = /home/luis/IPAP_Protocol/etc
+sysconfdir = ${prefix}/etc/ipap
 target_alias = 
 top_build_prefix = ../
 top_builddir = ..

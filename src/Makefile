@@ -15,6 +15,7 @@
 
 
 
+
 am__is_gnu_make = test -n '$(MAKEFILE_LIST)' && test -n '$(MAKELEVEL)'
 am__make_running_with_option = \
   case $${target_option-} in \
@@ -80,7 +81,7 @@ build_triplet = x86_64-unknown-linux-gnu
 host_triplet = x86_64-unknown-linux-gnu
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
-	$(top_srcdir)/depcomp
+	$(top_srcdir)/depcomp $(pkginclude_HEADERS)
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
@@ -118,7 +119,7 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(libdir)"
+am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgincludedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libipap_la_DEPENDENCIES =
 am_libipap_la_OBJECTS = Error.lo Constants.lo Logger.lo IpAp_field.lo \
@@ -171,6 +172,7 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
+HEADERS = $(pkginclude_HEADERS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 # Read a list of newline-separated strings from the standard input,
 # and print each of them once, without duplicates.  Input order is
@@ -212,7 +214,7 @@ CXXCPP = g++ -E
 CXXDEPMODE = depmode=gcc3
 CXXFLAGS = -g -O2
 CYGPATH_W = echo
-DEFS = -DPACKAGE_NAME=\"ipap\" -DPACKAGE_TARNAME=\"ipap\" -DPACKAGE_VERSION=\"0.1\" -DPACKAGE_STRING=\"ipap\ 0.1\" -DPACKAGE_BUGREPORT=\"la.marentes455@uniandes.edu.co\" -DPACKAGE_URL=\"\" -DPACKAGE=\"ipap\" -DVERSION=\"0.1\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DHAVE_STDBOOL_H=1 -DENABLE_DEBUG=1 -DDEF_SYSCONFDIR=\"/home/luis/IPAP_Protocol/etc\" -DDEF_STATEDIR=\"NONE/var\" -DDEF_LIBDIR=\"NONE/lib/ipap\" -DDEF_BINDIR=\"NONE/bin\"
+DEFS = -DPACKAGE_NAME=\"ipap\" -DPACKAGE_TARNAME=\"ipap\" -DPACKAGE_VERSION=\"0.1\" -DPACKAGE_STRING=\"ipap\ 0.1\" -DPACKAGE_BUGREPORT=\"la.marentes455@uniandes.edu.co\" -DPACKAGE_URL=\"\" -DPACKAGE=\"ipap\" -DVERSION=\"0.1\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DHAVE_STDBOOL_H=1 -DENABLE_DEBUG=1 -DDEF_SYSCONFDIR=\"/usr/local/etc/ipap\" -DDEF_STATEDIR=\"/usr/local/var\" -DDEF_LIBDIR=\"/usr/local/lib/ipap\" -DDEF_BINDIR=\"/usr/local/bin\"
 DEPDIR = .deps
 DLLTOOL = false
 DSYMUTIL = 
@@ -285,7 +287,7 @@ datadir = ${datarootdir}
 datarootdir = ${prefix}/share
 docdir = ${datarootdir}/doc/${PACKAGE_TARNAME}
 dvidir = ${docdir}
-exec_prefix = ${prefix}
+exec_prefix = /usr/local
 host = x86_64-unknown-linux-gnu
 host_alias = 
 host_cpu = x86_64
@@ -303,18 +305,34 @@ mandir = ${datarootdir}/man
 mkdir_p = $(MKDIR_P)
 oldincludedir = /usr/include
 pdfdir = ${docdir}
+pkgconfigdir = ${exec_prefix}/lib/pkgconfig
 prefix = /usr/local
 program_transform_name = s,x,x,
 psdir = ${docdir}
 sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
 srcdir = .
-sysconfdir = /home/luis/IPAP_Protocol/etc
+sysconfdir = ${prefix}/etc/ipap
 target_alias = 
 top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
+ACLOCAL_AMFLAGS = -I m4
 lib_LTLIBRARIES = libipap.la
+pkginclude_HEADERS = $(top_srcdir)/include/IpAp.h \
+					 $(top_srcdir)/include/IpAp_data_record.h \
+					 $(top_srcdir)/include/IpAp_def.h \
+				     $(top_srcdir)/include/IpAp_exception.h \
+				     $(top_srcdir)/include/IpAp_field.h \
+					 $(top_srcdir)/include/IpAp_field_container.h \
+					 $(top_srcdir)/include/IpAp_field_key.h \
+				     $(top_srcdir)/include/IpAp_message.h \
+					 $(top_srcdir)/include/IpAp_reverse_fields.h \
+				     $(top_srcdir)/include/IpAp_t.h \
+				     $(top_srcdir)/include/IpAp_template.h \
+				     $(top_srcdir)/include/IpAp_template_container.h \
+				     $(top_srcdir)/include/IpAp_value_field.h				  
+
 #AM_CXXFLAGS = -I$(top_srcdir)/include \
 #				-O2 
 
@@ -459,6 +477,27 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
+install-pkgincludeHEADERS: $(pkginclude_HEADERS)
+	@$(NORMAL_INSTALL)
+	@list='$(pkginclude_HEADERS)'; test -n "$(pkgincludedir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(pkgincludedir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(pkgincludedir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(pkgincludedir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(pkgincludedir)" || exit $$?; \
+	done
+
+uninstall-pkgincludeHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(pkginclude_HEADERS)'; test -n "$(pkgincludedir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(pkgincludedir)'; $(am__uninstall_files_from_dir)
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -544,9 +583,9 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LTLIBRARIES)
+all-am: Makefile $(LTLIBRARIES) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgincludedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -602,7 +641,7 @@ info: info-am
 
 info-am:
 
-install-data-am:
+install-data-am: install-pkgincludeHEADERS
 
 install-dvi: install-dvi-am
 
@@ -648,7 +687,7 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-libLTLIBRARIES
+uninstall-am: uninstall-libLTLIBRARIES uninstall-pkgincludeHEADERS
 
 .MAKE: install-am install-strip
 
@@ -660,11 +699,13 @@ uninstall-am: uninstall-libLTLIBRARIES
 	install-data-am install-dvi install-dvi-am install-exec \
 	install-exec-am install-html install-html-am install-info \
 	install-info-am install-libLTLIBRARIES install-man install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags tags-am uninstall uninstall-am uninstall-libLTLIBRARIES
+	install-pdf-am install-pkgincludeHEADERS install-ps \
+	install-ps-am install-strip installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-am uninstall \
+	uninstall-am uninstall-libLTLIBRARIES \
+	uninstall-pkgincludeHEADERS
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
