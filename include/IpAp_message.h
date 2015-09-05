@@ -114,12 +114,14 @@ class ipap_message
 	   Logger *log; //!< link to global logger object
 	   int ch;      //!< logging channel number used by objects of this class
 
-	   ipap_t * 							message;					///< Header Information, templates and end buffer for the message
-	   ipap_field_container 				g_ipap_fields;				///< Collection of fields that can be exchanged
-	   time_t             					g_tstart;					///< datetime when the message starts for processing
-	   uint16_t           					g_lasttid;                  ///< last sequence id given
-	   vector<ipap_data_record> 			data_list; 					///< List of data record asociated with the message
-	   bool                             	encode_network;				///< convert to network encoding 
+	   ipap_t * 							message;			///< Header Information, templates and end buffer for the message
+	   ipap_field_container 				g_ipap_fields;		///< Collection of fields that can be exchanged
+	   time_t             					g_tstart;			///< datetime when the message starts for processing
+	   uint16_t           					g_lasttid;          ///< last sequence id given
+	   vector<ipap_data_record> 			data_list; 			///< List of data record asociated with the message
+	   bool                             	encode_network;		///< Convert to network encoding 
+	   bool 								require_output;		///< Control in the messsage has changed since the last output execution.
+														
 	
    protected:
 	
@@ -127,12 +129,7 @@ class ipap_message
 	    * Alloc memory for buffers and pointers used to construct the message
 	    */
 	   void init( int ipap_version );
-	   
-	   /**
-	    * Release memory for buffers and pointers used to construct the message
-	    */
-	   void close( void );
-	   
+	   	   
 	   /**
 	    * Adds a field of vendor type to the collection of fields
 	    */
@@ -178,7 +175,7 @@ class ipap_message
 	    * @param mes - Character string containing the message
 	    * 		 offset - Lenght of character string
 	    */
-	   void ipap_parse_hdr( char *mes, int offset );
+	   void ipap_parse_hdr( unsigned char *mes, int offset );
 	   
 	   /**
 	    * parse and construct a template reading characters in buf.
@@ -188,7 +185,7 @@ class ipap_message
 	    * 		 nread - Number of characters read ( output).
 	    */
 	   void ipap_decode_trecord( int setid,
-								const char     *buf,
+								const unsigned char     *buf,
 								size_t         len,
 								int            *nread );
 	   
@@ -212,19 +209,10 @@ class ipap_message
 	    * 		 nread 	- Number of read characters ( output).
 	    */
 	   void ipap_decode_datarecord( ipap_template *templ,
-								   char      		  *buf, 
-								   int                buflen,
-								   int                *nread );
-	   
-	   /**
-	    * parse a message from characters in buf.
-	    * @param buffer			- character string to read
-	    * 		 message_length - Message length in characters
-	    * 		 nread 	- Number of read characters ( output).
-	    * @return number of read characters 
-	    */
-	   int ipap_import(char *buffer, size_t message_length );
-	   
+								    unsigned char      *buf, 
+								    int                buflen,
+								    int                *nread );
+	   	   
 	   /**
 	    * Find a return a reference to a template with id: templid
 	    * @param templid - Id of the template
@@ -236,6 +224,13 @@ class ipap_message
 	    * Return the number of templates included
 	    */
 	    int get_num_templates(void);
+	    
+	    /**
+	    * Export the message to the internal buffer. Only export the data associated 
+	    * with the template given as parameter
+	    *  @param templid 		- Template Id.
+	    */
+	   void output_set( uint16_t templid );
 	   
    public:	
 
@@ -247,7 +242,13 @@ class ipap_message
 	   ipap_message();
 
 	   /**
-	    * Create a new class mnslp_ipfix_message
+	    * Create a new class ipap_message
+	    * @param _encode_network - establish whether the message is going to be network encoded or not. 
+	    */
+	   ipap_message(bool _encode_network);
+
+	   /**
+	    * Create a new class ipap_message
 	    * @param ipap_version 	 - message version. 
 	    *  		 _encode_network - establish whether the message is going to be network encoded or not. 
 	    */
@@ -259,12 +260,20 @@ class ipap_message
 	    * 		 message_length	 - length of the message.
 	    *  		 _decode_network - establish whether the message is going to be network decoded or not. 
 	    */
-	   ipap_message(char * param, size_t message_length, bool _decode_network);
+	   ipap_message(unsigned char * param, size_t message_length, bool _decode_network);
+	   
+	   ipap_message(const ipap_message &rhs);
 	   
 	   /**
 	    * Destructor.
 	    */
 	   ~ipap_message(void);
+
+	   /**
+	    * Release memory for buffers and pointers used to construct the message
+	    */
+	   void close( void );
+
 	      
 	   /**
 	    * creates and add a new data template for the messsage
@@ -317,6 +326,12 @@ class ipap_message
 							   ipap_templ_type_t type );
 	   
 	   /**
+	    * Export the message to the internal buffer. This function must be
+	    * executed before associating the message as an spec object.
+	    */
+	   void output(void);	
+	   
+	   /**
 	    * Include set data record to the message 
 	    * @param templ 	- Pointer to the template associated to the record data set
 	    * 		 data 	- record data set to be included. It must have the same amount
@@ -325,17 +340,11 @@ class ipap_message
 	   void include_data( uint16_t templid, 
 						  ipap_data_record &data );
 	   
-	   /**
-	    * Export the message into an internal buffer. It only exports data associated
-	    * with the template given as parameter.
-	    * @param templ 	- Pointer to the template
-	    */
-	   void output( uint16_t templid );
 					
 	   /**
 	    * Get the internal buffer that was exported
 	    */
-	   char * get_message(void) const;
+	   unsigned char * get_message(void) const;
 
 	   /**
 	    * Get the length of the internal buffer that was exported
@@ -355,6 +364,20 @@ class ipap_message
 	    */
 	   ipap_message &operator=(const ipap_message &other);
 
+
+	   /**
+	    * parse a message from characters in buf.
+	    * @param buffer			- character string to read
+	    * 		 message_length - Message length in characters
+	    * 		 nread 	- Number of read characters ( output).
+	    * @return number of read characters 
+	    */
+	   int ipap_import(unsigned char *buffer, size_t message_length );
+	   
+	   /**
+	    * Return a list with all templates IDs included
+	    */
+	   std::list<int> get_template_list(void) const;
 	   	   
 };
 

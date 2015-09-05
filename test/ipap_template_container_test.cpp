@@ -69,8 +69,8 @@ void IpAp_Container_Template_Test::setUp()
 
 void IpAp_Container_Template_Test::tearDown() 
 {
-	delete container1;
-	delete container2;
+	saveDelete(container1);
+	saveDelete(container2);
 }
 
 void IpAp_Container_Template_Test::testAssign()
@@ -130,6 +130,6 @@ void IpAp_Container_Template_Test::testAssign()
 	CPPUNIT_ASSERT(*container1 == container3 );
 	
 	CPPUNIT_ASSERT(container3.get_num_templates() == 1 );
-
+	
 }
 // EOF

@@ -55,8 +55,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( Ipap_T_Test );
 
 
 void Ipap_T_Test::setUp() 
-{
-		
+{		
 	ptrIpap_t1 = new ipap_t();
 
 	ipap_template *template1;
@@ -94,11 +93,10 @@ void Ipap_T_Test::setUp()
 	template3->add_field((field1.get_field_type()).length, KNOWN, 1, field1);
 	template3->add_field((field2.get_field_type()).length, KNOWN, 1, field2);
 	template3->add_field((field4.get_field_type()).length, KNOWN, 1, field4);
-
+			
 	(ptrIpap_t1->templates).add_template(template1);
 	(ptrIpap_t1->templates).add_template(template2);
 	(ptrIpap_t1->templates).add_template(template3);
-	
 	
 }
 
@@ -110,10 +108,10 @@ void Ipap_T_Test::tearDown()
 
 void Ipap_T_Test::testAssign()
 {
-
+	
+	
 	CPPUNIT_ASSERT( ptrIpap_t1->templates.get_num_templates() == 3 );
-	
-	
+		
 	ptrIpap_t1->buffer[0] =  'a';
 	ptrIpap_t1->buffer[1] =  'b';
 	ptrIpap_t1->buffer[2] =  'c';
@@ -128,13 +126,12 @@ void Ipap_T_Test::testAssign()
 	ptrIpap_t1->cs_bytes = 3;
 	ptrIpap_t1->cs_offset= 4;
 	ptrIpap_t1->cs_header = (uint8_t*) ptrIpap_t1->buffer + ptrIpap_t1->cs_offset;
-	
+		
 	ptrIpap_t2 = new ipap_t();
 	*ptrIpap_t2 = *ptrIpap_t1;
 	
 	CPPUNIT_ASSERT( *ptrIpap_t2  == *ptrIpap_t1 );
 	CPPUNIT_ASSERT( *(ptrIpap_t2->cs_header)  == 'e' );
-	
 	
 }
 // EOF

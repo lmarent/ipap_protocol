@@ -24,7 +24,7 @@ class ipap_message_test : public ipap_message {
 	ipap_message_test(int ipap_version, bool _encode_network)
 		: ipap_message(ipap_version, _encode_network) { }
    
-    ipap_message_test( char * param, size_t message_length, bool _encode_network)
+    ipap_message_test( unsigned char * param, size_t message_length, bool _encode_network)
 		: ipap_message(param, message_length, _encode_network) { }
 
 
@@ -61,16 +61,28 @@ CPPUNIT_TEST_SUITE_REGISTRATION( IpAp_Message_Test );
 
 void IpAp_Message_Test::setUp() {
 	
-	int sourceid = 12345;
-	mes = new ipap_message_test( IPAP_VERSION, true);
+	try 
+	{
+		mes = new ipap_message_test( IPAP_VERSION, false);
+	}
+	catch(ipap_bad_argument &e)
+	{
+		cout << "Error: " << e.what() << endl;
+	}
+	catch(Error &e)
+	{
+		cout << "Error setting up the log file: " << endl;
+	}
+	
 }
 
 void IpAp_Message_Test::testAddTemplate()
 {
-	try{ 
+
+	try
+	{ 
 	
 		uint16_t templatedataid = 0;
-		uint16_t templatescopeid = 0;
 		int num_templates = 0;
 		
 		int nfields;
@@ -78,7 +90,7 @@ void IpAp_Message_Test::testAddTemplate()
 		uint32_t time = 234234;
 		
 		uint8_t   buf[5]  = { 1, 2, 3, 4 };
-				
+						
 		// Verifies the field add method.
 		nfields = 4; // Maximum number of fields.
 		templatedataid = mes->new_data_template( nfields, IPAP_SETID_AUCTION_TEMPLATE );
@@ -88,21 +100,21 @@ void IpAp_Message_Test::testAddTemplate()
 		mes->add_field(templatedataid, 0, IPAP_FT_AUCTIONINGALGORITHMNAME, 65535);
 		num_templates = mes->get_num_templates();
 		CPPUNIT_ASSERT( num_templates == 1 );
-			
+					
 		// Verifies the method delete template, second it verifies with a valid template
 		mes->delete_all_templates();
 		num_templates = mes->get_num_templates();
 		CPPUNIT_ASSERT( num_templates == 0 );
-		
+				
 		templatedataid = mes->new_data_template( nfields, IPAP_SETID_BID_TEMPLATE );
 		num_templates = mes->get_num_templates();
 		CPPUNIT_ASSERT( num_templates == 1 );
-				
+						
 		// Verifies the method delete template, second it verifies with a valid template
 		mes->delete_template(templatedataid);
 		num_templates = mes->get_num_templates();
 		CPPUNIT_ASSERT( num_templates == 0 );
-				
+						
 		ipap_field field1 = mes->get_field_definition( 0, IPAP_FT_ENDSECONDS );
 		ipap_value_field fvalue3 = field1.get_ipap_value_field(time);
 		
@@ -120,7 +132,7 @@ void IpAp_Message_Test::testAddTemplate()
 		a[2].eno = 0;
 		a[2].ienum = IPAP_FT_UNITBUDGET;
 		a[2].length = 8;
-		
+				
 		mes->make_template(a, 3, IPAP_SETID_ALLOCATION_TEMPLATE);
 		num_templates = mes->get_num_templates();
 		CPPUNIT_ASSERT( num_templates == 1 );
@@ -202,10 +214,10 @@ void IpAp_Message_Test::testDataRecords()
 	uint64_t packdel = 300;
 	uint64_t packdel2 = 400;
 	int num_templates = 0;
-	char   *buf1  = "1";
-	char   *buf1a  = "2";
-	char   *buf1b  = "3";
-	char   *buf2  = "bas";
+	unsigned char   *buf1  = (unsigned char *) "1";
+	unsigned char   *buf1a  = (unsigned char *) "2";
+	unsigned char   *buf1b  = (unsigned char *) "3";
+	unsigned char   *buf2  = (unsigned char *) "bas";
 
 	try
 	{
@@ -287,66 +299,72 @@ void IpAp_Message_Test::testExportImport()
 	uint64_t packdel = 300;
 	uint64_t packdel2 = 400;
 	int num_templates = 0;
-	char   *buf1  = "1";
-	char   *buf1a  = "2";
-	char   *buf1b  = "3";
-	char   *buf2  = "bas";
-	char   *buf2a  = "bas2";
+	unsigned char *buf1  = (unsigned char *) "1";
+	unsigned char *buf1a = (unsigned char *) "2";
+	unsigned char *buf1b = (unsigned char *) "3";
+	unsigned char *buf2  = (unsigned char *) "bas";
+	unsigned char *buf2a = (unsigned char *) "bas2";
 
 	int nfields = 4;
-	char * message;
+	unsigned char * message;
 	int offset;
+	try
+	{
+		mes->delete_all_templates();
 
-	mes->delete_all_templates();
+		templatedataid = mes->new_data_template( nfields, IPAP_SETID_AUCTION_TEMPLATE );
+		mes->add_field(templatedataid, 0, IPAP_FT_IDAUCTION, 65535);
+		mes->add_field(templatedataid, 0, IPAP_FT_STARTSECONDS, 4);
+		mes->add_field(templatedataid, 0, IPAP_FT_ENDSECONDS, 4);	
+		mes->add_field(templatedataid, 0, IPAP_FT_AUCTIONINGALGORITHMNAME, 65535);
 
-	templatedataid = mes->new_data_template( nfields, IPAP_SETID_AUCTION_TEMPLATE );
-	mes->add_field(templatedataid, 0, IPAP_FT_IDAUCTION, 65535);
-	mes->add_field(templatedataid, 0, IPAP_FT_STARTSECONDS, 4);
-	mes->add_field(templatedataid, 0, IPAP_FT_ENDSECONDS, 4);	
-	mes->add_field(templatedataid, 0, IPAP_FT_AUCTIONINGALGORITHMNAME, 65535);
+		ipap_field field1 = mes->get_field_definition( 0, IPAP_FT_IDAUCTION );
+		ipap_value_field fvalue1 = field1.get_ipap_value_field( buf1, 1 );
+		ipap_value_field fvalue1a = field1.get_ipap_value_field( buf1a, 1 );
 
-	ipap_field field1 = mes->get_field_definition( 0, IPAP_FT_IDAUCTION );
-	ipap_value_field fvalue1 = field1.get_ipap_value_field( buf1, 1 );
-	ipap_value_field fvalue1a = field1.get_ipap_value_field( buf1a, 1 );
+		ipap_field field2 = mes->get_field_definition( 0, IPAP_FT_STARTSECONDS );
+		ipap_value_field fvalue2 = field2.get_ipap_value_field( starttime );
 
-	ipap_field field2 = mes->get_field_definition( 0, IPAP_FT_STARTSECONDS );
-	ipap_value_field fvalue2 = field2.get_ipap_value_field( starttime );
+		ipap_field field3 = mes->get_field_definition( 0, IPAP_FT_ENDSECONDS );
+		ipap_value_field fvalue3 = field3.get_ipap_value_field( endtime );
 
-	ipap_field field3 = mes->get_field_definition( 0, IPAP_FT_ENDSECONDS );
-	ipap_value_field fvalue3 = field3.get_ipap_value_field( endtime );
+		ipap_field field4 = mes->get_field_definition( 0, IPAP_FT_AUCTIONINGALGORITHMNAME );
+		ipap_value_field fvalue4 = field4.get_ipap_value_field( buf2, 3 );
+		ipap_value_field fvalue4a = field4.get_ipap_value_field( buf2a, 4 );
+		
 
-	ipap_field field4 = mes->get_field_definition( 0, IPAP_FT_AUCTIONINGALGORITHMNAME );
-	ipap_value_field fvalue4 = field4.get_ipap_value_field( buf2, 3 );
-	ipap_value_field fvalue4a = field4.get_ipap_value_field( buf2a, 4 );
-	
+		ipap_data_record data(templatedataid);
+		data.insert_field(0, IPAP_FT_IDAUCTION, fvalue1);
+		data.insert_field(0, IPAP_FT_STARTSECONDS, fvalue2);
+		data.insert_field(0, IPAP_FT_ENDSECONDS, fvalue3);
+		data.insert_field(0, IPAP_FT_AUCTIONINGALGORITHMNAME, fvalue4);
+		mes->include_data(templatedataid, data);
 
-	ipap_data_record data(templatedataid);
-	data.insert_field(0, IPAP_FT_IDAUCTION, fvalue1);
-	data.insert_field(0, IPAP_FT_STARTSECONDS, fvalue2);
-	data.insert_field(0, IPAP_FT_ENDSECONDS, fvalue3);
-	data.insert_field(0, IPAP_FT_AUCTIONINGALGORITHMNAME, fvalue4);
-	mes->include_data(templatedataid, data);
-
-	ipap_data_record data2(templatedataid);
-	data2.insert_field(0, IPAP_FT_IDAUCTION, fvalue1a);
-	data2.insert_field(0, IPAP_FT_STARTSECONDS, fvalue2);
-	data2.insert_field(0, IPAP_FT_ENDSECONDS, fvalue3);
-	data2.insert_field(0, IPAP_FT_AUCTIONINGALGORITHMNAME, fvalue4a);
-	mes->include_data(templatedataid, data2);
-	
-	mes->output(templatedataid);
-	message = mes->get_message();
-	offset = mes->get_offset();
-	
-	std::cout << "offset:" << offset << std::endl;
-	
-	ipap_message_test msgb (message, offset, true);
-	num_templates = msgb.get_num_templates();
-	CPPUNIT_ASSERT( num_templates == 1 );
-	
-	std::cout << "import offset:" << msgb.get_offset() << std::endl;
-	
-	CPPUNIT_ASSERT( msgb.operator==( *mes) );
+		ipap_data_record data2(templatedataid);
+		data2.insert_field(0, IPAP_FT_IDAUCTION, fvalue1a);
+		data2.insert_field(0, IPAP_FT_STARTSECONDS, fvalue2);
+		data2.insert_field(0, IPAP_FT_ENDSECONDS, fvalue3);
+		data2.insert_field(0, IPAP_FT_AUCTIONINGALGORITHMNAME, fvalue4a);
+		mes->include_data(templatedataid, data2);
+		
+		mes->output();
+		message = mes->get_message();
+		offset = mes->get_offset();
+		
+		std::cout << "offset:" << offset << std::endl;
+		
+		ipap_message_test msgb (message, offset, false);
+		num_templates = msgb.get_num_templates();
+		CPPUNIT_ASSERT( num_templates == 1 );
+		
+		std::cout << "import offset:" << msgb.get_offset() << std::endl;
+		
+		CPPUNIT_ASSERT( msgb.operator==( *mes) );
+	}
+	catch(ipap_bad_argument &e)
+	{
+		cout << "Error: " << e.what() << endl;
+	}
 	
 	
 }

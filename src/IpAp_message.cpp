@@ -64,15 +64,45 @@
 		{ uint32_t _t; memcpy((&_t),b,4); val = ntohl(_t); }
 
 ipap_message::ipap_message( ):
-		message(NULL), g_tstart(0), encode_network(true)
+		message(NULL), g_tstart(0), encode_network(true), 
+		require_output(true)
 {
+    log = Logger::getInstance();
+    ch = log->createChannel("IPAP_MESSAGE");
+
+#ifdef DEBUG
+    log->dlog(ch, "Starting ipap message constructor");
+#endif 
     
     init( IPAP_VERSION );
 
+#ifdef DEBUG
+    log->dlog(ch, "Ending ipap message constructor");
+#endif 
+
 }
 
+ipap_message::ipap_message( bool _encode_network ):
+		message(NULL), g_tstart(0), 
+		encode_network(_encode_network), require_output(true)
+{
+
+    log = Logger::getInstance();
+    ch = log->createChannel("IPAP_MESSAGE");
+    
+    init( IPAP_VERSION );
+
+#ifdef DEBUG
+    log->dlog(ch, "ipap message constructor");
+#endif    
+
+
+}
+
+
 ipap_message::ipap_message( int ipap_version, bool _encode_network):
-		message(NULL), g_tstart(0), encode_network(_encode_network)
+		message(NULL), g_tstart(0), encode_network(_encode_network), 
+		require_output(true)
 {
 		
     log = Logger::getInstance();
@@ -148,7 +178,7 @@ void ipap_message::allocate_additional_memory(size_t additional)
 	{
 		if ((message->offset + additional) > message->buffer_lenght)
 		{
-			message->buffer=(char *)realloc(message->buffer, message->offset + additional + 1);
+			message->buffer=(unsigned char *)realloc(message->buffer, message->offset + additional + 1);
 			if (message->buffer == NULL)
 				message->buffer_lenght = message->offset + additional + 1;
 			else
@@ -178,8 +208,6 @@ void ipap_message::init( int ipap_version )
 	try
 	{		
 		i = new ipap_t();
-		i->buffer = new char[IPAP_DEFAULT_BUFLEN];
-		i->buffer_lenght = IPAP_DEFAULT_BUFLEN;
 	}
 	catch(std::bad_alloc& exc)
 	{
@@ -244,6 +272,11 @@ ipap_message::new_template( int nfields )
 		 */
 		(message->templates).add_template(t);
 		
+		/**
+		* The message change, so it requires a new output 
+		*/
+		require_output = true;
+		
 		return t->get_template_id();
 	
 	}
@@ -277,6 +310,10 @@ ipap_message::new_data_template( int nfields, ipap_templ_type_t type )
     templid = new_template( nfields );
     templ = message->templates.get_template(templid);
     templ->set_type(type);
+    /**
+	* The message change, so it requires a new output 
+	*/
+	require_output = true;    
     return templid;
     
 }
@@ -318,14 +355,20 @@ ipap_message::add_field(  uint16_t templid,
 
         ipap_field field = g_ipap_fields.get_field(eno, type);
         
-        if (encode_network)
+        if (encode_network){
 			templ->add_field(length,KNOWN,1,field);
-		else
+		}else{
 			templ->add_field(length,KNOWN,0,field);
+		}
+		
+		/**
+		* The message change, so it requires a new output 
+		*/
+		require_output = true;
     }
-    else 
+    else{ 
         throw ipap_bad_argument("Maximum number of field reach");
-    
+    }
 }
 
 /*
@@ -343,8 +386,12 @@ void ipap_message::delete_template( uint16_t templid )
 
     /** remove template from list
      */
-    
     message->templates.delete_template(templid);
+   
+   /**
+	* The message change, so it requires a new output 
+	*/
+	require_output = true;
 
 }
 
@@ -357,8 +404,12 @@ void ipap_message::delete_all_templates( void )
 {
     /** remove all templates from list
      */
-    
     message->templates.delete_all_templates();
+   
+    /**
+	* The message change, so it requires a new output 
+	*/
+	require_output = true;
 
 }
 
@@ -389,7 +440,12 @@ ipap_message::make_template( export_fields_t *fields,
 		for ( i=0; i<nfields; i++ )
 		{
 			add_field( templid, fields[i].eno, fields[i].ienum, fields[i].length);
-		}		
+		}
+		
+		/**
+		* The message change, so it requires a new output 
+		*/
+		require_output = true;		
 	}
 	catch(...)
 	{
@@ -417,7 +473,7 @@ void ipap_message::finish_cs( void )
     buflen = 0;
 
 #ifdef DEBUG
-    log->dlog(ch, "finish_cs - num_bytes %d", message->cs_bytes);
+    log->dlog(ch, "finish_cs - tid:%d num_bytes %d", message->cs_tid,  message->cs_bytes);
 #endif    
     
     if (encode_network == true){
@@ -476,6 +532,11 @@ void ipap_message::_write_hdr( void )
 	message->length = message->offset + IPAP_HDR_BYTES;
 	message->exporttime = now;
 	message->offset += hsize;
+
+#ifdef DEBUG
+    log->dlog(ch, "_write_hdr version:%d exporttime=%d offset:%d", 
+						message->version, message->exporttime, message->offset);
+#endif
 		
 }
 
@@ -501,12 +562,11 @@ void ipap_message::_output_flush( void )
         /* finish current dataset */
         finish_cs( );
     }
-    
-    _write_hdr( );
+
 }
 
 /*
- * name:        ipfix_close()
+ * name:        close()
  * parameters:
  * return:      0 = ok, -1 = error
  */
@@ -541,7 +601,7 @@ ipap_message::_write_template( ipap_template  *templ )
 #endif	
 	
     size_t            buflen, tsize=0, ssize=0, osize=0;
-    char              *buf;
+    unsigned char     *buf;
     uint16_t          tmp16;
     int               i, n;
 
@@ -549,12 +609,14 @@ ipap_message::_write_template( ipap_template  *templ )
      */
     for ( tsize=8,i=0; i < templ->get_numfields(); i++ ) {
         tsize += 4;
-        if ((templ->get_field(i).elem).get_field_type().eno != IPAP_FT_NOENO)
+        if ((templ->get_field(i).elem).get_field_type().eno != IPAP_FT_NOENO ){
             tsize += 4;
+        }   
     }
 
 #ifdef DEBUG
-    log->dlog(ch, "_write_template- template length:%d offset:%d", tsize, message->offset);
+    log->dlog(ch, "_write_template- template length:%d type:%d numFields:%d, templateId:%d offset:%d ", 
+				tsize, templ->get_type(), templ->get_numfields(), templ->get_template_id(), message->offset);
 #endif	
 
     /* check space */
@@ -620,26 +682,75 @@ ipap_message::_write_template( ipap_template  *templ )
         }
     }
     templ->set_time_send( time(NULL) );
+	
+    message->offset += buflen;
 
 #ifdef DEBUG
     log->dlog(ch, "_write_template- buffer len:%d ", buflen);
 #endif	
-	
-    message->offset += buflen;
+
 }
 
-void 
-ipap_message::output( uint16_t templid )
-{
-	
-#ifdef DEBUG
-    log->dlog(ch, "Starting method output");
-#endif	
 
+void
+ipap_message::output(void)
+{
+
+#ifdef DEBUG
+    log->dlog(ch, "starting output");
+#endif    
+	
+	if (message == NULL){
+		throw ipap_bad_argument("Error: The message is not initialized");
+    }
+    else{
+		if (require_output == true)
+		{
+			// Clear the internal buffer.
+			message->reinitiate_buffer();
+			
+			std::list<int>::iterator it;
+			std::list<int> lst_templates = get_template_list();
+					
+			// Put in internal buffer template definition and data related. 
+			for ( it = lst_templates.begin(); it != lst_templates.end(); ++it)
+			{
+				ipap_template *templ = get_template(*it);
+				output_set( templ->get_template_id() );
+			}
+
+			// Calculate message header information and put it on the buffer.
+			_write_hdr( );
+			
+			/** The message changed, so it requires a new output 
+			*/
+			require_output = false;
+		}
+	}
+#ifdef DEBUG
+    log->dlog(ch, "ending output");
+#endif 
+
+}
+
+/*
+ * name:        output_set()
+ * parameters:  Write in the buffer template definition and all 
+ * 				data records related to templateid given as parameter.
+ * return:      
+ */
+void 
+ipap_message::output_set( uint16_t templid )
+{
+		
     int               i, newset_f=0;
     size_t            buflen, datasetlen;
     uint8_t           *p, *buf;
-    ipap_template * templ; 
+    ipap_template 	  *templ; 
+
+#ifdef DEBUG
+    log->dlog(ch, "Starting output_set");
+#endif 
     
     templ = message->templates.get_template(templid);
 
@@ -650,40 +761,42 @@ ipap_message::output( uint16_t templid )
     	
     /** writes the templates if it was not done before
      */
-    if ( templ->get_tsend() == 0 )
+    if ( templ->get_tsend() == 0 ){
         _write_template( templ ); 
+    }
     
 
     /** get size of data set, check space
     */ 
     if ( templ->get_template_id() == message->cs_tid ) 
     {
-#ifdef DEBUG
-		log->dlog(ch, "Method output - No new set");
-#endif
         newset_f = 0;
         datasetlen = 0;
     }
     else 
     {
-#ifdef DEBUG
-		log->dlog(ch, "Method output - New set %d", message->cs_tid);
-#endif
         if ( message->cs_tid > 0 ) {
             finish_cs( );
         }
         newset_f = 1;
         datasetlen = 4;
     }
-        	
+            	
     // insert the data records associated with the template.
-    for ( int data_index= 0; data_index < data_list.size(); data_index++){
+    for ( int data_index= 0; data_index < data_list.size(); data_index++)
+	{
 		
-		if (data_list[data_index].get_template_id() == templ->get_template_id()){
-			
+		if (data_list[data_index].get_template_id() == templ->get_template_id())
+		{
+
+#ifdef DEBUG
+			log->dlog(ch, "Output set - Data associated with template %d", 
+							templ->get_template_id());
+#endif 
+				
 			ipap_data_record g_data = data_list[data_index];
-			
-			for ( i=0; i < templ->get_numfields(); i++ ){
+			for ( i=0; i < templ->get_numfields(); i++ )
+			{
 				ipap_field_key field_key = ipap_field_key((templ->get_field(i).elem).get_field_type().eno, 
 																		(templ->get_field(i).elem).get_field_type().ftype);
 				if ( templ->get_field(i).flength == IPAP_FT_VARLEN ) {
@@ -700,32 +813,22 @@ ipap_message::output( uint16_t templid )
 				datasetlen += g_data.get_length(field_key);
 			}
 
-#ifdef DEBUG
-			log->dlog(ch, "Method output - data set length %d", datasetlen);
-#endif
 
 			if ( (message->offset + datasetlen) > message->buffer_lenght )
 				allocate_additional_memory(datasetlen + message->offset - message->buffer_lenght );
-
-#ifdef DEBUG
-			log->dlog(ch, "Method output - message offset before inserting data %d", 
-							message->offset);
-#endif			
-
+			
 			// fill buffer 
 			buf    = (uint8_t*)(message->buffer) + message->offset;
 			buflen = 0;
 
 			if ( newset_f ) {
 				
-#ifdef DEBUG
-				log->dlog(ch, "Method output - Inside new set - Copying data"); 
-#endif			
 				// insert data set 
 				message->cs_bytes = 0;
 				message->cs_header = buf;
 				message->cs_offset = message->offset;
 				message->cs_tid = templ->get_template_id();
+				
 				
 				if (encode_network == true){
 					INSERTU16( buf+buflen, buflen, templ->get_template_id() );
@@ -738,25 +841,12 @@ ipap_message::output( uint16_t templid )
 			}
 			
 			for ( i=0; i < templ->get_numfields(); i++ ) {
-				
-#ifdef DEBUG
-				log->dlog(ch, "writing field: %d", i); 
-#endif
-				
+								
 				ipap_field_key field_key = ipap_field_key((templ->get_field(i).elem).get_field_type().eno, 
 																		(templ->get_field(i).elem).get_field_type().ftype);
 				
-				if ( templ->get_field(i).flength == IPAP_FT_VARLEN ) 
-				{
-
-#ifdef DEBUG
-					log->dlog(ch, "Variable len"); 
-#endif
-					if ( g_data.get_length(field_key) > 254 ) 
-					{
-#ifdef DEBUG
-						log->dlog(ch, "More than 254"); 
-#endif
+				if ( templ->get_field(i).flength == IPAP_FT_VARLEN ) {
+					if ( g_data.get_length(field_key) > 254 ) {
 						*(buf+buflen) = 0xFF;
 						buflen++;
 						if (encode_network == true){
@@ -766,26 +856,15 @@ ipap_message::output( uint16_t templid )
 							INSERT_U16_NOENCODE( buf+buflen, buflen, g_data.get_length(field_key) );
 						}
 					}
-					else{
-#ifdef DEBUG
-						log->dlog(ch, "Less than 254"); 
-#endif
+					else {
 						*(buf+buflen) = g_data.get_length(field_key);
 						buflen++;
 					}
 				}
-
-#ifdef DEBUG
-				log->dlog(ch, "Method output - encoding %d-%s", templ->get_field(i).relay_f, 
-							(g_data.get_field(field_key)).to_string().c_str());
-#endif							
+				
 				(templ->get_field(i).elem).encode( g_data.get_field(field_key), 
 												   buf+buflen, 
 												   templ->get_field(i).relay_f );
-
-#ifdef DEBUG
-				log->dlog(ch, "Method output - end encoding");
-#endif				
 
 				buflen += g_data.get_length(field_key);
 			}
@@ -796,14 +875,15 @@ ipap_message::output( uint16_t templid )
 		    if ( message->version == IPAP_VERSION )
 				message->seqno ++;
 		}
+		std::cout << "data len:" << data_index << std::endl;
 	}
+	 
+    _output_flush( );
 
 #ifdef DEBUG
-    log->dlog(ch, "Output - End of the data encode offset:%d", message->offset );
-#endif			
-    
-    _output_flush( );
-    
+    log->dlog(ch, "Ending output_set");
+#endif 
+		        
 }
 
 
@@ -833,7 +913,7 @@ ipap_message::include_data( uint16_t templid,
     data_list.push_back(data);
 }
 
-char * 
+unsigned char * 
 ipap_message::get_message(void) const
 {
 	return message->buffer;
@@ -842,12 +922,23 @@ ipap_message::get_message(void) const
 int 
 ipap_message::get_offset(void) const
 {
-	return message->offset;
+	if (message != NULL){
+		if (require_output == true)
+		{
+			return 0;
+		}
+			return message->offset;
+	}
+	else
+		return 0;
 }
 
-ipap_message::ipap_message(char * param, size_t message_length, bool _encode_network):
-	message(NULL), g_tstart(0), encode_network(_encode_network)
+ipap_message::ipap_message(unsigned char * param, size_t message_length, bool _encode_network):
+	message(NULL), g_tstart(0), encode_network(_encode_network), require_output(true)
 {
+	
+    log = Logger::getInstance();
+    ch = log->createChannel("IPAP_MESSAGE");
 
 #ifdef DEBUG
     log->dlog(ch, "Starting method ipap_message");
@@ -868,7 +959,7 @@ ipap_message::ipap_message(char * param, size_t message_length, bool _encode_net
  * parameters:
  */
 void 
-ipap_message::ipap_parse_hdr( char *mes, int offset )
+ipap_message::ipap_parse_hdr( unsigned char *mes, int offset )
 {
 	
 #ifdef DEBUG
@@ -889,8 +980,6 @@ ipap_message::ipap_parse_hdr( char *mes, int offset )
 
       case IPAP_VERSION:
 
-		  std::cout << " Arrive 1.4" << std::endl;
-
           if ( (offset) < IPAP_HDR_BYTES )
               throw ipap_bad_argument("Length of the message header is less than required");
 
@@ -898,19 +987,15 @@ ipap_message::ipap_parse_hdr( char *mes, int offset )
 		      READ16(_length, mes+2);
 		      READ32(_exporttime, mes+4);		      
 		      READ32(_seqno, mes+8);
-		      READ32(_sourceid, mes+12);
 		  }
 		  else{
 			  READ16_NOENCODE(_length,mes+2);
 			  READ32_NOENCODE(_exporttime,mes+4);
 			  READ32_NOENCODE(_seqno,mes+8);
-			  READ32_NOENCODE(_sourceid,mes+12);
 		  }
-          std::cout << "header received" << _version 
-					<< "length:"         << _length
-					<< "exporttime:"	 << _exporttime
-					<< "seqno:"			 << _seqno
-					<< "sourceid:"		 << _sourceid << std::endl;
+#ifdef DEBUG
+		  log->dlog(ch, "Header received - lengh:%d exporttime %d seqno:%d", _length, _exporttime, _seqno );
+#endif
 
 		  /* Initialize the message object */
 		  init(_version); 
@@ -921,10 +1006,13 @@ ipap_message::ipap_parse_hdr( char *mes, int offset )
           break;
 
       default:
-		  std::cout << " Arrive 1.5" << std::endl;
           message->version = -1;
           throw ipap_bad_argument("Invalid Message Version");
     }
+
+#ifdef DEBUG
+    log->dlog(ch, "Ending method ipap_parse_hdr");
+#endif
 	
 }
 
@@ -936,7 +1024,7 @@ ipap_message::ipap_parse_hdr( char *mes, int offset )
  */
 void
 ipap_message::ipap_decode_trecord( int setid,
-								   const char     *buf2,
+								   const unsigned char     *buf2,
 								   size_t         len,
 								   int            *nread )
 {
@@ -965,6 +1053,7 @@ ipap_message::ipap_decode_trecord( int setid,
           if (encode_network == true){
 			  READ16(templid, buf);
               READ16(nfields, buf+2);
+
           }
           else{
 			  READ16_NOENCODE(templid,buf);
@@ -1166,7 +1255,7 @@ ipap_message::read_field(ipap_template *templ, const uint8_t  *buf,
  * todo:        parse message before calling this func
  */
 void ipap_message::ipap_decode_datarecord( ipap_template *templ,
-											char  *buf, 
+											unsigned char  *buf, 
 											int   buflen,
 											int   *nread )
 {
@@ -1209,8 +1298,6 @@ void ipap_message::ipap_decode_datarecord( ipap_template *templ,
             throw ipap_bad_argument("Invalid buffer len for reading the data");
         }
 		
-		
-		
         ipap_value_field value;
         if (encode_network)
         {
@@ -1250,9 +1337,9 @@ ipap_message::get_template(uint16_t templid)
 
 
 int 
-ipap_message::ipap_import( char  *buffer, size_t message_length )
+ipap_message::ipap_import( unsigned char  *buffer, size_t message_length )
 {
-    char                 *buf;                 /* ipfix payload */
+    unsigned char        *buf;                 /* ipfix payload */
     uint16_t             setid, setlen;        /* set id, set lenght */
     int                  i, nread, offset;     /* counter */
     int                  bytes, bytesleft;
@@ -1276,12 +1363,12 @@ ipap_message::ipap_import( char  *buffer, size_t message_length )
           throw ipap_bad_argument("Invalid IPAP Version");
     }
 	
-    /** read ipfix sets
+    /** read ipap sets
      */
     for ( i=0; (nread+4) < message_length; i++ ) {
 
 
-        /** read ipfix record header (set id, lenght). Verifies that the lenght 
+        /** read ipap record header (set id, lenght). Verifies that the lenght 
          *  given is valid.
          */
         if (encode_network == true){
@@ -1293,11 +1380,12 @@ ipap_message::ipap_import( char  *buffer, size_t message_length )
 			READ16_NOENCODE(setlen, buf+nread+2);
 		}
 		
-		std::cout << "reading data set " << i << "setid:" << setid << "length:" << setlen << std::endl;
+#ifdef DEBUG
+		log->dlog(ch, "Reading data set:%d setid:%d length:%d", i, setid, setlen);
+#endif
 		
         nread  += 4;
         if ( setlen <4 ) {
-            // std::string err1 = func + "set" + std::to_string(i+1) + ": invalid set length " + std::to_string(setlen);
             continue;
         }
         setlen -= 4;  // this corresponds to the record's header.
@@ -1308,11 +1396,10 @@ ipap_message::ipap_import( char  *buffer, size_t message_length )
 				fprintf(stderr, "[%02x]", ((buffer)[ii] & 0xFF));
 			fprintf(stderr, "\n");
 
-			//std::string err2 = func + "set" + std::to_string(i+1) + ": message too short (" + std::to_string(setlen+nread) + ">" + std::to_string(offset)+ ")";
 			goto end;
 		}
 
-		/** read rest of ipfix message
+		/** read rest of ipap message
          */
         if ( (setid == IPAP_SETID_AUCTION_TEMPLATE)
              || (setid == IPAP_SETID_BID_TEMPLATE)
@@ -1328,7 +1415,6 @@ ipap_message::ipap_import( char  *buffer, size_t message_length )
 				ipap_decode_trecord(setid, buf + offset, bytesleft,&bytes);
 				bytesleft -= bytes;
 				offset += bytes;
-				std::cout << "setid:" << i << "template-" <<" bytes decoded:" << bytes << std::endl;
 			}
             nread += setlen;
         }
@@ -1339,12 +1425,10 @@ ipap_message::ipap_import( char  *buffer, size_t message_length )
             ipap_template *templ = get_template(setid);
 
             if ( templ == NULL ) {
-                std::cout <<  "no template for" << setid << "skip data set" << std::endl;
                 nread += setlen;
                 err_flag = 1;
             }
             else {
-				std::cout << "is going to read - setlen" << setlen << std::endl;
                 /** read data records
                  */
                 for ( offset=nread, bytesleft=setlen; bytesleft>0; ) {
@@ -1384,6 +1468,11 @@ end:
 		message->cs_header = (u_int8_t *) message->buffer + message->cs_offset;
 	}
     message->nrecords = data_list.size();
+    
+    /** The message does not require ouput.
+     */
+    require_output = false;
+    
     return nread;
 
  errend:
@@ -1451,7 +1540,38 @@ ipap_message::operator=(const ipap_message &other)
 	g_lasttid = other.g_lasttid;
 	data_list = other.data_list;
 	encode_network = other.encode_network;
+	require_output = other.require_output;
 	
 	return *this;
 	
+}
+
+std::list<int> 
+ipap_message::get_template_list(void) const
+{
+	if (message != NULL)
+		return message->templates.get_template_list();
+	else{
+		std::list<int> empty;
+		return empty;
+	}
+}
+
+
+ipap_message::ipap_message(const ipap_message &other):
+message(NULL), g_tstart(0), encode_network(true), require_output(true)
+{
+
+    log = Logger::getInstance();
+    ch = log->createChannel("IPAP_MESSAGE");
+    
+    	
+	if (other.message != NULL)
+	   message = new ipap_t(*(other.message));
+	g_ipap_fields = other.g_ipap_fields;
+	g_tstart = other.g_tstart;
+	g_lasttid = other.g_lasttid;
+	data_list = other.data_list;
+	encode_network = other.encode_network;
+	require_output = other.require_output;		
 }

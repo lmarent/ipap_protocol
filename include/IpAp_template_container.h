@@ -56,7 +56,7 @@ class ipap_template_container
 {
 	private:
 		
-		templateList_t templateList; ///< List of templates
+		templateList_t templateList; ///< Map of templates
 	
 	protected:
 		
@@ -87,10 +87,7 @@ class ipap_template_container
 		/**
 		 * Add a new template to the container
 		 */
-		inline void add_template(ipap_template *param )
-		{
-			templateList.insert ( std::pair<uint16_t, ipap_template *>(param->get_template_id(),param) );
-		}
+		void add_template(ipap_template *param );
 				
 		/**
 		 * delete all templates from the container
@@ -119,6 +116,11 @@ class ipap_template_container
 	    * Return the number of templates included
 	    */
 	    inline int get_num_templates(void){  return templateList.size(); }
+	    
+	    /**
+	     * Return a list with all templates IDs included
+	     */
+	    std::list<int> get_template_list(void) const;
 	    
 	    /**
 		*  Equals to operator. 

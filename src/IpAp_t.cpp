@@ -29,15 +29,48 @@
 
 
 ipap_t::ipap_t():
-nrecords(0), offset(0), buffer_lenght(0), buffer(NULL), cs_tid(0), 
-cs_bytes(0), cs_header(NULL), length(0), exporttime(0), cs_offset(0)
+version(IPAP_VERSION), buffer(NULL), nrecords(0), offset(0), 
+buffer_lenght(0), seqno(0), cs_tid(0), cs_bytes(0), cs_offset(0), 
+cs_header(NULL), length(0), exporttime(0)
 {
 
-   buffer = new char[IPAP_DEFAULT_BUFLEN];
+   buffer = new unsigned char[IPAP_DEFAULT_BUFLEN];
    buffer_lenght = IPAP_DEFAULT_BUFLEN;
 
 }
 
+
+ipap_t::ipap_t(const ipap_t& rhs):
+version(IPAP_VERSION), buffer(NULL), nrecords(0), offset(0), 
+buffer_lenght(0), seqno(0), cs_tid(0), cs_bytes(0), cs_offset(0), 
+cs_header(NULL), length(0), exporttime(0)
+{
+
+	version = rhs.version;
+	templates = rhs.templates;
+	nrecords = rhs.nrecords;
+	offset = rhs.offset;
+	seqno = rhs.seqno;	
+	buffer_lenght = rhs.buffer_lenght;
+	if (buffer_lenght > 0){
+		buffer = new unsigned char[buffer_lenght];
+		memcpy(buffer,rhs.buffer,rhs.offset);
+	}
+	
+	cs_tid = rhs.cs_tid;
+	cs_bytes = rhs.cs_bytes;
+	cs_offset = rhs.cs_offset;
+	// put the pointer the number of positions given by cs_header.
+	
+	if (rhs.cs_header != NULL)
+		cs_header = (uint8_t*)(buffer) + cs_offset;
+	else
+		cs_header = NULL;
+	
+	length = rhs.length;
+	exporttime = rhs.exporttime;
+
+}
 
 
 /**
@@ -57,8 +90,9 @@ ipap_t::operator=(const ipap_t & rhs)
 	nrecords = rhs.nrecords;
 	offset = rhs.offset;
 	seqno = rhs.seqno;
+	buffer_lenght = rhs.buffer_lenght;	
 	if (buffer_lenght > 0){
-		buffer = new char[buffer_lenght];
+		buffer = new unsigned char[buffer_lenght];
 		memcpy(buffer,rhs.buffer,rhs.offset);
 	}
 	
@@ -108,15 +142,28 @@ ipap_t::operator!= (const ipap_t& rhs)
 
 
 void
-ipap_t::copy_raw_message(char * msg, size_t _offset)
+ipap_t::copy_raw_message(unsigned char * msg, size_t _offset)
 {
 	if (offset<= buffer_lenght){
 		// release the memory assigned to the buffer
 		delete buffer;
-		buffer = new char[buffer_lenght];
+		buffer = new unsigned char[buffer_lenght];
 		memcpy(buffer,msg,_offset);
 		offset = _offset;
 	}
 	else
 		throw ipap_bad_argument("buffer length not enough for the raw copy");
+}
+
+void 
+ipap_t::reinitiate_buffer(void)
+{
+   if (buffer != NULL) {
+	   delete buffer;
+   }
+   
+   buffer = new unsigned char[IPAP_DEFAULT_BUFLEN];
+   buffer_lenght = IPAP_DEFAULT_BUFLEN;
+   offset = 0;
+
 }

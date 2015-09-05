@@ -134,6 +134,15 @@ ipap_template_container::operator== (const ipap_template_container& rhs)
 	return true;
 }
 
+
+void 
+ipap_template_container::add_template(ipap_template *param )
+{
+	if (param != NULL)
+		templateList[param->get_template_id()] = param;
+}
+
+
 bool
 ipap_template_container::operator!= (const ipap_template_container& rhs)
 {
@@ -151,4 +160,14 @@ ipap_template_container::operator=(const ipap_template_container &rhs)
 	
 	return *this;
 	
+}
+
+std::list<int>
+ipap_template_container::get_template_list(void) const
+{
+	std::list<int> val_return;
+	templateListConstIter_t it;
+	for( it = templateList.begin(); it != templateList.end(); ++it)
+		val_return.push_back(it->first);
+	return val_return;
 }

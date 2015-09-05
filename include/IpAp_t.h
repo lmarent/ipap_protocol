@@ -41,19 +41,19 @@
 class ipap_t
 {
     public: 
-		int              		 version;     ///< ipap version to export.
+		int              version;     			   ///< ipap version to export.
 		ipap_template_container templates;   	  ///< list of templates. 
 
-		char       *buffer;          		  ///< output buffer - the actual message when exported is put it here.
-		int         nrecords;        		  ///< no. of records in buffer.
-		size_t      offset;           		  ///< Number of bytes in the buffer, output buffer fill level.
-		int 		buffer_lenght;    		  ///< output buffer allocated length, it is readjusted as more memory is needed.
-		uint32_t    seqno;            		  ///< sequence no. of next message.
+		unsigned char   *buffer;          		  ///< output buffer - the actual message when exported is put it here.
+		int         	nrecords;        		  ///< no. of records in buffer.
+		size_t      	offset;           		  ///< Number of bytes in the buffer, output buffer fill level.
+		int 			buffer_lenght;    		  ///< output buffer allocated length, it is readjusted as more memory is needed.
+		uint32_t   		seqno;            		  ///< sequence no. of next message.
 
-		int        			cs_tid;            		  ///< template id of current dataset 
-		int        			cs_bytes;          		  ///< size of current set
-		int 	   			cs_offset;				  ///< offset required for the current set
-		uint8_t    *cs_header;        		  		  ///< start of current set
+		int        		cs_tid;            		  ///< template id of current dataset 
+		int        		cs_bytes;          		  ///< size of current set
+		int 	   		cs_offset;				  ///< offset required for the current set
+		uint8_t    		*cs_header;        		  ///< start of current set
 
         /* Header ipap fields */
         uint16_t   length;      			  ///< total number of record in this packet
@@ -63,6 +63,11 @@ class ipap_t
 	 * Constructor of the class
 	 */
 	ipap_t();
+	
+	/**
+	 * Constructor of the class
+	 */
+	ipap_t(const ipap_t &rhs);
 	
 	/**
 	 * Destructor of the class
@@ -92,7 +97,12 @@ class ipap_t
 	 * Copy the definition of a message into the buffer. It is assumed that 
 	 * the message is in the correct ipfix message
 	 */
-	void copy_raw_message(char * msg, size_t _offset);
+	void copy_raw_message(unsigned char * msg, size_t _offset);
+
+	/**
+	 * Release the buffer and reinitiate it
+	 */
+	void reinitiate_buffer(void);	
 
 };
 

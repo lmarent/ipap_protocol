@@ -1,7 +1,7 @@
 prefix=/usr/local
 exec_prefix=/usr/local
 libdir=${exec_prefix}/lib/ipap
-includedir=${prefix}/include
+includedir=${prefix}/include/ipap
 
 Name:libipap
 Description: Auction processing protocol library

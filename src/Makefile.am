@@ -2,7 +2,12 @@ ACLOCAL_AMFLAGS = -I m4
 
 lib_LTLIBRARIES = libipap.la
 
-pkginclude_HEADERS = $(top_srcdir)/include/IpAp.h \
+pkginclude_HEADERS = $(top_srcdir)/include/Constants.h \
+				     $(top_srcdir)/include/Error.h \
+				     $(top_srcdir)/include/Logger.h \
+				     $(top_srcdir)/include/stdinc.h \
+				     $(top_srcdir)/include/stdincpp.h \
+					 $(top_srcdir)/include/IpAp.h \
 					 $(top_srcdir)/include/IpAp_data_record.h \
 					 $(top_srcdir)/include/IpAp_def.h \
 				     $(top_srcdir)/include/IpAp_exception.h \

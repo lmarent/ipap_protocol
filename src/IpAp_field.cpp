@@ -294,15 +294,11 @@ ipap_field::ipap_snprint_string( char * str, size_t size,
     char *in = in_field.get_value_string();
     int len = in_field.get_length();
 
-    std::cout << in_field.get_length() << "param:"<< len << std::endl << std::flush;
-
     for( i=len-1; i>=0; i-- ) {
         if ( in[i] == '\0' ) {
             return snprintf( str, size, "%s", in );
         }
     }
-
-	std::cout << "1" << std::endl << std::flush;
 
     if ( len < size ) {
         memcpy( str, in, len );
