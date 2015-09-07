@@ -174,6 +174,11 @@ void ipap_message::add_vendor_information_elements( ipap_field_type_t *fields )
 
 void ipap_message::allocate_additional_memory(size_t additional)
 {
+
+#ifdef DEBUG
+    log->dlog(ch, "starting allocate_additional_memory");
+#endif
+	
 	if (message)
 	{
 		if ((message->offset + additional) > message->buffer_lenght)
@@ -402,6 +407,11 @@ void ipap_message::delete_template( uint16_t templid )
  */
 void ipap_message::delete_all_templates( void )
 {
+
+#ifdef DEBUG
+    log->dlog(ch, "delete_all_templates");
+#endif	
+
     /** remove all templates from list
      */
     message->templates.delete_all_templates();
@@ -875,7 +885,6 @@ ipap_message::output_set( uint16_t templid )
 		    if ( message->version == IPAP_VERSION )
 				message->seqno ++;
 		}
-		std::cout << "data len:" << data_index << std::endl;
 	}
 	 
     _output_flush( );
@@ -916,21 +925,39 @@ ipap_message::include_data( uint16_t templid,
 unsigned char * 
 ipap_message::get_message(void) const
 {
-	return message->buffer;
+
+#ifdef DEBUG
+    log->dlog(ch, "starting get_message");
+#endif
+	if (message != NULL)
+		return message->buffer;
+	else
+		return NULL;
+}
+
+bool 
+ipap_message::get_require_output(void) const
+{
+	return require_output;
 }
 
 int 
 ipap_message::get_offset(void) const
 {
+
+#ifdef DEBUG
+    log->dlog(ch, "starting get_offset");
+#endif
+	
 	if (message != NULL){
-		if (require_output == true)
-		{
+		if (require_output == true){
 			return 0;
 		}
-			return message->offset;
+		return message->offset;
 	}
-	else
+	else{
 		return 0;
+	}
 }
 
 ipap_message::ipap_message(unsigned char * param, size_t message_length, bool _encode_network):
@@ -1319,6 +1346,10 @@ void ipap_message::ipap_decode_datarecord( ipap_template *templ,
     
     data_list.push_back(g_data);
 
+#ifdef DEBUG
+    log->dlog(ch, "Ending method ipap_decode_datarecord");
+#endif
+
 }
 
 ipap_template * 
@@ -1346,7 +1377,7 @@ ipap_message::ipap_import( unsigned char  *buffer, size_t message_length )
     int                  err_flag = 0;
 
 #ifdef DEBUG
-    log->dlog(ch, "Starting method ipap_import");
+    log->dlog(ch, "Starting method ipap_import: %d", message_length);
 #endif
 
     if (message_length < 2)
@@ -1432,17 +1463,18 @@ ipap_message::ipap_import( unsigned char  *buffer, size_t message_length )
                 /** read data records
                  */
                 for ( offset=nread, bytesleft=setlen; bytesleft>0; ) {
-                    ipap_decode_datarecord( templ, buf+offset, bytesleft,
-                                                  &bytes );
+                    ipap_decode_datarecord( templ, buf+offset, bytesleft, &bytes );
                     
                     bytesleft -= bytes;
-                    std::cout << "bytes read:"<< bytes << "bytes left:" << bytesleft << std::endl;
                     offset    += bytes;
                 }
 
                 if ( bytesleft ) {
                     // mlogf( 3, "[%s] set%d: skip %d bytes padding\n",
                     //       func, i+1, bytesleft );
+#ifdef DEBUG
+					log->dlog(ch, "Set:%d skip:%d", setid, bytesleft);
+#endif                    
                 }
                 nread += setlen;
             }
@@ -1458,7 +1490,7 @@ ipap_message::ipap_import( unsigned char  *buffer, size_t message_length )
         goto errend;
 
 end:
-    message->copy_raw_message(buffer, message_length);
+    message->copy_raw_message(buffer, nread);
     
     // Establishes correct values for the current data set.
     if ( setid > 255 ){
@@ -1472,6 +1504,11 @@ end:
     /** The message does not require ouput.
      */
     require_output = false;
+
+#ifdef DEBUG
+		log->dlog(ch, "Ending method ipap_import- characters read %d", nread);
+#endif
+
     
     return nread;
 
@@ -1502,14 +1539,22 @@ ipap_message::operator== (const ipap_message& rhs) const
 	// compare message header information.
 	if ((rhs.message != NULL) and (message != NULL)){
 		
-		if (*(rhs.message) != *message)
+		if (*(rhs.message) != *message){
+#ifdef DEBUG
+			log->dlog(ch, "Ending method operator== different message header");
+#endif				
 			return false;
+		}
 									
 		try
 		{
 			for (int i = 0; i < data_list.size(); i++){
-				if ( data_list[i] != rhs.data_list[i] )
+				if ( data_list[i] != rhs.data_list[i] ){
+#ifdef DEBUG
+					log->dlog(ch, "Ending method operator== different data");
+#endif				
 					return false;
+				}
 			}
 		}
 		catch(const std::out_of_range& oor)
@@ -1517,7 +1562,10 @@ ipap_message::operator== (const ipap_message& rhs) const
 			return false;
 		}
 	}
-		
+
+#ifdef DEBUG
+    log->dlog(ch, "Ending method operator== return true");
+#endif			
 	return true;
 			
 }
@@ -1559,19 +1607,29 @@ ipap_message::get_template_list(void) const
 
 
 ipap_message::ipap_message(const ipap_message &other):
-message(NULL), g_tstart(0), encode_network(true), require_output(true)
+message(NULL), g_tstart(other.g_tstart), 
+g_ipap_fields(other.g_ipap_fields), g_lasttid(other.g_lasttid), 
+data_list(other.data_list), encode_network(other.encode_network),
+require_output(other.require_output)
 {
 
     log = Logger::getInstance();
     ch = log->createChannel("IPAP_MESSAGE");
-    
+
+#ifdef DEBUG
+    log->dlog(ch, "Starting constructor ipap_message based in another \
+					instance, require output %d", other.require_output);
+#endif
     	
 	if (other.message != NULL)
-	   message = new ipap_t(*(other.message));
-	g_ipap_fields = other.g_ipap_fields;
-	g_tstart = other.g_tstart;
-	g_lasttid = other.g_lasttid;
-	data_list = other.data_list;
-	encode_network = other.encode_network;
-	require_output = other.require_output;		
+	{
+		message = new ipap_t(*(other.message));
+	}
+
+#ifdef DEBUG
+    log->dlog(ch, "Ending constructor ipap_message based in another \
+					instance, require output %d", require_output);
+#endif	    
+
+
 }

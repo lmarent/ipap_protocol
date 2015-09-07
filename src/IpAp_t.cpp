@@ -122,13 +122,17 @@ ipap_t::operator== (const ipap_t& rhs)
 	   (offset != rhs.offset) ||
 	   (buffer_lenght != rhs.buffer_lenght) ||
 	   (seqno != rhs.seqno)  
-	   )
+	   ){
+		
 		return false;
+	}
 					
-	if (version == IPAP_VERSION)
+	if (version == IPAP_VERSION){
 		if ( (rhs.length != length) ||
-			 (rhs.exporttime != exporttime) )
+			 (rhs.exporttime != exporttime) ){
 			return false;
+		}
+	}
 		
 	return true;
 	    

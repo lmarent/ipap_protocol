@@ -379,7 +379,7 @@ void Logger::_write( int lvl, int ch, int nl, const char *fmt, va_list argp )
 
         struct tm tm;
         now = time(NULL);
-        strftime(buf, sizeof(buf), "%b %d %H:%M:%S", localtime_r(&now,&tm));
+        strftime(buf, sizeof(buf), "%b %d %H:%M:%S.000", localtime_r(&now,&tm));
         if (fprintf(file, "%s  %s  ", buf, LogLevel[lvl]) < 0) {
             throw Error("Writing log mesage (Logger::_write#strftime)");
         }

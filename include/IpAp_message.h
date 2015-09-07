@@ -378,7 +378,8 @@ class ipap_message
 	    * Return a list with all templates IDs included
 	    */
 	   std::list<int> get_template_list(void) const;
-	   	   
+	   
+	   bool get_require_output(void) const;	   
 };
 
 
