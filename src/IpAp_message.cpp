@@ -1074,6 +1074,9 @@ ipap_message::ipap_decode_trecord( int setid,
       case IPAP_SETID_AUCTION_TEMPLATE:
       case IPAP_SETID_BID_TEMPLATE:
       case IPAP_SETID_ALLOCATION_TEMPLATE:
+      case IPAP_OPTNS_AUCTION_TEMPLATE:
+      case IPAP_OPTNS_BID_TEMPLATE:
+      case IPAP_OPTNS_ALLOCATION_TEMPLATE:
                     
           if ( len<4 )
              throw ipap_bad_argument("invalid message lenght");
@@ -1366,6 +1369,19 @@ ipap_message::get_template(uint16_t templid)
 		return NULL;
 }
 
+ipap_template * 
+ipap_message::get_template(uint16_t templid) const
+{
+
+#ifdef DEBUG
+    log->dlog(ch, "Starting method get_template");
+#endif
+
+	if (message != NULL)
+		return (message->templates.get_template(templid))->copy();
+	else
+		return NULL;
+}
 
 int 
 ipap_message::ipap_import( unsigned char  *buffer, size_t message_length )
@@ -1434,7 +1450,10 @@ ipap_message::ipap_import( unsigned char  *buffer, size_t message_length )
          */
         if ( (setid == IPAP_SETID_AUCTION_TEMPLATE)
              || (setid == IPAP_SETID_BID_TEMPLATE)
-             || (setid == IPAP_SETID_ALLOCATION_TEMPLATE) ) {
+             || (setid == IPAP_SETID_ALLOCATION_TEMPLATE)
+             || (setid == IPAP_OPTNS_AUCTION_TEMPLATE)
+             || (setid == IPAP_OPTNS_BID_TEMPLATE)
+             || (setid == IPAP_OPTNS_ALLOCATION_TEMPLATE) ) {
             /** parse a template set ( option or normal template ).
              */
 
@@ -1632,4 +1651,16 @@ require_output(other.require_output)
 #endif	    
 
 
+}
+
+dateRecordListConstIter_t 
+ipap_message::begin(void) const
+{
+	return data_list.begin();
+}
+	   
+dateRecordListConstIter_t 
+ipap_message::end(void) const
+{
+	return data_list.end();
 }

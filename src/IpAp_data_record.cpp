@@ -193,3 +193,15 @@ ipap_data_record::operator!= (const ipap_data_record& rhs) const
 	}
 	return false;
 }
+
+fieldDataListIter_t 
+ipap_data_record::begin(void) 
+{
+	return fields.begin();
+}
+
+fieldDataListIter_t 
+ipap_data_record::end(void) 
+{
+	return fields.end();
+}

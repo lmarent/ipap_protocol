@@ -90,6 +90,11 @@ typedef struct {
 } export_fields_t;
 
 
+typedef vector<ipap_data_record>   dataRecordList_t;
+typedef vector<ipap_data_record>::iterator dateRecordListIter_t;
+typedef vector<ipap_data_record>::const_iterator dateRecordListConstIter_t;
+
+
 /**
  * \class ipap_message
  *
@@ -141,6 +146,14 @@ class ipap_message
 	    * @return 			- Template id.
 	    */
 	   uint16_t new_template( int nfields );
+
+
+	   /**
+	    * Find a return a reference to a template with id: templid
+	    * @param templid - Id of the template
+	    * @return reference to the template, if not found, it returns NULL.
+	    */
+	   ipap_template * get_template(uint16_t templid);
 	   
 	   /**
 	    * Finish the current record set assigning the lenght and te template id.
@@ -212,14 +225,7 @@ class ipap_message
 								    unsigned char      *buf, 
 								    int                buflen,
 								    int                *nread );
-	   	   
-	   /**
-	    * Find a return a reference to a template with id: templid
-	    * @param templid - Id of the template
-	    * @return reference to the template, if not found, it returns NULL.
-	    */
-	   ipap_template * get_template(uint16_t templid);
-	   
+	   	   	   
 	   /**
 	    * Return the number of templates included
 	    */
@@ -273,7 +279,6 @@ class ipap_message
 	    * Release memory for buffers and pointers used to construct the message
 	    */
 	   void close( void );
-
 	      
 	   /**
 	    * creates and add a new data template for the messsage
@@ -283,6 +288,14 @@ class ipap_message
 	    */
 	   uint16_t new_data_template( int nfields, ipap_templ_type_t type );
                               
+	   /**
+	    * Find a return a reference to a template with id: templid 
+	    * It makes an object copy.
+	    * @param templid - Id of the template
+	    * @return reference to the template, if not found, it returns NULL.
+	    */
+	   ipap_template * get_template(uint16_t templid) const;
+
                    
 	   /**
 	    * Get a field definition from the container field
@@ -380,6 +393,10 @@ class ipap_message
 	   std::list<int> get_template_list(void) const;
 	   
 	   bool get_require_output(void) const;	   
+	   
+	   dateRecordListConstIter_t begin(void) const;
+	   
+	   dateRecordListConstIter_t end(void) const;
 };
 
 

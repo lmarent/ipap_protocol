@@ -58,12 +58,26 @@ private:
 
 public:
 	
+	
 	/// Constructor of the field key
 	inline ipap_field_key(int _eno, int _ftype): 
 			eno(_eno), ftype(_ftype){}
 	
 	/// Destructor of the field key
 	inline ~ipap_field_key(){}
+	
+	
+	/// Get the enterprise number
+	inline int get_eno(){ return eno; }
+	
+	/// Get the field type
+	inline int get_ftype(){ return ftype; }
+
+	/// Get the enterprise number
+	inline int get_eno() const { return eno; }
+	
+	/// Get the field type
+	inline int get_ftype() const { return ftype; }
 		
 	/**
 	 *  Equals to operator. It is equal when it has the same enterprise number an type
@@ -103,6 +117,10 @@ public:
 	/** Convert the key field in a string.
 	*/ 
 	std::string to_string();
+
+	/** Convert the key field in a string.
+	*/ 
+	std::string to_string() const;
 
 };
 

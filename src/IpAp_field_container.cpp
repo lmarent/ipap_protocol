@@ -39,6 +39,7 @@ ipap_field_container::~ipap_field_container()
 
 void ipap_field_container::AddFieldType(int _eno, int _ftype, ssize_t _length, 
 										int _coding, const std::string _name, 
+										const std::string _xml_name,
 										const std::string _documentation)
 {
 	ipap_field_type_t newType;
@@ -47,6 +48,7 @@ void ipap_field_container::AddFieldType(int _eno, int _ftype, ssize_t _length,
 	newType.length = _length;
 	newType.coding = _coding;
 	newType.name = _name;
+	newType.xml_name = _xml_name;
 	newType.documentation = _documentation;
 	AddFieldType(newType);
 
@@ -72,69 +74,74 @@ void ipap_field_container::initialize_forward(void)
 {
 
    AddFieldType( 0, IPAP_FT_MAXUNITVALUATION, 8, IPAP_CODING_FLOAT, 
-     "auctionMaxUnitValuation", "" );
+     "auctionMaxUnitValuation", "MaxUnitValuation", "" );
    AddFieldType( 0, IPAP_FT_UNITVALUE, 8, IPAP_CODING_FLOAT, 
-     "auctionUnitValue", "" );
+     "auctionUnitValue", "UnitValue", "" );
    AddFieldType( 0, IPAP_FT_UNITBUDGET, 8, IPAP_CODING_FLOAT, 
-     "auctionUnitBudget", "" );
+     "auctionUnitBudget", "UnitBudget", "" );
    AddFieldType( 0, IPAP_FT_TOTALBUDGET, 8, IPAP_CODING_FLOAT, 
-     "auctionTotalBudget", "" );     
+     "auctionTotalBudget", "TotalBudget", "" );     
    AddFieldType( 0, IPAP_FT_AUCTIONINGTIMESECONDS, 4, IPAP_CODING_UINT, 
-     "auctionTimeSeconds", "" ); 
+     "auctionTimeSeconds", "AuctioningTimeSeconds", "" ); 
    AddFieldType( 0, IPAP_FT_AUCTIONINGTIMEMILLISECONDS, 8, IPAP_CODING_UINT, 
-     "auctionTimeMilliseconds", "" );
+     "auctionTimeMilliseconds", "AuctioningTimeMilliSeconds", "" );
    AddFieldType( 0, IPAP_FT_AUCTIONINGTIMEMICROSECONDS, 8, IPAP_CODING_NTP, 
-     "auctionTimeMicroseconds", "" );
+     "auctionTimeMicroseconds", "AuctioningTimeMicroSeconds", "" );
    AddFieldType( 0, IPAP_FT_AUCTIONINGTIMENANOSECONDS, 8, IPAP_CODING_NTP, 
-     "auctionTimeNanoseconds", "" );
-   AddFieldType( 0, IPAP_FT_AUCTIONINGALGORITHMCODE, 2, IPAP_CODING_UINT, 
-     "auctioningAlgorithmCode", "" );   
+     "auctionTimeNanoseconds", "AuctioningTimeNanoSeconds", "" );
+   AddFieldType( 0, IPAP_FT_AUCTIONINGALGORITHMCODE, 4, IPAP_CODING_UINT, 
+     "auctioningAlgorithmCode", "AuctioningAlgorithmCode", "" );   
    AddFieldType( 0, IPAP_FT_SOURCEIPV4ADDRESS, 4, IPAP_CODING_IPADDR, 
-     "sourceIPv4Address", "" );
+     "sourceIPv4Address", "SourceIpv4Address", "" );
    AddFieldType( 0, IPAP_FT_SOURCEIPV4PREFIXLENGTH, 1, IPAP_CODING_UINT, 
-     "sourceIPv4PrefixLength", "" );
+     "sourceIPv4PrefixLength", "SourceIpv4PrefixLenght", "" );
    AddFieldType( 0, IPAP_FT_DESTINATIONIPV4ADDRESS, 4, IPAP_CODING_IPADDR, 
-     "destinationIPv4Address", "" );
+     "destinationIPv4Address", "DestinationIpv4Address", "" );
    AddFieldType( 0, IPAP_FT_DESTINATIONIPV4PREFIXLENGTH, 1, IPAP_CODING_UINT, 
-     "destinationIPv4PrefixLength", "" );
+     "destinationIPv4PrefixLength", "DestinationIpv4PrefixLen", "" );
    AddFieldType( 0, IPAP_FT_SOURCEIPV6ADDRESS, 16, IPAP_CODING_IPADDR, 
-     "sourceIPv6Address", "" );
+     "sourceIPv6Address", "SourceIpv6Address", "" );
    AddFieldType( 0, IPAP_FT_DESTINATIONIPV6ADDRESS, 16, IPAP_CODING_IPADDR, 
-     "destinationIPv6Address", "" );
+     "destinationIPv6Address", "DestinationIpv6Address", "" );
    AddFieldType( 0, IPAP_FT_SOURCEIPV6PREFIXLENGTH, 1, IPAP_CODING_UINT, 
-     "sourceIPv6PrefixLength", "" );
+     "sourceIPv6PrefixLength", "SourceIpv6PrefixLenght", "" );
    AddFieldType( 0, IPAP_FT_DESTINATIONIPV6PREFIXLENGTH, 1, IPAP_CODING_UINT, 
-     "destinationIPv6PrefixLength", "" );
+     "destinationIPv6PrefixLength", "DestinationIpv6PrefixLenght", "" );
    AddFieldType( 0, IPAP_FT_PADDINGOCTETS, 65535, IPAP_CODING_BYTES, 
-     "paddingOctets", "" );
+     "paddingOctets", "PaddingOctects", "" );
    AddFieldType( 0, IPAP_FT_IPHEADERPACKETSECTION, 65535, IPAP_CODING_BYTES, 
-     "ipHeaderPacketSection", "" );
+     "ipHeaderPacketSection", "IpHeaderPacketSection", "" );
    AddFieldType( 0, IPAP_FT_IPPAYLOADPACKETSECTION, 65535, IPAP_CODING_BYTES, 
-     "ipPayloadPacketSection", "" );
+     "ipPayloadPacketSection", "IpPayloadPacketSection", "" );
    AddFieldType( 0, IPAP_FT_DATALINKFRAMESECTION, 65535, IPAP_CODING_BYTES, 
-     "dataLinkFrameSection", "" );
+     "dataLinkFrameSection", "DataLinkFrameSection", "" );
    AddFieldType( 0, IPAP_FT_SOURCEMACADDRESS, 6, IPAP_CODING_BYTES, 
-     "sourceMacAddress", "" );
+     "sourceMacAddress", "SourceMacAddress", "" );
    AddFieldType( 0, IPAP_FT_POSTDESTINATIONMACADDRESS, 6, IPAP_CODING_BYTES, 
-     "postDestinationMacAddress", "" );
-   AddFieldType( 0, IPAP_FT_IDAUCTION, 65535, IPAP_CODING_STRING, 
-     "idAuction", "" );
-   AddFieldType( 0, IPAP_FT_IDBID, 65535, IPAP_CODING_STRING, 
-     "idBid", "" );
-   AddFieldType( 0, IPAP_FT_IDALLOCATION, 65535, IPAP_CODING_STRING, 
-     "idAllocation", "" );
+     "postDestinationMacAddress", "PostDestinationMacAddress", "" );
+   AddFieldType( 0, IPAP_FT_IDAUCTION, 128, IPAP_CODING_STRING, 
+     "idAuction", "IdAuction", "" );
+   AddFieldType( 0, IPAP_FT_IDBID, 128, IPAP_CODING_STRING, 
+     "idBid", "IdBid", "" );
+   AddFieldType( 0, IPAP_FT_IDALLOCATION, 128, IPAP_CODING_STRING, 
+     "idAllocation", "IdAllocation", "" );
    AddFieldType( 0, IPAP_FT_STARTSECONDS, 4, IPAP_CODING_UINT, 
-     "startSeconds", "" ),      
+     "startSeconds", "StartSeconds", "" ),      
    AddFieldType( 0, IPAP_FT_ENDSECONDS, 4, IPAP_CODING_UINT, 
-     "endSeconds", "" ),      
+     "endSeconds", "EndSeconds", "" ),      
    AddFieldType( 0, IPAP_FT_STARTMILLISECONDS, 8, IPAP_CODING_UINT, 
-     "startMilliSeconds", "" ),      
+     "startMilliSeconds", "StartMilliSeconds", "" ),      
    AddFieldType( 0, IPAP_FT_ENDMILLISECONDS, 8, IPAP_CODING_UINT, 
-     "endMilliSeconds", "" ),      
-   AddFieldType( 0, IPAP_FT_AUCTIONINGALGORITHMNAME, 65535, IPAP_CODING_STRING, 
-     "auctioningAlgorithmName", "" ),
+     "endMilliSeconds", "EndMilliSeconds", "" ),      
+   AddFieldType( 0, IPAP_FT_AUCTIONINGALGORITHMNAME, 128, IPAP_CODING_STRING, 
+     "auctioningAlgorithmName", "AuctioningAlgorithName", "" ),
+   AddFieldType( 0, IPAP_FT_IDRECORD, 128, IPAP_CODING_STRING, 
+     "idRecord", "IdRecord", "" ),
+   AddFieldType( 0, IPAP_FT_QUANTITY, 8, IPAP_CODING_FLOAT, 
+     "quantity", "Quantity", "" ),
+     
 
-   AddFieldType( 0, 0, -1, 0, "", "" );
+   AddFieldType( 0, 0, -1, 0, "", "", "" );
 
 }
 
@@ -142,69 +149,74 @@ void ipap_field_container::initialize_reverse(void)
 {
 
    AddFieldType( REV_PEN, IPAP_FT_MAXUNITVALUATION, 8, IPAP_CODING_FLOAT, 
-     "ReverseAuctionMaxUnitValuation", "" ); 
+     "reverseAuctionMaxUnitValuation", "MaxUnitValuation", "" );
    AddFieldType( REV_PEN, IPAP_FT_UNITVALUE, 8, IPAP_CODING_FLOAT, 
-     "ReverseAuctionUnitValue", "" );
+     "reverseAuctionUnitValue", "UnitValue", "" );
    AddFieldType( REV_PEN, IPAP_FT_UNITBUDGET, 8, IPAP_CODING_FLOAT, 
-     "ReverseAuctionUnitBudget", "" );
+     "reverseAuctionUnitBudget", "UnitBudget", "" );
    AddFieldType( REV_PEN, IPAP_FT_TOTALBUDGET, 8, IPAP_CODING_FLOAT, 
-     "ReverseAuctionTotalBudget", "" );
+     "reverseAuctionTotalBudget", "TotalBudget", "" );     
    AddFieldType( REV_PEN, IPAP_FT_AUCTIONINGTIMESECONDS, 4, IPAP_CODING_UINT, 
-     "ReverseAuctionTimeSeconds", "" );
+     "reverseAuctionTimeSeconds", "AuctioningTimeSeconds", "" ); 
    AddFieldType( REV_PEN, IPAP_FT_AUCTIONINGTIMEMILLISECONDS, 8, IPAP_CODING_UINT, 
-     "ReverseAuctionTimeMilliseconds", "" );
+     "reverseAuctionTimeMilliseconds", "AuctioningTimeMilliSeconds", "" );
    AddFieldType( REV_PEN, IPAP_FT_AUCTIONINGTIMEMICROSECONDS, 8, IPAP_CODING_NTP, 
-     "ReverseAuctionTimeMicroseconds", "" );
+     "reverseAuctionTimeMicroseconds", "AuctioningTimeMicroSeconds", "" );
    AddFieldType( REV_PEN, IPAP_FT_AUCTIONINGTIMENANOSECONDS, 8, IPAP_CODING_NTP, 
-     "ReverseAuctionTimeNanoseconds", "" );
-   AddFieldType( REV_PEN, IPAP_FT_AUCTIONINGALGORITHMCODE, 2, IPAP_CODING_UINT, 
-     "ReverseAuctioningAlgorithmCode", "" );
+     "reverseAuctionTimeNanoseconds", "AuctioningTimeNanoSeconds", "" );
+   AddFieldType( REV_PEN, IPAP_FT_AUCTIONINGALGORITHMCODE, 4, IPAP_CODING_UINT, 
+     "reverseAuctioningAlgorithmCode", "AuctioningAlgorithmCode", "" );   
    AddFieldType( REV_PEN, IPAP_FT_SOURCEIPV4ADDRESS, 4, IPAP_CODING_IPADDR, 
-     "ReverseSourceIPv4Address", "" );
+     "reverseSourceIPv4Address", "SourceIpv4Address", "" );
    AddFieldType( REV_PEN, IPAP_FT_SOURCEIPV4PREFIXLENGTH, 1, IPAP_CODING_UINT, 
-     "ReverseSourceIPv4PrefixLength", "" );
+     "reverseSourceIPv4PrefixLength", "SourceIpv4PrefixLenght", "" );
    AddFieldType( REV_PEN, IPAP_FT_DESTINATIONIPV4ADDRESS, 4, IPAP_CODING_IPADDR, 
-     "ReverseDestinationIPv4Address", "" );
+     "reverseDestinationIPv4Address", "DestinationIpv4Address", "" );
    AddFieldType( REV_PEN, IPAP_FT_DESTINATIONIPV4PREFIXLENGTH, 1, IPAP_CODING_UINT, 
-     "ReverseDestinationIPv4PrefixLength", "" );
+     "reverseDestinationIPv4PrefixLength", "DestinationIpv4PrefixLen", "" );
    AddFieldType( REV_PEN, IPAP_FT_SOURCEIPV6ADDRESS, 16, IPAP_CODING_IPADDR, 
-     "ReverseSourceIPv6Address", "" );
+     "reverseSourceIPv6Address", "SourceIpv6Address", "" );
    AddFieldType( REV_PEN, IPAP_FT_DESTINATIONIPV6ADDRESS, 16, IPAP_CODING_IPADDR, 
-     "ReverseDestinationIPv6Address", "" );
+     "reverseDestinationIPv6Address", "DestinationIpv6Address", "" );
    AddFieldType( REV_PEN, IPAP_FT_SOURCEIPV6PREFIXLENGTH, 1, IPAP_CODING_UINT, 
-     "ReverseSourceIPv6PrefixLength", "" );
+     "reverseSourceIPv6PrefixLength", "SourceIpv6PrefixLenght", "" );
    AddFieldType( REV_PEN, IPAP_FT_DESTINATIONIPV6PREFIXLENGTH, 1, IPAP_CODING_UINT, 
-     "ReverseDestinationIPv6PrefixLength", "" );
+     "reverseDestinationIPv6PrefixLength", "DestinationIpv6PrefixLenght", "" );
    AddFieldType( REV_PEN, IPAP_FT_PADDINGOCTETS, 65535, IPAP_CODING_BYTES, 
-     "ReversePaddingOctets", "" );
+     "reversePaddingOctets", "PaddingOctects", "" );
    AddFieldType( REV_PEN, IPAP_FT_IPHEADERPACKETSECTION, 65535, IPAP_CODING_BYTES, 
-     "ReverseIpHeaderPacketSection", "" );
+     "reverseIpHeaderPacketSection", "IpHeaderPacketSection", "" );
    AddFieldType( REV_PEN, IPAP_FT_IPPAYLOADPACKETSECTION, 65535, IPAP_CODING_BYTES, 
-     "ReverseIpPayloadPacketSection", "" );
+     "reverseIpPayloadPacketSection", "IpPayloadPacketSection", "" );
    AddFieldType( REV_PEN, IPAP_FT_DATALINKFRAMESECTION, 65535, IPAP_CODING_BYTES, 
-     "ReverseDataLinkFrameSection", "" );
+     "reverseDataLinkFrameSection", "DataLinkFrameSection", "" );
    AddFieldType( REV_PEN, IPAP_FT_SOURCEMACADDRESS, 6, IPAP_CODING_BYTES, 
-     "ReverseSourceMacAddress", "" );
+     "reverseSourceMacAddress", "SourceMacAddress", "" );
    AddFieldType( REV_PEN, IPAP_FT_POSTDESTINATIONMACADDRESS, 6, IPAP_CODING_BYTES, 
-     "ReversePostDestinationMacAddress", "" );    
-   AddFieldType( REV_PEN, IPAP_FT_IDAUCTION, 65535, IPAP_CODING_STRING, 
-     "ReverseIdAuction", "" );
-   AddFieldType( REV_PEN, IPAP_FT_IDBID, 65535, IPAP_CODING_STRING, 
-     "ReverseIdBid", "" );
-   AddFieldType( REV_PEN, IPAP_FT_IDALLOCATION, 65535, IPAP_CODING_STRING, 
-     "ReverseIdAllocation", "" );
+     "reversePostDestinationMacAddress", "PostDestinationMacAddress", "" );
+   AddFieldType( REV_PEN, IPAP_FT_IDAUCTION, 128, IPAP_CODING_STRING, 
+     "reverseIdAuction", "IdAuction", "" );
+   AddFieldType( REV_PEN, IPAP_FT_IDBID, 128, IPAP_CODING_STRING, 
+     "reverseIdBid", "IdBid", "" );
+   AddFieldType( REV_PEN, IPAP_FT_IDALLOCATION, 128, IPAP_CODING_STRING, 
+     "reverseIdAllocation", "IdAllocation", "" );
    AddFieldType( REV_PEN, IPAP_FT_STARTSECONDS, 4, IPAP_CODING_UINT, 
-     "ReverseStartSeconds", "" ),      
+     "reverseStartSeconds", "StartSeconds", "" ),      
    AddFieldType( REV_PEN, IPAP_FT_ENDSECONDS, 4, IPAP_CODING_UINT, 
-     "ReverseEndSeconds", "" ),      
+     "reverseEndSeconds", "EndSeconds", "" ),      
    AddFieldType( REV_PEN, IPAP_FT_STARTMILLISECONDS, 8, IPAP_CODING_UINT, 
-     "ReverseStartMilliSeconds", "" ),      
+     "reverseStartMilliSeconds", "StartMilliSeconds", "" ),      
    AddFieldType( REV_PEN, IPAP_FT_ENDMILLISECONDS, 8, IPAP_CODING_UINT, 
-     "ReverseEndMilliSeconds", "" ),      
-   AddFieldType( REV_PEN, IPAP_FT_AUCTIONINGALGORITHMNAME, 65535, IPAP_CODING_STRING, 
-     "ReverseAuctioningAlgorithmName", "" ),
+     "reverseEndMilliSeconds", "EndMilliSeconds", "" ),      
+   AddFieldType( REV_PEN, IPAP_FT_AUCTIONINGALGORITHMNAME, 128, IPAP_CODING_STRING, 
+     "reverseAuctioningAlgorithmName", "AuctioningAlgorithName", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_IDRECORD, 128, IPAP_CODING_STRING, 
+     "reverseIdRecord", "IdRecord", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_QUANTITY, 8, IPAP_CODING_FLOAT, 
+     "reverseQuantity", "Quantity", "" ),
 
-   AddFieldType( REV_PEN, 0, -1, 0, "", "");
+
+   AddFieldType( REV_PEN, 0, -1, 0, "", "", "");
 
 }
 

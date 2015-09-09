@@ -38,6 +38,7 @@
 #define IPAP_CODING_IPADDR 7
 
 #define REV_PEN 29305
+#define TOT_FIELD_COUNT    33
 
 typedef int (*ipap_encode_func) (void *, void*, size_t);
 typedef int (*ipap_decode_func) (void *, void*, size_t);
@@ -50,13 +51,13 @@ typedef struct
     ssize_t     length;             /* field length */
     int         coding;
     string      name;
+    string 		xml_name;			// name to be used in when posting to xml.
     string	    documentation;
 
 } ipap_field_type_t;
 
 typedef struct
 {
-    struct ipap_field   *next;
     ipap_field_type_t   *ft;
     ipap_encode_func    encode;
     ipap_decode_func    decode;
@@ -95,10 +96,8 @@ typedef struct
 #define IPAP_FT_STARTMILLISECONDS        		29
 #define IPAP_FT_ENDMILLISECONDS          		30
 #define IPAP_FT_AUCTIONINGALGORITHMNAME       	31
-
-
-
-
+#define IPAP_FT_IDRECORD				       	32
+#define IPAP_FT_QUANTITY				       	33
 
 
 /* column name definitions
@@ -134,6 +133,9 @@ typedef struct
 #define IPAP_CN_ENDSECONDS               		"ie0_28"
 #define IPAP_CN_STARTMILLISECONDS        		"ie0_29"
 #define IPAP_CN_ENDMILLISECONDS          		"ie0_30"
+#define IPAP_CN_AUCTIONINGALGORITHMNAME       	"ie0_31"
+#define IPAP_CN_IDRECORD				       	"ie0_32"
+#define IPAP_CN_QUANTITY				       	"ie0_33"
  
  
  

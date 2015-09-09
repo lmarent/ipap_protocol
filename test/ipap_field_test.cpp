@@ -90,6 +90,7 @@ void IpAp_Field_Test::setUp() {
 	field1.length = 8; 
 	field1.coding =  IPAP_CODING_FLOAT;
 	field1.name = "auctionMaxUnitValuation";
+	field1.xml_name = "MaxUnitValuation";
 	field1.documentation = "";
 
 	field2.eno = 0;  
@@ -97,6 +98,7 @@ void IpAp_Field_Test::setUp() {
 	field2.length = 8; 
 	field2.coding =  IPAP_CODING_FLOAT;
 	field2.name = "auctionUnitValue";
+	field2.xml_name = "UnitValue";
 	field2.documentation = "";
 
 	field3.eno = 0;  
@@ -104,6 +106,7 @@ void IpAp_Field_Test::setUp() {
 	field3.length = 8; 
 	field3.coding =  IPAP_CODING_FLOAT;
 	field3.name = "auctionUnitBudget";
+	field2.xml_name = "UnitBudget";
 	field3.documentation = "";
 
 	ptrField1 = new ipap_field(field1);
@@ -148,10 +151,10 @@ void IpAp_Field_Test::testException()
     field_container.clear();     
 
 	field_container.AddFieldType( 0, IPAP_FT_UNITBUDGET, 8, IPAP_CODING_FLOAT, 
-     "auctionUnitBudget", "" );
+     "auctionUnitBudget", "UnitBudget", "" );
 
 	field_container.AddFieldType( 0, IPAP_FT_UNITBUDGET, 8, IPAP_CODING_FLOAT, 
-     "auctionTotalBudget", "" );
+     "auctionTotalBudget", "TotalBudget", "" );
          
     CPPUNIT_ASSERT( field_container.get_num_fields() == 2 );
 
@@ -161,11 +164,11 @@ void IpAp_Field_Test::testAddFields()
 {
 	field_container.initialize_forward();
 	
-	CPPUNIT_ASSERT( field_container.get_num_fields() == 32 );
+	CPPUNIT_ASSERT( field_container.get_num_fields() == TOT_FIELD_COUNT + 1 );
 	
 	field_container.initialize_reverse();
 	
-	CPPUNIT_ASSERT( field_container.get_num_fields() == 64 );
+	CPPUNIT_ASSERT( field_container.get_num_fields() == (TOT_FIELD_COUNT + 1)*2 );
 	
 	// Gets one of the fields and verifies its data.
 	ipap_field tmpField = field_container.get_field( 0, IPAP_FT_UNITVALUE );
@@ -206,17 +209,18 @@ void IpAp_Field_Test::testFieldValues()
 	int relay_f;
 	ipap_field tmpField;
 	
+	
 	// Int 1
 	tmpField = field_container.get_field( 0, IPAP_FT_SOURCEIPV6PREFIXLENGTH );
 	ipap_value_field fvalue1 = tmpField.get_ipap_value_field(value8);
 	
-		// Test without encoding
+	// Test without encoding
 	relay_f = 1;
 	tmpField.ipap_encode_int( fvalue1, out, relay_f );
 	ipap_value_field fvalue1aResult = tmpField.ipap_decode_int( out, fvalue1.get_length(), relay_f );	
 	CPPUNIT_ASSERT( (uint8_t) 8 == fvalue1aResult.get_value_int8() );
 		
-		// Test with encoding
+	// Test with encoding
 	relay_f = 0;
 	tmpField.ipap_encode_int( fvalue1, out, relay_f );
 	ipap_value_field fvalue1bResult = tmpField.ipap_decode_int( out, fvalue1.get_length(), relay_f );	
@@ -225,26 +229,6 @@ void IpAp_Field_Test::testFieldValues()
 	std::string str(charprint, charprint + fvalue1bResult.get_length());
 	CPPUNIT_ASSERT( str.compare("8")  == 0 );
 
-	// Int 2
-	tmpField = field_container.get_field( 0, IPAP_FT_AUCTIONINGALGORITHMCODE );
-	ipap_value_field fvalue2 = tmpField.get_ipap_value_field(value16);
-	CPPUNIT_ASSERT( (uint16_t) 21 == fvalue2.get_value_int16() );
-	tmpField.ipap_snprint_int( charprint, 100, fvalue2 );
-	std::string str2(charprint, charprint + fvalue2.get_length());
-	CPPUNIT_ASSERT( str2.compare("21")  == 0 );
-
-	// Test without encoding
-	relay_f = 1;
-	tmpField.ipap_encode_int( fvalue2, out, relay_f );
-	ipap_value_field fvalue2aResult = tmpField.ipap_decode_int( out, fvalue2.get_length(), relay_f );	
-	CPPUNIT_ASSERT( (uint16_t) 21 == fvalue2aResult.get_value_int16() );
-		
-	// Test with encoding
-	relay_f = 0;
-	tmpField.ipap_encode_int( fvalue2, out, relay_f );
-	ipap_value_field fvalue2bResult = tmpField.ipap_decode_int( out, fvalue2.get_length(), relay_f );	
-	CPPUNIT_ASSERT( (uint16_t) 21 == fvalue2bResult.get_value_int16() );
-
 	// Int 4
 	tmpField = field_container.get_field( 0, IPAP_FT_AUCTIONINGTIMESECONDS );
 	ipap_value_field fvalue3 = tmpField.get_ipap_value_field(value32);
@@ -252,7 +236,6 @@ void IpAp_Field_Test::testFieldValues()
 	tmpField.ipap_snprint_int( charprint, 100, fvalue3 );
 	std::string str3(charprint, charprint + fvalue3.get_length());
 	CPPUNIT_ASSERT( str3.compare("3210")  == 0 );
-
 
 		// Test without encoding
 	relay_f = 1;
@@ -291,7 +274,6 @@ void IpAp_Field_Test::testFieldValues()
 	for (int i=0; i < 4; i++)
 		if (valuebyte0[i] != valuebyte4b[i]) equal = false;
 	CPPUNIT_ASSERT( true == equal );
-
 	  
 	// Int 8 
 	tmpField = field_container.get_field( 0, IPAP_FT_AUCTIONINGTIMEMILLISECONDS );
@@ -335,7 +317,7 @@ void IpAp_Field_Test::testFieldValues()
 	for (int i=0; i < 16; i++)
 		if (valuebyte6a[i] != valuebyte3[i]) equal = false;
 	CPPUNIT_ASSERT( true == equal );
-		
+	
 	// Test with encoding
 	relay_f = 0;
 	tmpField.ipap_encode_bytes( fvalue6, out, relay_f );
@@ -412,7 +394,7 @@ void IpAp_Field_Test::testFieldValues()
 	tmpField.ipap_encode_float( fvalue9, out, relay_f );
 	ipap_value_field fvalue9aResult = tmpField.ipap_decode_float( out, fvalue9.get_length(), relay_f );	
 	CPPUNIT_ASSERT( (uint64_t) 87654321 == fvalue9aResult.get_value_int64() );
-		
+			
 	// Test with encoding
 	relay_f = 0;
 	tmpField.ipap_encode_float( fvalue9, out, relay_f );

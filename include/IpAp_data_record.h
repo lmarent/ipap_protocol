@@ -139,6 +139,10 @@ public:
 	*/ 
 	bool operator != (const ipap_data_record &rhs) const;
     
+	fieldDataListIter_t begin();
+	
+	fieldDataListIter_t end();
+    
 };
 
 

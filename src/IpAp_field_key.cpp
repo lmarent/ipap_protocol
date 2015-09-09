@@ -36,3 +36,13 @@ ipap_field_key::to_string()
 	return o1.str();
 
 }
+
+std::string 
+ipap_field_key::to_string() const
+{
+	std::ostringstream o1;
+	o1 << "eno:" << eno;
+	o1 << "ftype:" << ftype;
+	return o1.str();
+
+}

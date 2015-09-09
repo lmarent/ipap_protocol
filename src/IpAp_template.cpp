@@ -27,6 +27,12 @@
 #include "IpAp_template.h"
 #include "IpAp_exception.h"
 
+char *ipap_template::TEMPLATE_XML_TAGS[] = { "AUCTION", 
+											"ELEMENT",
+											"ALLOCATION",
+											"ACTION",
+											"AUCTION",
+											"TO_DEFINE" };
 
 
 ipap_template::ipap_template(const ipap_template &rhs)
@@ -161,3 +167,21 @@ ipap_template::copy(void) const
 	q = new ipap_template(*this);
 	return q;
 }
+
+/* name:       get_field()
+ * parameters: eno, ftype
+ * return:     field from the container list or NULL
+ */
+ipap_field 
+ipap_template::get_field( int eno, int type )
+{
+ 
+	templateFieldIterList_t it;
+	for ( it = datafields.begin(); it != datafields.end(); ++it)
+	{
+        if( (((it->elem).get_field_type()).ftype == type) && (((it->elem).get_field_type()).eno==eno) )
+			return it->elem;
+	}
+    throw ipap_bad_argument("Field not found in the container");
+}
+

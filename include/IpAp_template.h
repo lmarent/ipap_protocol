@@ -35,10 +35,15 @@
 
 typedef enum 
 {
-    IPAP_SETID_AUCTION_TEMPLATE, 
+    IPAP_SETID_AUCTION_TEMPLATE = 0, 
     IPAP_SETID_BID_TEMPLATE,
-    IPAP_SETID_ALLOCATION_TEMPLATE
+    IPAP_SETID_ALLOCATION_TEMPLATE,
+    IPAP_OPTNS_AUCTION_TEMPLATE,
+    IPAP_OPTNS_BID_TEMPLATE,
+    IPAP_OPTNS_ALLOCATION_TEMPLATE
 } ipap_templ_type_t;
+
+
 
 typedef enum
 {
@@ -95,12 +100,15 @@ typedef vector<ipap_template_field_t>::const_iterator templateFieldConstIterList
 class ipap_template
 {
     private:
+		
 		ipap_templ_type_t     				type;  			///< data or option template 
 		time_t                  			tsend; 			///< time of last transmission
 		uint16_t                			tid;			///< Template id
 		int 								maxfields; 		///< Maximum number of fields
 		templateFieldList_t			 		datafields;		///< Subset of data fields
 	public:
+
+		static char *TEMPLATE_XML_TAGS[];
 		
 		/**
 		 * Constructor for the class ipap_template
@@ -227,7 +235,9 @@ class ipap_template
 		 * instance.
 		*/
 		ipap_template * copy(void) const;
-						
+	
+	
+		ipap_field  get_field( int eno, int type );
 };
 
 

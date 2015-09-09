@@ -98,6 +98,7 @@ public:
     void AddFieldType(int _eno, int _ftype, ssize_t _length, 
 					  int _coding, 
 					  const std::string _name, 
+					  const std::string _xml_name, 
 					  const std::string _documentation );
 
     /**
