@@ -195,7 +195,8 @@
  /usr/include/c++/4.8/bits/stl_multiset.h /usr/include/c++/4.8/debug/set \
  /usr/include/c++/4.8/debug/set.h /usr/include/c++/4.8/debug/multiset.h \
  /usr/include/c++/4.8/bitset /usr/include/c++/4.8/debug/bitset \
- /usr/include/c++/4.8/iomanip /usr/include/c++/4.8/stdexcept
+ /usr/include/c++/4.8/iomanip /usr/include/c++/4.8/stdexcept \
+ ../include/IpAp_exception.h ../include/Error.h
 
 /usr/include/stdc-predef.h:
 
@@ -732,3 +733,7 @@
 /usr/include/c++/4.8/iomanip:
 
 /usr/include/c++/4.8/stdexcept:
+
+../include/IpAp_exception.h:
+
+../include/Error.h:

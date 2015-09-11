@@ -36,6 +36,7 @@
 #define IPAP_CODING_FLOAT  5
 #define IPAP_CODING_NTP    6
 #define IPAP_CODING_IPADDR 7
+#define IPAP_CODING_DOUBLE 8
 
 #define REV_PEN 29305
 #define TOT_FIELD_COUNT    33

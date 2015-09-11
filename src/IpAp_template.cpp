@@ -27,7 +27,7 @@
 #include "IpAp_template.h"
 #include "IpAp_exception.h"
 
-char *ipap_template::TEMPLATE_XML_TAGS[] = { "AUCTION", 
+const char *ipap_template::TEMPLATE_XML_TAGS[] = { "AUCTION", 
 											"ELEMENT",
 											"ALLOCATION",
 											"ACTION",

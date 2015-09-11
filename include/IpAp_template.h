@@ -108,7 +108,7 @@ class ipap_template
 		templateFieldList_t			 		datafields;		///< Subset of data fields
 	public:
 
-		static char *TEMPLATE_XML_TAGS[];
+		static const char *TEMPLATE_XML_TAGS[];
 		
 		/**
 		 * Constructor for the class ipap_template

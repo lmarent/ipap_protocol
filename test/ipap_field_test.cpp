@@ -88,7 +88,7 @@ void IpAp_Field_Test::setUp() {
 	field1.eno = 0;  
 	field1.ftype = IPAP_FT_MAXUNITVALUATION;
 	field1.length = 8; 
-	field1.coding =  IPAP_CODING_FLOAT;
+	field1.coding =  IPAP_CODING_DOUBLE;
 	field1.name = "auctionMaxUnitValuation";
 	field1.xml_name = "MaxUnitValuation";
 	field1.documentation = "";
@@ -96,7 +96,7 @@ void IpAp_Field_Test::setUp() {
 	field2.eno = 0;  
 	field2.ftype = IPAP_FT_UNITVALUE;
 	field2.length = 8; 
-	field2.coding =  IPAP_CODING_FLOAT;
+	field2.coding =  IPAP_CODING_DOUBLE;
 	field2.name = "auctionUnitValue";
 	field2.xml_name = "UnitValue";
 	field2.documentation = "";
@@ -104,7 +104,7 @@ void IpAp_Field_Test::setUp() {
 	field3.eno = 0;  
 	field3.ftype = IPAP_FT_UNITBUDGET;
 	field3.length = 8; 
-	field3.coding =  IPAP_CODING_FLOAT;
+	field3.coding =  IPAP_CODING_DOUBLE;
 	field3.name = "auctionUnitBudget";
 	field2.xml_name = "UnitBudget";
 	field3.documentation = "";
@@ -150,10 +150,10 @@ void IpAp_Field_Test::testException()
 
     field_container.clear();     
 
-	field_container.AddFieldType( 0, IPAP_FT_UNITBUDGET, 8, IPAP_CODING_FLOAT, 
+	field_container.AddFieldType( 0, IPAP_FT_UNITBUDGET, 8, IPAP_CODING_DOUBLE, 
      "auctionUnitBudget", "UnitBudget", "" );
 
-	field_container.AddFieldType( 0, IPAP_FT_UNITBUDGET, 8, IPAP_CODING_FLOAT, 
+	field_container.AddFieldType( 0, IPAP_FT_UNITBUDGET, 8, IPAP_CODING_DOUBLE, 
      "auctionTotalBudget", "TotalBudget", "" );
          
     CPPUNIT_ASSERT( field_container.get_num_fields() == 2 );
@@ -188,8 +188,8 @@ void IpAp_Field_Test::testFieldValues()
 	uint16_t value16 = 21;
 	uint32_t value32 = 3210;
 	uint64_t value64 = 87654321;
-	float valfloat = 12;
-	uint64_t valfloatu = (uint64_t) valfloat;
+	float valfloat = 0.15;
+	double valdouble = 0.15;
 	char valuechar[5] = "1234";
 	uint8_t valuebyte0[5] = { 1, 2, 3, 4 };
 	uint8_t valuebyte1[7] = { 1, 2, 3, 4, 5, 6 };
@@ -381,26 +381,34 @@ void IpAp_Field_Test::testFieldValues()
 		if (valuebyte8b[i] != valuebyte2[i]) equal = false;
 	CPPUNIT_ASSERT( true == equal );
 
+	cout << "We are here" << endl;
 	
-	// Float 8
+	// Double 8
 	tmpField = field_container.get_field( 0, IPAP_FT_UNITBUDGET );
-	ipap_value_field fvalue9 = tmpField.get_ipap_value_field(value64);
-	uint64_t float1 = fvalue9.get_value_float64();
-	CPPUNIT_ASSERT( float1 == value64 );
+	cout << "We are here 0a - Coding" << tmpField.get_field_type().coding << endl;
+	ipap_value_field fvalue9 = tmpField.get_ipap_value_field(valdouble);
+	cout << "We are here 0b" << endl;
+	double double1 = fvalue9.get_value_double();
+	cout << "We are here 0c:" << double1 << "val2:" << valdouble << endl;
+	CPPUNIT_ASSERT( double1 == valdouble );
 
-
+	cout << "We are here 2" << endl;
+	
 	// Test without encoding
 	relay_f = 1;
-	tmpField.ipap_encode_float( fvalue9, out, relay_f );
-	ipap_value_field fvalue9aResult = tmpField.ipap_decode_float( out, fvalue9.get_length(), relay_f );	
-	CPPUNIT_ASSERT( (uint64_t) 87654321 == fvalue9aResult.get_value_int64() );
-			
+	tmpField.ipap_encode_double( fvalue9, out, relay_f );
+	ipap_value_field fvalue9aResult = tmpField.ipap_decode_double( out, fvalue9.get_length(), relay_f );	
+	CPPUNIT_ASSERT( valdouble == fvalue9aResult.get_value_double() );
+	
+	cout << "We are here 3" << endl;
+	
 	// Test with encoding
 	relay_f = 0;
-	tmpField.ipap_encode_float( fvalue9, out, relay_f );
-	ipap_value_field fvalue9bResult = tmpField.ipap_decode_int( out, fvalue9.get_length(), relay_f );	
-	CPPUNIT_ASSERT( (uint64_t) 87654321 == fvalue9bResult.get_value_int64() );
+	tmpField.ipap_encode_double( fvalue9, out, relay_f );
+	ipap_value_field fvalue9bResult = tmpField.ipap_decode_double( out, fvalue9.get_length(), relay_f );	
+	CPPUNIT_ASSERT(  valdouble == fvalue9bResult.get_value_double() );
 	
+	cout << "We are here 4" << endl;
 }
 
 void IpAp_Field_Test::testExceptionInt1()

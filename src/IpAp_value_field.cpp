@@ -39,12 +39,9 @@ ipap_value_field::~ipap_value_field()
 void
 ipap_value_field::set_value_vunit8(uint8_t * _valuebyte, int _length)
 {
-
 	valuebyte = (uint8_t*) malloc(sizeof(uint8_t) * _length);
-	for (int i=0; i< _length; i++)
-		valuebyte[i] = _valuebyte[i];
+	memcpy ( valuebyte, _valuebyte, _length );
 	length = _length;
-	
 }
 
 void
@@ -54,6 +51,32 @@ ipap_value_field::set_value_vchar(char * _valuechar, int _length)
 	valuechar = (char *)malloc(sizeof(char *) * _length);
 	memcpy ( valuechar, _valuechar, _length );
 	length = _length;
+}
+
+float 
+ipap_value_field::get_value_float()
+{
+	float fvalue;
+    
+    if (length == sizeof(float)){
+		memcpy ( &fvalue, valuebyte, sizeof(float) );
+		return fvalue;
+    } else{
+		throw ipap_bad_argument("Value is not a float value");
+    }
+}
+
+double 
+ipap_value_field::get_value_double()
+{
+	double dvalue;
+    
+    if (length == sizeof(double)){
+		memcpy ( &dvalue, valuebyte, sizeof(double) );
+		return dvalue;
+    } else{
+		throw ipap_bad_argument("Value is not a double value");
+    }
 }
 
 ipap_value_field::ipap_value_field(const ipap_value_field &param)

@@ -28,6 +28,7 @@
 #define _IPAP_VALUE_FIELD_H_
 
 #include "stdincpp.h"
+#include "IpAp_exception.h"
 
 
 /**
@@ -158,14 +159,14 @@ public:
 	inline uint64_t get_value_int64(){ return value64; }
 
 	/** 
-	 * Obtain the value as four byte long  - float
+	 * Obtain the value as float
 	 */
-	inline uint32_t get_value_float32(){ return value32; }
-
+	float get_value_float();
+	
 	/** 
-	 * Obtain the value as eight byte long  - float
+	 * Obtain the value as double
 	 */
-	inline uint64_t get_value_float64(){ return value64; }
+	double get_value_double();
 
 	/** 
 	 * Obtain the value as string of characters

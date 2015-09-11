@@ -73,13 +73,13 @@ void ipap_field_container::AddFieldType(ipap_field_type_t &param)
 void ipap_field_container::initialize_forward(void)
 {
 
-   AddFieldType( 0, IPAP_FT_MAXUNITVALUATION, 8, IPAP_CODING_FLOAT, 
+   AddFieldType( 0, IPAP_FT_MAXUNITVALUATION, 8, IPAP_CODING_DOUBLE, 
      "auctionMaxUnitValuation", "MaxUnitValuation", "" );
-   AddFieldType( 0, IPAP_FT_UNITVALUE, 8, IPAP_CODING_FLOAT, 
+   AddFieldType( 0, IPAP_FT_UNITVALUE, 8, IPAP_CODING_DOUBLE, 
      "auctionUnitValue", "UnitValue", "" );
-   AddFieldType( 0, IPAP_FT_UNITBUDGET, 8, IPAP_CODING_FLOAT, 
+   AddFieldType( 0, IPAP_FT_UNITBUDGET, 8, IPAP_CODING_DOUBLE, 
      "auctionUnitBudget", "UnitBudget", "" );
-   AddFieldType( 0, IPAP_FT_TOTALBUDGET, 8, IPAP_CODING_FLOAT, 
+   AddFieldType( 0, IPAP_FT_TOTALBUDGET, 8, IPAP_CODING_DOUBLE, 
      "auctionTotalBudget", "TotalBudget", "" );     
    AddFieldType( 0, IPAP_FT_AUCTIONINGTIMESECONDS, 4, IPAP_CODING_UINT, 
      "auctionTimeSeconds", "AuctioningTimeSeconds", "" ); 
@@ -137,7 +137,7 @@ void ipap_field_container::initialize_forward(void)
      "auctioningAlgorithmName", "AuctioningAlgorithName", "" ),
    AddFieldType( 0, IPAP_FT_IDRECORD, 128, IPAP_CODING_STRING, 
      "idRecord", "IdRecord", "" ),
-   AddFieldType( 0, IPAP_FT_QUANTITY, 8, IPAP_CODING_FLOAT, 
+   AddFieldType( 0, IPAP_FT_QUANTITY, 4, IPAP_CODING_FLOAT, 
      "quantity", "Quantity", "" ),
      
 
@@ -148,13 +148,13 @@ void ipap_field_container::initialize_forward(void)
 void ipap_field_container::initialize_reverse(void)
 {
 
-   AddFieldType( REV_PEN, IPAP_FT_MAXUNITVALUATION, 8, IPAP_CODING_FLOAT, 
+   AddFieldType( REV_PEN, IPAP_FT_MAXUNITVALUATION, 8, IPAP_CODING_DOUBLE, 
      "reverseAuctionMaxUnitValuation", "MaxUnitValuation", "" );
-   AddFieldType( REV_PEN, IPAP_FT_UNITVALUE, 8, IPAP_CODING_FLOAT, 
+   AddFieldType( REV_PEN, IPAP_FT_UNITVALUE, 8, IPAP_CODING_DOUBLE, 
      "reverseAuctionUnitValue", "UnitValue", "" );
-   AddFieldType( REV_PEN, IPAP_FT_UNITBUDGET, 8, IPAP_CODING_FLOAT, 
+   AddFieldType( REV_PEN, IPAP_FT_UNITBUDGET, 8, IPAP_CODING_DOUBLE, 
      "reverseAuctionUnitBudget", "UnitBudget", "" );
-   AddFieldType( REV_PEN, IPAP_FT_TOTALBUDGET, 8, IPAP_CODING_FLOAT, 
+   AddFieldType( REV_PEN, IPAP_FT_TOTALBUDGET, 8, IPAP_CODING_DOUBLE, 
      "reverseAuctionTotalBudget", "TotalBudget", "" );     
    AddFieldType( REV_PEN, IPAP_FT_AUCTIONINGTIMESECONDS, 4, IPAP_CODING_UINT, 
      "reverseAuctionTimeSeconds", "AuctioningTimeSeconds", "" ); 

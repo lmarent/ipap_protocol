@@ -759,7 +759,7 @@ ipap_message::output_set( uint16_t templid )
     ipap_template 	  *templ; 
 
 #ifdef DEBUG
-    log->dlog(ch, "Starting output_set");
+    log->dlog(ch, "Starting output_set %d ", templid);
 #endif 
     
     templ = message->templates.get_template(templid);
@@ -795,6 +795,11 @@ ipap_message::output_set( uint16_t templid )
     // insert the data records associated with the template.
     for ( int data_index= 0; data_index < data_list.size(); data_index++)
 	{
+
+#ifdef DEBUG
+			log->dlog(ch, "Output set - data set:%d template: %d", 
+							data_index, data_list[data_index].get_template_id() );
+#endif
 		
 		if (data_list[data_index].get_template_id() == templ->get_template_id())
 		{
@@ -807,22 +812,49 @@ ipap_message::output_set( uint16_t templid )
 			ipap_data_record g_data = data_list[data_index];
 			for ( i=0; i < templ->get_numfields(); i++ )
 			{
-				ipap_field_key field_key = ipap_field_key((templ->get_field(i).elem).get_field_type().eno, 
-																		(templ->get_field(i).elem).get_field_type().ftype);
-				if ( templ->get_field(i).flength == IPAP_FT_VARLEN ) {
+
+				ipap_field temp_field = templ->get_field(i).elem;
+
+				ipap_field_key field_key = ipap_field_key(temp_field.get_field_type().eno, 
+																		temp_field.get_field_type().ftype);
+				uint16_t field_len = 0;
+				try
+				{
+					 field_len = g_data.get_length(field_key);
 					
-					if ( g_data.get_length(field_key) > 254 )
+				}catch (ipap_bad_argument){
+#ifdef DEBUG
+					log->dlog(ch, "Output set - Data associated with \
+								   template %d field:%d has not found - \
+								   fieldkey:%s - dataRecord:%s", 
+							templ->get_template_id(), i, 
+							field_key.to_string().c_str(), 
+							g_data.to_string().c_str());
+#endif 							
+					throw ipap_bad_argument("Field not included:" +
+										field_key.to_string() );
+					
+				}		
+					
+				if ( templ->get_field(i).flength == IPAP_FT_VARLEN ) {
+	
+					if ( field_len > 254 )
 						datasetlen += 3;
 					else
 						datasetlen += 1;
 				} 
-				else 
-					if ( g_data.get_length(field_key) > templ->get_field(i).flength )
+				else{
+					if ( field_len > templ->get_field(i).flength )
 						throw ipap_bad_argument("Data length greater than field definition lenght");
-						
-				datasetlen += g_data.get_length(field_key);
+				}		
+				
+				datasetlen += field_len;
 			}
 
+#ifdef DEBUG
+			log->dlog(ch, "Output set - finish calculating dataset %d", 
+							datasetlen);
+#endif 
 
 			if ( (message->offset + datasetlen) > message->buffer_lenght )
 				allocate_additional_memory(datasetlen + message->offset - message->buffer_lenght );
@@ -849,7 +881,10 @@ ipap_message::output_set( uint16_t templid )
 					INSERT_U16_NOENCODE( buf+buflen, buflen, datasetlen );			
 				}
 			}
-			
+
+#ifdef DEBUG
+			log->dlog(ch, "Output set - finish writing dataset header");
+#endif
 			for ( i=0; i < templ->get_numfields(); i++ ) {
 								
 				ipap_field_key field_key = ipap_field_key((templ->get_field(i).elem).get_field_type().eno, 
@@ -878,6 +913,10 @@ ipap_message::output_set( uint16_t templid )
 
 				buflen += g_data.get_length(field_key);
 			}
+
+#ifdef DEBUG
+			log->dlog(ch, "Output set - finish writing dataset fields");
+#endif			
 			message->nrecords ++;
 			message->offset += buflen;
 			message->cs_bytes += buflen;
@@ -917,6 +956,19 @@ ipap_message::include_data( uint16_t templid,
        
     if ( ( templ->get_numfields() != data.get_num_fields())  ){
         throw ipap_bad_argument("The number of field values is diferent from template's fields");
+	}
+	
+	// Verifies that fields correspond to template fields.
+	for ( i=0; i < templ->get_numfields(); i++ )
+	{	
+
+		ipap_field temp_field = templ->get_field(i).elem;
+
+		ipap_field_key field_key = ipap_field_key(temp_field.get_field_type().eno, 
+									temp_field.get_field_type().ftype);
+		
+		// This line generates an exception when the value for the field is not found.
+		ipap_value_field val = data.get_field(field_key);
 	}
 				
     data_list.push_back(data);

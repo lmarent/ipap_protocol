@@ -346,106 +346,81 @@ ipap_field::ipap_encode_float( ipap_value_field in,
 									   uint8_t *out, 
 									   int relay_f )
 {
-    uint32_t      tmp32;
-    uint64_t      tmp64;
-
-    if (relay_f)
-    {
-		switch ( in.get_length() ) {
-		  case 4:
-			  tmp32 = in.get_value_float32();
-			  memcpy( out, &tmp32, in.get_length() );
-			  break;
-		  case 8:
-			  tmp64 = in.get_value_float64();
-			  memcpy( out, &tmp64, in.get_length() );
-			  break;
-		  default:
-			  memset( out, 0xff, in.get_length() );
-			  return -1;
-		}
-
-	}
-	else
-	{
-		switch ( in.get_length() ) {
-		  case 4:
-			  tmp32 = in.get_value_float32();
-			  tmp32 = htonl( tmp32 );
-			  memcpy( out, &tmp32, in.get_length() );
-			  break;
-		  case 8:
-			  tmp64 = in.get_value_float64();
-			  tmp64 = HTONLL( tmp64 );
-			  memcpy( out, &tmp64, in.get_length() );
-			  break;
-		  default:
-			  memset( out, 0xff, in.get_length() );
-			  return -1;
-		}
-	}
+    memcpy( out, in.get_value_byte(), in.get_length() );
     return 0;
 }
 
 ipap_value_field 
 ipap_field::ipap_decode_float( uint8_t *in,  size_t len, int relay_f )
 {
-    uint32_t      tmp32;
-    uint64_t      tmp64;
-	ipap_value_field value;
-    if (relay_f)
-    {
-		switch ( len ) {
-		  case 4:
-			  memcpy( &tmp32, in, len );
-			  value = get_ipap_value_field(tmp32);
-			  break;
-		  case 8:
-			  memcpy( &tmp64, in, len );
-			  value = get_ipap_value_field(tmp64);
-			  break;
-		  default:
-			  break;
-		}
 
-	}
-	else
-	{
-		switch ( len ) {
-		  case 4:
-			  memcpy( &tmp32, in, len );
-			  tmp32 = ntohl( tmp32 );
-			  value = get_ipap_value_field(tmp32);
-			  break;
-		  case 8:
-			  memcpy( &tmp64, in, len );
-			  tmp64 = NTOHLL( tmp64 );
-			  value = get_ipap_value_field(tmp64);
-			  break;
-		  default:
-			  break;	
-		}
-	}
+	float fvalue;
+    ipap_value_field value;
+    
+    if (len == sizeof(float)){
+		memcpy ( &fvalue, in, sizeof(float) );
+        value = get_ipap_value_field(fvalue);
+    }
     return value;
 
 }
 
 int 
+ipap_field::ipap_encode_double( ipap_value_field in, 
+									   uint8_t *out, 
+									   int relay_f )
+{
+    memcpy( out, in.get_value_byte(), in.get_length() );
+    return 0;
+}
+
+
+ipap_value_field 
+ipap_field::ipap_decode_double( uint8_t *in,  size_t len, int relay_f )
+{
+
+	double dvalue;
+    ipap_value_field value;
+    
+    if (len == sizeof(double)){
+		memcpy ( &dvalue, in, sizeof(double) );
+        value = get_ipap_value_field(dvalue);
+    }
+    return value;
+
+}
+
+
+int 
 ipap_field::ipap_snprint_float( char * str, size_t size, 
+								ipap_value_field &in)
+{
+	cout << "field:" << get_field_type().ftype 
+		 << "- ipap_snprint_float" << "len:" 
+		 << in.get_length() << endl;
+
+	float value;
+	
+	memcpy (&value, in.get_value_byte(), sizeof(float) );
+    return snprintf( str, size, "%7f", value );
+
+}
+
+int 
+ipap_field::ipap_snprint_double( char * str, size_t size, 
 										ipap_value_field &in)
 {
-	int len = in.get_length();
-    switch ( len ) {
-      case 4:
-          return snprintf( str, size, "%f", (float)in.get_value_float32() );
-      case 8:
-          return snprintf( str, size, "%lf", (double) in.get_value_float64());
-      default:
-          break;
-    }
+	cout << "field:" << get_field_type().ftype 
+		 << "- ipap_snprint_double" << "len:" 
+		 << in.get_length() << endl;
 
-    return snprintf( str, size, "err" );
+    double value;
+    
+	memcpy (&value, in.get_value_byte(), sizeof(double) );
+    return snprintf( str, size, "%.10f", value );
+
 }
+
 
 int ipap_field::encode( ipap_value_field in, 
 							   uint8_t *out, int relay_f)
@@ -461,6 +436,9 @@ int ipap_field::encode( ipap_value_field in,
      }
      else if ( field_type.coding == IPAP_CODING_FLOAT ) {
          ipap_encode_float(in, out, relay_f);
+     }
+     else if ( field_type.coding == IPAP_CODING_DOUBLE ) {
+         ipap_encode_double(in, out, relay_f);
      }
      else if ( field_type.coding == IPAP_CODING_IPADDR ) {
          ipap_encode_bytes(in, out, relay_f);
@@ -490,6 +468,9 @@ ipap_field::decode( uint8_t *in,
         else if ( field_type.coding == IPAP_CODING_FLOAT ) {
             return ipap_decode_float(in, len, relay_f);
         }
+        else if ( field_type.coding == IPAP_CODING_DOUBLE ) {
+            return ipap_decode_double(in, len, relay_f);
+        }
         else if ( field_type.coding == IPAP_CODING_IPADDR ) {
             return ipap_decode_bytes(in, len, relay_f);
         }
@@ -516,6 +497,9 @@ int ipap_field::snprint( char * str, size_t size,
         }
         else if ( field_type.coding == IPAP_CODING_FLOAT ) {
             ipap_snprint_float(str,size,in);
+        }
+        else if ( field_type.coding == IPAP_CODING_DOUBLE ) {
+            ipap_snprint_double(str,size,in);
         }
         else if ( field_type.coding == IPAP_CODING_IPADDR ) {
             ipap_snprint_ipaddr(str,size,in);
@@ -576,8 +560,45 @@ ipap_field::get_ipap_value_field(uint64_t &_value64)
 	else
 		throw ipap_bad_argument("Value does not agree with Field Type");
 	
-	return field;
+	return field;		
+}
+
+ipap_value_field
+ipap_field::get_ipap_value_field(float &_value64)
+{ 
+	uint8_t * tmp;
+	
+	
+	if (get_field_type().coding == IPAP_CODING_FLOAT){
+		ipap_value_field field;
+		int len = sizeof(float) * sizeof(uint8_t);
+		tmp = (uint8_t *) malloc ((size_t) len);
+		memcpy (tmp, &_value64, sizeof(float) );
 		
+		field.set_value_vunit8( tmp, len); 	
+		free(tmp);
+		return field;
+	}else{
+		throw ipap_bad_argument("Value does not agree with Field Type");
+	}
+}
+
+ipap_value_field
+ipap_field::get_ipap_value_field(double dvalue)
+{ 
+	uint8_t * tmp;
+	
+	if (get_field_type().coding == IPAP_CODING_DOUBLE){
+		ipap_value_field field;
+		int len = (int) sizeof(double) * sizeof(uint8_t);
+		tmp = (uint8_t *) malloc (sizeof(double) * sizeof(uint8_t));
+		memcpy (tmp, &dvalue, sizeof(double) );		
+		field.set_value_vunit8( tmp, len);
+		free(tmp);
+		return field;		
+	} else {
+		throw ipap_bad_argument("Value does not agree with Field Type");
+	}
 }
 
 ipap_value_field
@@ -637,6 +658,17 @@ ipap_field::get_ipap_value_field(char * _valuechar, int _length)
 	return field;
 }
 
+string 
+ipap_field::writeValue(ipap_value_field &in)
+{
 
+	size_t field_len = (size_t) in.get_length() + 1;
+	char * buffer = (char *) malloc(sizeof(char) * field_len);
+	snprint(buffer, field_len, in );
+	string val_return(buffer);
+	delete buffer;
+	
+	return val_return;
+}
 
 

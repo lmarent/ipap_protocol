@@ -220,6 +220,34 @@ class ipap_field
 		*/
 		int ipap_snprint_float( char * str, size_t size, ipap_value_field &in );
 
+
+		/** Encode a field value of type double into a uint8_t array. 
+		*   verifies that the value is of type double. 
+		*  @param  in - value to enconce
+		* 		   out - array where the method put the information
+		* 		   relay_f - if 0 it must do network encoding, 
+		* 						1 just copy the information.
+		*/
+		int ipap_encode_double( ipap_value_field in, uint8_t *out, int relay_f );
+	
+		/** Decode from a uint8_t array to a field value of type double.
+		*   verifies that the value is a double type. 
+		*  @param  in - we take the value from param
+		* 		   len - how many bytes are going to be taken
+		* 		   relay_f - if 0 it must do network encoding, 
+		* 						1 just copy the information.
+		*/
+		ipap_value_field ipap_decode_double( uint8_t *in, size_t len, int relay_f );
+
+		/** Put a float field value into a char string 
+		*  @param  in - value to put
+		* 		   str - string where the method puts the information
+		* 		   size - number of characters allocated to str, so the method could no 
+		* 				  copy more size characters.
+		*/
+		int ipap_snprint_double( char * str, size_t size, ipap_value_field &in );
+
+
 		/** Encode a field value of type string into a uint8_t array. 
 		*  @param  in - value to enconce
 		* 		   out - array where the method put the information
@@ -265,6 +293,18 @@ class ipap_field
 		*/
 		ipap_value_field get_ipap_value_field(uint64_t &_value64);
 
+		/** Get the field value from a field of type int of eight characters
+		*  verifies that the field is of type int and eight characters long.
+		*  @param  _value64 - Value that is going to be assigned
+		*/
+		ipap_value_field get_ipap_value_field(float &_value64);
+
+		/** Get the field value from a field of type int of eight characters
+		*  verifies that the field is of type int and eight characters long.
+		*  @param  _value64 - Value that is going to be assigned
+		*/
+		ipap_value_field get_ipap_value_field(double dvalue);
+
 		/** Get the field value from a field of type char
 		*  verifies that the field is of type char
 		*  @param  _valuechar - Value that is going to be assigned
@@ -309,7 +349,12 @@ class ipap_field
 		* 				  copy more size characters.
 		*/
 		int snprint( char * str, size_t size, ipap_value_field &in );
-
+		
+		/** Put a fieldvalue into a string. It takes the field type from
+		 *  the field object for who is call is method.
+		*  @param  in - value to put
+		*/
+		string writeValue(ipap_value_field &in);
 };
 
 #endif // IPAP_FIELD_H
