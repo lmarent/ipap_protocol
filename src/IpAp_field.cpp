@@ -24,6 +24,10 @@
     $Id: IpAp_field.cpp 748 2015-08-27 14:49:00Z amarentes $
 */
 
+#include "stdinc.h"
+#include "stdincpp.h"
+#include <string.h>
+#include <stdint.h>
 #include "IpAp_field.h"
 
 /* 
@@ -187,10 +191,6 @@ ipap_field::ipap_decode_int( uint8_t *in, size_t len, int relay_f )
 
 int ipap_field::ipap_snprint_int( char *str, size_t size, ipap_value_field &in )
 {
-    int8_t       tmp8;
-    int16_t      tmp16;
-    int32_t      tmp32;
-    int64_t      tmp64;
 
     switch ( in.get_length() ) {
       case 1:
@@ -207,22 +207,148 @@ int ipap_field::ipap_snprint_int( char *str, size_t size, ipap_value_field &in )
     return snprintf( str, size, "err" );
 }
 
+unsigned long 
+ipap_field::parseULong(string in, unsigned long min, unsigned long max)
+{
+ 
+	char *errp = NULL;
+	unsigned long n;
+
+	
+    n = strtoul(in.c_str(), &errp, 0);
+		
+    if (in.empty() || (*errp != '\0')) {
+		throw ipap_bad_argument("String given is not a unsigned long:" 
+										+ string(errp) );
+    }
+
+    if ((n<min) && (n>max)) {
+        throw ipap_bad_argument("parseULong - out of range:");
+    }
+
+    return 	n;
+}
+
+
+long long 
+ipap_field::parseLLong(string in, long long min, long long max)
+{
+ 
+	char *errp = NULL;
+	long long n;
+
+	
+    n = strtoll(in.c_str(), &errp, 0);
+
+    if (in.empty() || (*errp != '\0')) {
+		throw ipap_bad_argument("String given is not a long long number:" 
+								+ string(errp) );
+    }
+
+    if ((n<min) && (n>max)) {
+        throw ipap_bad_argument("parseLLong - out of range:");
+    }
+
+    return 	n;
+}
+
+unsigned long long
+ipap_field::parseULLong(string in, unsigned long long min, 
+                                  unsigned long long max)
+{
+ 
+	char *errp = NULL;
+	unsigned long long n;
+
+	
+    n = strtoull(in.c_str(), &errp, 0);
+
+    if (in.empty() || (*errp != '\0')) {
+		throw ipap_bad_argument("String given is not a unsigned \
+									long long number:" + string(errp) );
+    }
+
+    if ((n<min) && (n>max)) {
+        throw ipap_bad_argument("parseULLong - out of range");
+    }
+
+    return 	n;
+}
+
+int 
+ipap_field::parseInt(string in, int min, int max)
+{
+    char *errp = NULL;
+    int n;
+
+    n = (int)strtol(in.c_str(), &errp, 0);
+
+    if (in.empty() || (*errp != '\0')) {
+        throw ipap_bad_argument("String given is not an \
+									integer number" + string(errp));
+    }
+    if ((n<min) && (n>max)) {
+        throw ipap_bad_argument("parseInt - out of range");
+    }
+
+    return n;
+}
+
+float 
+ipap_field::parseFloat(string in, float min, float max)
+{
+    char *errp = NULL;
+    float n;
+
+    n = strtof(in.c_str(), &errp);
+
+    if (in.empty() || (*errp != '\0')) {
+        throw ipap_bad_argument("String given is not an \
+								   float number" + string(errp));
+    }
+    if ((n<min) && (n>max)) {
+        throw ipap_bad_argument("parseFloat - out of range");
+    }
+
+    return n;
+}
+
+double 
+ipap_field::parseDouble(string in, double min, double max)
+{
+    char *errp = NULL;
+    double n;
+
+    n = strtod(in.c_str(), &errp);
+
+    if (in.empty() || (*errp != '\0')) {
+        throw ipap_bad_argument("String given is not a \
+									double number" + string(errp));
+    }
+    if ((n<min) && (n>max)) {
+        throw Error("parseDouble - out of range");
+    }
+
+    return n;
+}
+
 int ipap_field::ipap_snprint_uint( char *str, size_t size, ipap_value_field &in )
 {
-    uint8_t       tmp8;
-    uint16_t      tmp16;
-    uint32_t      tmp32;
-    uint64_t      tmp64;
 
+    
     switch ( in.get_length() ) {
       case 1:
           return snprintf( str, size, "%u", in.get_value_int8() );
+          break;
       case 2:
           return snprintf( str, size, "%u", in.get_value_int16() );
+		  break;
       case 4:
           return snprintf( str, size, "%u", (unsigned int)in.get_value_int32());
+          break;
       case 8:
           return snprintf( str, size, "%llu", (long long unsigned int)in.get_value_int64() );
+          break;
       default:
 		  break;
     }
@@ -319,9 +445,9 @@ ipap_field::ipap_snprint_ipaddr( char * str, size_t size,
     
     switch ( len ) {
       case 4:
-          snprintf( str, size, "%u.%u.%u.%u",
+          return snprintf( str, size, "%u.%u.%u.%u",
                            in[0], in[1], in[2], in[3] );
-          return 1;
+          
       case 16:
       {
           /** change this!
@@ -395,9 +521,6 @@ int
 ipap_field::ipap_snprint_float( char * str, size_t size, 
 								ipap_value_field &in)
 {
-	cout << "field:" << get_field_type().ftype 
-		 << "- ipap_snprint_float" << "len:" 
-		 << in.get_length() << endl;
 
 	float value;
 	
@@ -410,9 +533,6 @@ int
 ipap_field::ipap_snprint_double( char * str, size_t size, 
 										ipap_value_field &in)
 {
-	cout << "field:" << get_field_type().ftype 
-		 << "- ipap_snprint_double" << "len:" 
-		 << in.get_length() << endl;
 
     double value;
     
@@ -483,34 +603,73 @@ ipap_field::decode( uint8_t *in,
 
 }
 
+// 
+// This function calculates the number of characters required to 
+// print a ipap_value_field.
+//
+int ipap_field::nCharacters( ipap_value_field &in )
+{
+	char sbuf[4];
+	int ndigits = 0;
+	
+	if ( field_type.coding == IPAP_CODING_INT ) {
+       ndigits = ipap_snprint_int(sbuf,1,in);
+    }
+    else if ( field_type.coding == IPAP_CODING_UINT ) {
+       ndigits = ipap_snprint_uint(sbuf,1,in);
+    }
+    else if ( field_type.coding == IPAP_CODING_NTP ) {
+       ndigits = ipap_snprint_uint(sbuf,1,in);
+    }
+    else if ( field_type.coding == IPAP_CODING_FLOAT ) {
+       ndigits = ipap_snprint_float(sbuf,1,in);
+    }
+    else if ( field_type.coding == IPAP_CODING_DOUBLE ) {
+       ndigits = ipap_snprint_double(sbuf,1,in);
+    }
+    else if ( field_type.coding == IPAP_CODING_IPADDR ) {
+       ndigits = ipap_snprint_ipaddr(sbuf,1,in);
+    }
+    else if ( field_type.coding == IPAP_CODING_STRING ) {
+       ndigits = ipap_snprint_string(sbuf,1,in);
+    }
+    else {
+       ndigits = (in.get_length() + 1 ) * 2;
+    }
+    
+    if (string(sbuf).compare("err") == 0){
+		throw ipap_bad_argument("Error trying to print ipap value field");
+	}
+    return ndigits;
+}
+
 int ipap_field::snprint( char * str, size_t size, 
 								ipap_value_field &in)
-{
-	    if ( field_type.coding == IPAP_CODING_INT ) {
-            ipap_snprint_int(str,size,in);
-        }
-        else if ( field_type.coding == IPAP_CODING_UINT ) {
-            ipap_snprint_uint(str,size,in);
-        }
-        else if ( field_type.coding == IPAP_CODING_NTP ) {
-            ipap_snprint_uint(str,size,in);
-        }
-        else if ( field_type.coding == IPAP_CODING_FLOAT ) {
-            ipap_snprint_float(str,size,in);
-        }
-        else if ( field_type.coding == IPAP_CODING_DOUBLE ) {
-            ipap_snprint_double(str,size,in);
-        }
-        else if ( field_type.coding == IPAP_CODING_IPADDR ) {
-            ipap_snprint_ipaddr(str,size,in);
-        }
-        else if ( field_type.coding == IPAP_CODING_STRING ) {
-            ipap_snprint_string(str,size,in);
-        }
-        else {
-            ipap_snprint_bytes(str,size,in);
-        }
-
+{	
+	if ( field_type.coding == IPAP_CODING_INT ) {
+        ipap_snprint_int(str,size,in);
+    }
+    else if ( field_type.coding == IPAP_CODING_UINT ) {
+        ipap_snprint_uint(str,size,in);
+    }
+    else if ( field_type.coding == IPAP_CODING_NTP ) {
+        ipap_snprint_uint(str,size,in);
+    }
+    else if ( field_type.coding == IPAP_CODING_FLOAT ) {
+        ipap_snprint_float(str,size,in);
+    }
+    else if ( field_type.coding == IPAP_CODING_DOUBLE ) {
+        ipap_snprint_double(str,size,in);
+    }
+    else if ( field_type.coding == IPAP_CODING_IPADDR ) {
+        ipap_snprint_ipaddr(str,size,in);
+    }
+    else if ( field_type.coding == IPAP_CODING_STRING ) {
+        ipap_snprint_string(str,size,in);
+    }
+    else {
+        ipap_snprint_bytes(str,size,in);
+    }
 }
 
 	
@@ -564,19 +723,12 @@ ipap_field::get_ipap_value_field(uint64_t &_value64)
 }
 
 ipap_value_field
-ipap_field::get_ipap_value_field(float &_value64)
+ipap_field::get_ipap_value_field(float &_fvalue)
 { 
-	uint8_t * tmp;
-	
-	
+		
 	if (get_field_type().coding == IPAP_CODING_FLOAT){
 		ipap_value_field field;
-		int len = sizeof(float) * sizeof(uint8_t);
-		tmp = (uint8_t *) malloc ((size_t) len);
-		memcpy (tmp, &_value64, sizeof(float) );
-		
-		field.set_value_vunit8( tmp, len); 	
-		free(tmp);
+		field.set_value_float32(_fvalue); 
 		return field;
 	}else{
 		throw ipap_bad_argument("Value does not agree with Field Type");
@@ -585,16 +737,10 @@ ipap_field::get_ipap_value_field(float &_value64)
 
 ipap_value_field
 ipap_field::get_ipap_value_field(double dvalue)
-{ 
-	uint8_t * tmp;
-	
+{ 	
 	if (get_field_type().coding == IPAP_CODING_DOUBLE){
 		ipap_value_field field;
-		int len = (int) sizeof(double) * sizeof(uint8_t);
-		tmp = (uint8_t *) malloc (sizeof(double) * sizeof(uint8_t));
-		memcpy (tmp, &dvalue, sizeof(double) );		
-		field.set_value_vunit8( tmp, len);
-		free(tmp);
+		field.set_value_float64(dvalue); 
 		return field;		
 	} else {
 		throw ipap_bad_argument("Value does not agree with Field Type");
@@ -663,12 +809,296 @@ ipap_field::writeValue(ipap_value_field &in)
 {
 
 	size_t field_len = (size_t) in.get_length() + 1;
-	char * buffer = (char *) malloc(sizeof(char) * field_len);
-	snprint(buffer, field_len, in );
+	int char_size;
+	
+	// The pointer to char * can require a number of characters depending 
+	// on the type of encoding, so it is required to verify how many 
+	// are required and then it can be written.
+	 
+	char_size = nCharacters( in ) + 1;	
+		
+	char * buffer = (char *) malloc(sizeof(char) * char_size);
+	snprint(buffer, char_size, in );
 	string val_return(buffer);
+	
+	
 	delete buffer;
 	
 	return val_return;
 }
 
+ipap_value_field
+ipap_field::parseINT(string in)
+{
+	unsigned long nul;
+	long long unsigned int nllui;
+	ipap_value_field val_return;
+	
+	uint8_t val8;
+	uint16_t val16;
+	uint32_t val32;
+	uint64_t val64;
+	
+	
+	switch (get_field_type().length)
+	{
+      case 1:          
+		nul = parseULong(in, INT8_MIN, INT8_MAX);
+		val8 = nul;
+		val_return.set_value_int8(val8);
+		break;
+      case 2:
+		nul = parseULong(in, INT16_MIN, INT16_MAX);
+		val16 = nul;
+		val_return.set_value_int16(val16);
+		break;
+      case 4:
+        nul = parseULong(in, INT32_MIN, INT32_MAX);  
+        val32 = nul;
+        val_return.set_value_int32(val32);
+        break;
+      case 8:
+        nllui = parseULLong(in, INT64_MIN, INT64_MAX);
+        val64 = nllui;
+        val_return.set_value_int64(val64);
+        break;
+      default:
+		  break;
+	}
+	
+	return val_return;
+}
 
+ipap_value_field
+ipap_field::parseUINT(string in)
+{
+	unsigned long nul;
+	long long unsigned int nllui;
+	uint8_t val8;
+	uint16_t val16;
+	uint32_t val32;
+	uint64_t val64;
+		
+	ipap_value_field val_return;
+	switch (get_field_type().length)
+	{
+      case 1:          
+		nul = parseULong(in, 0, UINT8_MAX);
+		val8 = nul;
+		val_return.set_value_int8(val8);
+		break;
+      case 2:
+		nul = parseULong(in, 0, UINT16_MAX);
+		val16 = nul;
+		val_return.set_value_int16(val16);
+		break;
+      case 4:
+        nul = parseULong(in, 0, UINT32_MAX);  
+        val32 = nul;
+        val_return.set_value_int32(val32);
+        break;
+      case 8:
+        nllui = parseULLong(in,0, UINT64_MAX);
+        val64 = nllui;
+        val_return.set_value_int64(val64);
+        break;
+      default:
+		  break;
+	}	
+	return val_return;
+}
+
+ipap_value_field
+ipap_field::parseFLOAT(string in)
+{
+	ipap_value_field val_return;
+	float value = parseFloat(in, MINFLOAT, MAXFLOAT);
+	val_return.set_value_float32(value);
+	return val_return;
+}
+
+ipap_value_field
+ipap_field::parseDOUBLE(string in)
+{
+	ipap_value_field val_return;
+	double value = parseDouble(in, MINDOUBLE, MAXDOUBLE);
+	val_return.set_value_float64(value);
+	return val_return;
+}
+
+int 
+ipap_field::isNumericIPv4(string s)
+{
+    return (s.find_first_not_of("0123456789.", 0) >= s.length());  
+}
+
+ipap_value_field
+ipap_field::parseIP4ADDR(string in)
+{
+	ipap_value_field val_return;
+	int error;
+	
+	if (isNumericIPv4(in)){
+	
+		struct addrinfo *result=NULL;
+		struct in_addr sin;
+			
+		error = getaddrinfo(in.c_str(), NULL, NULL, &result);
+
+		if (error != 0){
+			throw ipap_bad_argument("invalid IPV4 address");
+		}
+		
+		sin = ((struct sockaddr_in *) result->ai_addr)->sin_addr;
+		
+		uint8_t *ip = (uint8_t *) &sin.s_addr;
+		
+		val_return.set_value_vunit8(ip, 4);
+		
+		freeaddrinfo(result);
+		
+		return val_return;
+	} else {
+		throw ipap_bad_argument("invalid IPV4 address");
+	}
+}
+
+int ipap_field::isNumericIPv6(string s)
+{
+    return (s.find_first_not_of("0123456789abcdefABCDEF:.", 0) >= s.length());
+}
+
+ipap_value_field
+ipap_field::parseIP6ADDR(string in)
+{
+	ipap_value_field val_return;
+	int error;
+	
+	if (isNumericIPv6(in)){
+	
+		struct addrinfo *result=NULL;
+		struct in6_addr  sin;
+			
+		error = getaddrinfo(in.c_str(), NULL, NULL, &result);
+
+		if (error != 0){
+			throw ipap_bad_argument("invalid IPV6 address");
+		}
+		
+		sin = ((struct sockaddr_in6 *) result->ai_addr)->sin6_addr;
+		
+		uint8_t *ip = (uint8_t *) &sin.s6_addr;
+		
+		val_return.set_value_vunit8(ip, 16);
+		
+		freeaddrinfo(result);
+		
+		return val_return;
+	} else {
+		throw ipap_bad_argument("invalid IPV6 address");
+	}
+}
+
+ipap_value_field
+ipap_field::parseIPAddr(string in)
+{
+
+	switch (get_field_type().length)
+	{
+		case 4:
+			return parseIP4ADDR(in);
+			break;
+		
+		case 16:
+			return parseIP6ADDR(in);
+			break;
+		
+		default:
+			throw ipap_bad_argument("The field is not a valid address");
+			break;
+	}
+
+}
+
+ipap_value_field
+ipap_field::parseString(string in)
+{
+	ipap_value_field val_return;
+
+	char * cstr = new char [in.length()+1];
+	strcpy (cstr, in.c_str());
+	
+	val_return.set_value_vchar(cstr, in.length());
+	delete[] cstr;
+	
+	return val_return;
+}
+
+ipap_value_field
+ipap_field::parseBytes(string in)
+{
+	ipap_value_field val_return;
+
+	char * cstr = new char [in.length() + 1];
+	strcpy (cstr, in.c_str());
+
+    int size = (in.length() / 2 ) - 1;
+    uint8_t * data = (uint8_t *) malloc(sizeof(uint8_t) * size);
+
+    char *iter = cstr;
+    iter+=2; // First character that was introduced for formating.
+    for(int count = 0; count < sizeof(data)/sizeof(data[0]); count++) {
+        sscanf(iter, "%2hhx", &data[count]);
+        iter += 2 * sizeof(uint8_t);
+    }
+		
+	val_return.set_value_vunit8(data, size);
+	free(data);
+	delete[] cstr;
+	
+	return val_return;
+}
+
+
+ipap_value_field 
+ipap_field::parse(string in )
+{
+	switch (field_type.coding)
+	{ 
+		
+		case IPAP_CODING_INT:  
+			return parseINT(in);
+			break;
+    
+        case IPAP_CODING_UINT: 
+            return parseUINT(in);
+            break;
+            
+        case IPAP_CODING_NTP: 
+            return parseINT(in);
+            break;
+        
+        case IPAP_CODING_FLOAT:
+            return parseFLOAT(in);
+            break;
+            
+        case IPAP_CODING_DOUBLE:
+            return parseDOUBLE(in);
+            break;
+        
+        case IPAP_CODING_IPADDR:
+            return parseIPAddr(in);
+            break;
+        
+        case IPAP_CODING_STRING:
+            return parseString(in);
+            break;
+        
+        case IPAP_CODING_BYTES:
+            return parseBytes(in);
+			break;
+		default:
+			throw ipap_bad_argument("The field type is invalid");
+			break;
+	}
+}

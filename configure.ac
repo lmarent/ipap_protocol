@@ -38,6 +38,7 @@ AC_HEADER_STDBOOL
 # os check
 #
 
+
 AC_LANG(C++)
 
 AC_ARG_ENABLE(debug,
@@ -51,6 +52,11 @@ AM_CONDITIONAL(ENABLE_DEBUG, test x$debug = xtrue)
 if test $debug = true ; then
   AC_DEFINE(ENABLE_DEBUG, 1, [enable debug build])
 fi
+
+# check for headers
+
+AC_CHECK_HEADERS([float.h types.h limits.h stdlib.h string.h sys/time.h unistd.h float.h])
+
 
 # Additional arguments (and substitutions)
 # Allow the pkg-config directory to be set

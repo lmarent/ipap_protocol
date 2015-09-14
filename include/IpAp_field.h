@@ -27,6 +27,7 @@
 #ifndef IPAP_FIELD_H
 #define IPAP_FIELD_H
 
+#include "stdinc.h"
 #include "stdincpp.h"
 #include "IpAp_def.h"
 #include "IpAp_value_field.h"
@@ -174,7 +175,11 @@ class ipap_field
 		*  @param  in - value to put
 		* 		   str - string where the method puts the information
 		* 		   size - number of characters allocated to str, so the method could no 
-		* 				  copy more size characters.
+		* 				  copy more size characters. 
+		*  This method is printing in hexaheximal format; therefore, 
+		*   every byte requires two characters to be printed. Additionally the 
+		*   method introduces two characters at the beginning "0x", so the user
+		*   must to allocate as the size of the string at least 2*len + 2 characters.
 		*/
 		int ipap_snprint_bytes( char * str, size_t size, ipap_value_field &in_field );
 
@@ -182,7 +187,7 @@ class ipap_field
 		*  @param  in - value to put
 		* 		   str - string where the method puts the information
 		* 		   size - number of characters allocated to str, so the method could no 
-		* 				  copy more size characters.
+		* 				  copy more size characters. Only one 
 		*/
 		int ipap_snprint_string( char * str, size_t size, ipap_value_field &in_field );
 
@@ -349,12 +354,102 @@ class ipap_field
 		* 				  copy more size characters.
 		*/
 		int snprint( char * str, size_t size, ipap_value_field &in );
+
+		unsigned long parseULong(string in, unsigned long min=0, 
+										unsigned long max=ULONG_MAX);
+		
+		long long parseLLong(string in, long long min=LLONG_MIN, 
+											long long max=LLONG_MAX);
+		
+		unsigned long long parseULLong(string in, unsigned long long min=0, 
+                                          unsigned long long max=ULLONG_MAX);
+
+		int parseInt(string in, int min, int max);
+		
+		float parseFloat(string in, float min, float max);
+		
+		double parseDouble(string in, double min, double max);
+
+		/** Figure out the number of characters required. 
+		*  @param  in - value to put into string.
+		*/
+		int nCharacters( ipap_value_field &in );
 		
 		/** Put a fieldvalue into a string. It takes the field type from
 		 *  the field object for who is call is method.
 		*  @param  in - value to put
 		*/
 		string writeValue(ipap_value_field &in);
+
+		/** 
+		*  Get a fieldvalue of type int from another string. 
+		*  @param  in - value represented in string.
+		*/
+		ipap_value_field parseINT(string in);
+
+		/** 
+		*  Get a fieldvalue of type unsigned int from another string. 
+		*  @param  in - value represented in string.
+		*/
+		ipap_value_field parseUINT(string in);
+
+		/** 
+		*  Get a fieldvalue of type float from another string. 
+		*  @param  in - value represented in string.
+		*/
+		ipap_value_field parseFLOAT(string in);
+
+		/** 
+		*  Get a fieldvalue of type double from another string. 
+		*  @param  in - value represented in string.
+		*/
+		ipap_value_field parseDOUBLE(string in);
+
+		int isNumericIPv4(string s);
+
+		/** 
+		*  Get a fieldvalue of type parseIP4ADDR from another string. 
+		*  @param  in - value represented in string.
+		*/
+		ipap_value_field parseIP4ADDR(string in);
+		
+		int isNumericIPv6(string s);
+		
+		/** 
+		*  Get a fieldvalue of type parseIP6ADDR from another string. 
+		*  @param  in - value represented in string.
+		*/
+		ipap_value_field parseIP6ADDR(string in);
+
+		/** 
+		*  Get a fieldvalue of type IP6Addr from another string. 
+		*  @param  in - value represented in string.
+		*/
+		ipap_value_field parseIP6Addr(string in);
+
+		/** 
+		*  Get a fieldvalue of type IPAddr from another string. 
+		*  @param  in - value represented in string.
+		*/
+		ipap_value_field parseIPAddr(string in);
+		
+		/** 
+		*  Get a fieldvalue of type string from another string. 
+		*  @param  in - value represented in string.
+		*/
+		ipap_value_field parseString(string in);
+		
+		/** 
+		*  Get a fieldvalue of type bytes from string. 
+		*  @param  in - value represented in string.
+		*/
+		ipap_value_field parseBytes(string in);
+		
+		/** Create a new ipap value field from the data in the string. 
+		 *  It takes the field type from the field object.
+		*  @param  in - value in string.
+		*/
+		ipap_value_field parse(string in );
 };
 
 #endif // IPAP_FIELD_H

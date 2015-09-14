@@ -39,10 +39,36 @@ ipap_value_field::~ipap_value_field()
 void
 ipap_value_field::set_value_vunit8(uint8_t * _valuebyte, int _length)
 {
+	
 	valuebyte = (uint8_t*) malloc(sizeof(uint8_t) * _length);
 	memcpy ( valuebyte, _valuebyte, _length );
 	length = _length;
 }
+
+void 
+ipap_value_field::set_value_float32(float &_value)
+{
+	uint8_t * tmp;	
+	int len = sizeof(float) * sizeof(uint8_t);
+	tmp = (uint8_t *) malloc ((size_t) len);
+	memcpy (tmp, &_value, sizeof(float) );
+		
+	set_value_vunit8( tmp, len); 	
+	free(tmp);
+
+}
+
+void 
+ipap_value_field::set_value_float64(double &_value)
+{
+	uint8_t * tmp;
+	int len = (int) sizeof(double) * sizeof(uint8_t);
+	tmp = (uint8_t *) malloc (sizeof(double) * sizeof(uint8_t));
+	memcpy (tmp, &_value, sizeof(double) );		
+	set_value_vunit8( tmp, len);
+	free(tmp);
+}
+
 
 void
 ipap_value_field::set_value_vchar(char * _valuechar, int _length)

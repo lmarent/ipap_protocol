@@ -208,9 +208,8 @@ void IpAp_Field_Test::testFieldValues()
 	charprint2 = (char *) calloc (100, sizeof(char) );
 	int relay_f;
 	ipap_field tmpField;
-	
-	
-	// Int 1
+		
+	// UInt 1
 	tmpField = field_container.get_field( 0, IPAP_FT_SOURCEIPV6PREFIXLENGTH );
 	ipap_value_field fvalue1 = tmpField.get_ipap_value_field(value8);
 	
@@ -228,6 +227,11 @@ void IpAp_Field_Test::testFieldValues()
 	tmpField.ipap_snprint_int( charprint, 100, fvalue1bResult );
 	std::string str(charprint, charprint + fvalue1bResult.get_length());
 	CPPUNIT_ASSERT( str.compare("8")  == 0 );
+	
+	// Test write to and read from string
+	string tmpFieldStr = tmpField.writeValue(fvalue1bResult);
+	ipap_value_field fvalue1cResult = tmpField.parse(tmpFieldStr);
+	CPPUNIT_ASSERT( (uint8_t) 8 == fvalue1cResult.get_value_int8() );
 
 	// Int 4
 	tmpField = field_container.get_field( 0, IPAP_FT_AUCTIONINGTIMESECONDS );
@@ -249,6 +253,11 @@ void IpAp_Field_Test::testFieldValues()
 	ipap_value_field fvalue3bResult = tmpField.ipap_decode_int( out, fvalue3.get_length(), relay_f );	
 	CPPUNIT_ASSERT( (uint32_t) 3210 == fvalue3bResult.get_value_int32() );
 
+	// Test write to and read from string
+	tmpFieldStr = tmpField.writeValue(fvalue3aResult);
+	ipap_value_field fvalue3cResult = tmpField.parse(tmpFieldStr);
+	CPPUNIT_ASSERT( (uint32_t) 3210 == fvalue3cResult.get_value_int32() );
+
     //Address 4
 	tmpField = field_container.get_field( 0, IPAP_FT_SOURCEIPV4ADDRESS );
 	ipap_value_field fvalue4 = tmpField.get_ipap_value_field((uint8_t *) valuebyte0, 4);
@@ -259,8 +268,8 @@ void IpAp_Field_Test::testFieldValues()
 	
 	// Test without encoding
 	relay_f = 1;
-	tmpField.ipap_encode_int( fvalue4, out, relay_f );
-	ipap_value_field fvalue4aResult = tmpField.ipap_decode_int( out, fvalue4.get_length(), relay_f );	
+	tmpField.ipap_encode_bytes( fvalue4, out, relay_f );
+	ipap_value_field fvalue4aResult = tmpField.ipap_decode_bytes( out, fvalue4.get_length(), relay_f );	
 	uint8_t * valuebyte4a = fvalue4.get_value_address();
 	for (int i=0; i < 4; i++)
 		if (valuebyte0[i] != valuebyte4a[i]) equal = false;
@@ -273,6 +282,15 @@ void IpAp_Field_Test::testFieldValues()
 	uint8_t * valuebyte4b = fvalue4.get_value_address();
 	for (int i=0; i < 4; i++)
 		if (valuebyte0[i] != valuebyte4b[i]) equal = false;
+	CPPUNIT_ASSERT( true == equal );
+
+	// Test write to and read from string
+	tmpFieldStr = tmpField.writeValue(fvalue4aResult);
+		
+	ipap_value_field fvalue4cResult = tmpField.parse(tmpFieldStr);
+	valuebyte4a = fvalue4cResult.get_value_address();
+	for (int i=0; i < 4; i++)
+		if (valuebyte0[i] != valuebyte4a[i]) equal = false;
 	CPPUNIT_ASSERT( true == equal );
 	  
 	// Int 8 
@@ -299,8 +317,12 @@ void IpAp_Field_Test::testFieldValues()
 	tmpField.ipap_encode_int( fvalue5, out, relay_f );
 	ipap_value_field fvalue5bResult = tmpField.ipap_decode_int( out, fvalue5.get_length(), relay_f );	
 	CPPUNIT_ASSERT( (uint64_t) 87654321 == fvalue5bResult.get_value_int64() );
-	
 
+	// Test write to and read from string
+	tmpFieldStr = tmpField.writeValue(fvalue5aResult);
+	ipap_value_field fvalue5cResult = tmpField.parse(tmpFieldStr);
+	CPPUNIT_ASSERT( (uint64_t) 87654321 == fvalue5cResult.get_value_int64() );
+		
 	// Address 16
 	tmpField = field_container.get_field( 0, IPAP_FT_SOURCEIPV6ADDRESS );
 	ipap_value_field fvalue6 = tmpField.get_ipap_value_field((uint8_t *) valuebyte3, 16);
@@ -308,6 +330,12 @@ void IpAp_Field_Test::testFieldValues()
 	for (int i=0; i < 16; i++)
 		if (valuebyte6[i] != valuebyte3[i]) equal = false;
 	CPPUNIT_ASSERT( true == equal );	
+
+	// Verifies string conversion of IPV6
+	
+	string ipv6String = tmpField.writeValue(fvalue6);
+	ipap_value_field fvalueIPv6 = tmpField.parse(ipv6String);
+	ipv6String = tmpField.writeValue(fvalueIPv6);
 
 	// Test without encoding
 	relay_f = 1;
@@ -323,6 +351,14 @@ void IpAp_Field_Test::testFieldValues()
 	tmpField.ipap_encode_bytes( fvalue6, out, relay_f );
 	ipap_value_field fvalue6bResult = tmpField.ipap_decode_bytes( out, fvalue6.get_length(), relay_f );	
 	uint8_t * valuebyte6b = fvalue6bResult.get_value_address();
+	for (int i=0; i < 16; i++)
+		if (valuebyte6b[i] != valuebyte3[i]) equal = false;
+	CPPUNIT_ASSERT( true == equal );
+
+	// Test write to and read from string
+	tmpFieldStr = tmpField.writeValue(fvalue6aResult);
+	ipap_value_field fvalue6cResult = tmpField.parse(tmpFieldStr);
+	valuebyte6b = fvalue6cResult.get_value_address();
 	for (int i=0; i < 16; i++)
 		if (valuebyte6b[i] != valuebyte3[i]) equal = false;
 	CPPUNIT_ASSERT( true == equal );
@@ -354,6 +390,14 @@ void IpAp_Field_Test::testFieldValues()
 		if (valuebyte7b[i] != valuebyte3[i]) equal = false;
 	CPPUNIT_ASSERT( true == equal );
 
+	// Test write to and read from string
+	tmpFieldStr = tmpField.writeValue(fvalue7bResult);
+	ipap_value_field fvalue7cResult = tmpField.parse(tmpFieldStr);
+	valuebyte7b = fvalue7cResult.get_value_byte();
+	for (int i=0; i < 6; i++)
+		if (valuebyte7b[i] != valuebyte3[i]) equal = false;
+	CPPUNIT_ASSERT( true == equal );
+
 	// Bytes - variable length
 	tmpField = field_container.get_field( 0, IPAP_FT_IPHEADERPACKETSECTION );
 	ipap_value_field fvalue8 = tmpField.get_ipap_value_field((uint8_t *) valuebyte2, 14);
@@ -381,34 +425,39 @@ void IpAp_Field_Test::testFieldValues()
 		if (valuebyte8b[i] != valuebyte2[i]) equal = false;
 	CPPUNIT_ASSERT( true == equal );
 
-	cout << "We are here" << endl;
+	// Test write to and read from string
+	tmpFieldStr = tmpField.writeValue(fvalue8bResult);
+	ipap_value_field fvalue8cResult = tmpField.parse(tmpFieldStr);
+	valuebyte8b = fvalue8cResult.get_value_byte();
+	for (int i=0; i < 14; i++)
+		if (valuebyte8b[i] != valuebyte2[i]) equal = false;
+	CPPUNIT_ASSERT( true == equal );
 	
 	// Double 8
 	tmpField = field_container.get_field( 0, IPAP_FT_UNITBUDGET );
-	cout << "We are here 0a - Coding" << tmpField.get_field_type().coding << endl;
 	ipap_value_field fvalue9 = tmpField.get_ipap_value_field(valdouble);
-	cout << "We are here 0b" << endl;
 	double double1 = fvalue9.get_value_double();
-	cout << "We are here 0c:" << double1 << "val2:" << valdouble << endl;
 	CPPUNIT_ASSERT( double1 == valdouble );
 
-	cout << "We are here 2" << endl;
 	
 	// Test without encoding
 	relay_f = 1;
 	tmpField.ipap_encode_double( fvalue9, out, relay_f );
 	ipap_value_field fvalue9aResult = tmpField.ipap_decode_double( out, fvalue9.get_length(), relay_f );	
 	CPPUNIT_ASSERT( valdouble == fvalue9aResult.get_value_double() );
-	
-	cout << "We are here 3" << endl;
-	
+		
 	// Test with encoding
 	relay_f = 0;
 	tmpField.ipap_encode_double( fvalue9, out, relay_f );
 	ipap_value_field fvalue9bResult = tmpField.ipap_decode_double( out, fvalue9.get_length(), relay_f );	
 	CPPUNIT_ASSERT(  valdouble == fvalue9bResult.get_value_double() );
+
+	// Test write to and read from string
+	tmpFieldStr = tmpField.writeValue(fvalue9aResult);
+	ipap_value_field fvalue9cResult = tmpField.parse(tmpFieldStr);
+	CPPUNIT_ASSERT(  valdouble == fvalue9cResult.get_value_double() );
+
 	
-	cout << "We are here 4" << endl;
 }
 
 void IpAp_Field_Test::testExceptionInt1()

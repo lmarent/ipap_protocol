@@ -115,13 +115,13 @@ public:
 	 * Set the value as four byte long - float
 	 * @param _value - value to copy.
 	 */
-	inline void set_value_float32(uint32_t &_value){value32 =_value; length = 4;}
+	void set_value_float32(float &_value);
 
 	/** 
 	 * Set the value as eight byte long - float
 	 * @param _value - value to copy.
 	 */
-	inline void set_value_float64(uint64_t &_value){value64 =_value; length = 8;}
+	void set_value_float64(double &_value);
 
 	/** 
 	 * Set the value as a variable string of type unit8. 
