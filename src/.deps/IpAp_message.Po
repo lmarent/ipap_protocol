@@ -63,8 +63,8 @@
  /usr/include/x86_64-linux-gnu/bits/uio.h \
  /usr/include/x86_64-linux-gnu/bits/stat.h \
  /usr/include/x86_64-linux-gnu/bits/fcntl2.h /usr/include/assert.h \
- /usr/include/ctype.h /usr/include/dlfcn.h \
- /usr/include/x86_64-linux-gnu/bits/dlfcn.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.8/include/float.h /usr/include/ctype.h \
+ /usr/include/dlfcn.h /usr/include/x86_64-linux-gnu/bits/dlfcn.h \
  /usr/include/x86_64-linux-gnu/sys/socket.h \
  /usr/include/x86_64-linux-gnu/sys/uio.h \
  /usr/include/x86_64-linux-gnu/bits/socket.h \
@@ -200,7 +200,7 @@
  ../include/IpAp_value_field.h ../include/IpAp_exception.h \
  ../include/Error.h ../include/IpAp_template_container.h \
  ../include/IpAp_field.h ../include/IpAp_message.h ../include/Logger.h \
- ../include/Constants.h ../include/IpAp_field_container.h \
+ ../include/ConstantsIpAp.h ../include/IpAp_field_container.h \
  ../include/IpAp_data_record.h ../include/IpAp_field_key.h \
  ../include/IpAp_t.h ../include/IpAp_data_record.h \
  ../include/IpAp_exception.h
@@ -380,6 +380,8 @@
 /usr/include/x86_64-linux-gnu/bits/fcntl2.h:
 
 /usr/include/assert.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/4.8/include/float.h:
 
 /usr/include/ctype.h:
 
@@ -761,7 +763,7 @@
 
 ../include/Logger.h:
 
-../include/Constants.h:
+../include/ConstantsIpAp.h:
 
 ../include/IpAp_field_container.h:
 

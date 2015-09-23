@@ -39,7 +39,7 @@
 #define IPAP_CODING_DOUBLE 8
 
 #define REV_PEN 29305
-#define TOT_FIELD_COUNT    33
+#define TOT_FIELD_COUNT    40
 
 typedef int (*ipap_encode_func) (void *, void*, size_t);
 typedef int (*ipap_decode_func) (void *, void*, size_t);
@@ -99,6 +99,14 @@ typedef struct
 #define IPAP_FT_AUCTIONINGALGORITHMNAME       	31
 #define IPAP_FT_IDRECORD				       	32
 #define IPAP_FT_QUANTITY				       	33
+#define IPAP_FT_INTERVALSECONDS					34
+#define IPAP_FT_INTERVALMILLISECONDS			35
+#define IPAP_FT_INTERVALMICROSECONDS			36
+#define IPAP_FT_INTERVALNANOSECONDS				37
+#define IPAP_FT_POSTOCTETTOTALCOUNT             38
+#define IPAP_FT_RESERVEPRICE			        39
+
+
 
 
 /* column name definitions
@@ -137,6 +145,12 @@ typedef struct
 #define IPAP_CN_AUCTIONINGALGORITHMNAME       	"ie0_31"
 #define IPAP_CN_IDRECORD				       	"ie0_32"
 #define IPAP_CN_QUANTITY				       	"ie0_33"
+#define IPAP_CN_INTERVALSECONDS					"ie0_34"
+#define IPAP_CN_INTERVALMILLISECONDS			"ie0_35"
+#define IPAP_CN_INTERVALMICROSECONDS			"ie0_36"
+#define IPAP_CN_INTERVALNANOSECONDS				"ie0_37"
+#define IPAP_CN_POSTOCTETTOTALCOUNT             "ie0_38"
+#define IPAP_CN_RESERVEPRICE			        "ie0_39"
  
  
  

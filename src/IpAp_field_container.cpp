@@ -125,9 +125,9 @@ void ipap_field_container::initialize_forward(void)
      "idBid", "IdBid", "" );
    AddFieldType( 0, IPAP_FT_IDALLOCATION, 128, IPAP_CODING_STRING, 
      "idAllocation", "IdAllocation", "" );
-   AddFieldType( 0, IPAP_FT_STARTSECONDS, 4, IPAP_CODING_UINT, 
+   AddFieldType( 0, IPAP_FT_STARTSECONDS, 8, IPAP_CODING_UINT, 
      "startSeconds", "StartSeconds", "" ),      
-   AddFieldType( 0, IPAP_FT_ENDSECONDS, 4, IPAP_CODING_UINT, 
+   AddFieldType( 0, IPAP_FT_ENDSECONDS, 8, IPAP_CODING_UINT, 
      "endSeconds", "EndSeconds", "" ),      
    AddFieldType( 0, IPAP_FT_STARTMILLISECONDS, 8, IPAP_CODING_UINT, 
      "startMilliSeconds", "StartMilliSeconds", "" ),      
@@ -139,6 +139,18 @@ void ipap_field_container::initialize_forward(void)
      "idRecord", "IdRecord", "" ),
    AddFieldType( 0, IPAP_FT_QUANTITY, 4, IPAP_CODING_FLOAT, 
      "quantity", "Quantity", "" ),
+   AddFieldType( 0, IPAP_FT_INTERVALSECONDS, 8, IPAP_CODING_UINT, 
+     "intervalSeconds", "IntervalsSeconds", "" ),
+   AddFieldType( 0, IPAP_FT_INTERVALMILLISECONDS, 8, IPAP_CODING_UINT, 
+     "intervalMilliSeconds", "IntervalsMilliSeconds", "" ),
+   AddFieldType( 0, IPAP_FT_INTERVALMICROSECONDS, 8, IPAP_CODING_NTP, 
+     "intervalMicroSeconds", "IntervalsMicroSeconds", "" ),
+   AddFieldType( 0, IPAP_FT_INTERVALNANOSECONDS, 8, IPAP_CODING_NTP, 
+     "intervalNanoSeconds", "IntervalsNanoSeconds", "" ),
+   AddFieldType( 0, IPAP_FT_POSTOCTETTOTALCOUNT, 8, IPAP_CODING_FLOAT, 
+     "postOctetTotalCount", "PostOctetTotalCount", "" ),
+   AddFieldType( 0, IPAP_FT_RESERVEPRICE, 8, IPAP_CODING_DOUBLE, 
+     "reservePrice", "ReservePrice", "" ),
      
 
    AddFieldType( 0, 0, -1, 0, "", "", "" );
@@ -200,9 +212,9 @@ void ipap_field_container::initialize_reverse(void)
      "reverseIdBid", "IdBid", "" );
    AddFieldType( REV_PEN, IPAP_FT_IDALLOCATION, 128, IPAP_CODING_STRING, 
      "reverseIdAllocation", "IdAllocation", "" );
-   AddFieldType( REV_PEN, IPAP_FT_STARTSECONDS, 4, IPAP_CODING_UINT, 
+   AddFieldType( REV_PEN, IPAP_FT_STARTSECONDS, 8, IPAP_CODING_UINT, 
      "reverseStartSeconds", "StartSeconds", "" ),      
-   AddFieldType( REV_PEN, IPAP_FT_ENDSECONDS, 4, IPAP_CODING_UINT, 
+   AddFieldType( REV_PEN, IPAP_FT_ENDSECONDS, 8, IPAP_CODING_UINT, 
      "reverseEndSeconds", "EndSeconds", "" ),      
    AddFieldType( REV_PEN, IPAP_FT_STARTMILLISECONDS, 8, IPAP_CODING_UINT, 
      "reverseStartMilliSeconds", "StartMilliSeconds", "" ),      
@@ -214,6 +226,18 @@ void ipap_field_container::initialize_reverse(void)
      "reverseIdRecord", "IdRecord", "" ),
    AddFieldType( REV_PEN, IPAP_FT_QUANTITY, 8, IPAP_CODING_FLOAT, 
      "reverseQuantity", "Quantity", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_INTERVALSECONDS, 8, IPAP_CODING_UINT, 
+     "reverseIntervalSeconds", "IntervalsSeconds", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_INTERVALMILLISECONDS, 8, IPAP_CODING_UINT, 
+     "reverseIntervalMilliSeconds", "IntervalsMilliSeconds", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_INTERVALMICROSECONDS, 8, IPAP_CODING_NTP, 
+     "reverseIntervalMicroSeconds", "IntervalsMicroSeconds", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_INTERVALNANOSECONDS, 8, IPAP_CODING_NTP, 
+     "reverseIntervalNanoSeconds", "IntervalsNanoSeconds", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_POSTOCTETTOTALCOUNT, 8, IPAP_CODING_FLOAT, 
+     "reversePostOctetTotalCount", "PostOctetTotalCount", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_RESERVEPRICE, 8, IPAP_CODING_DOUBLE, 
+     "reverseReservePrice", "ReservePrice", "" ),
 
 
    AddFieldType( REV_PEN, 0, -1, 0, "", "", "");

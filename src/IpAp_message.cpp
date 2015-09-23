@@ -258,7 +258,8 @@ ipap_message::new_template( int nfields )
         throw ipap_bad_argument("Message is not initialized");
     
     if ( nfields<1 )
-		throw ipap_bad_argument("Invalid number of fields");
+		throw ipap_bad_argument("The number of fields to insert in a \
+									template must be greater than zero");
 
     /** alloc mem
      */
@@ -339,8 +340,7 @@ ipap_message::get_field_definition( int eno, int type )
 void 
 ipap_message::add_field(  uint16_t templid,
                uint32_t         eno,
-               uint16_t         type,
-               uint16_t         length )
+               uint16_t         type )
 {
 
 #ifdef DEBUG
@@ -359,6 +359,7 @@ ipap_message::add_field(  uint16_t templid,
          */
 
         ipap_field field = g_ipap_fields.get_field(eno, type);
+        uint16_t length = (uint16_t) field.get_field_type().length;
         
         if (encode_network){
 			templ->add_field(length,KNOWN,1,field);
@@ -449,7 +450,7 @@ ipap_message::make_template( export_fields_t *fields,
 	{
 		for ( i=0; i<nfields; i++ )
 		{
-			add_field( templid, fields[i].eno, fields[i].ienum, fields[i].length);
+			add_field( templid, fields[i].eno, fields[i].ienum);
 		}
 		
 		/**
@@ -1422,7 +1423,7 @@ ipap_message::get_template(uint16_t templid)
 }
 
 ipap_template * 
-ipap_message::get_template(uint16_t templid) const
+ipap_message::get_template_object(uint16_t templid)
 {
 
 #ifdef DEBUG

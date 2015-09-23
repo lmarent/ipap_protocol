@@ -2,7 +2,7 @@ ACLOCAL_AMFLAGS = -I m4
 
 lib_LTLIBRARIES = libipap.la
 
-pkginclude_HEADERS = $(top_srcdir)/include/Constants.h \
+pkginclude_HEADERS = $(top_srcdir)/include/ConstantsIpAp.h \
 				     $(top_srcdir)/include/Error.h \
 				     $(top_srcdir)/include/Logger.h \
 				     $(top_srcdir)/include/stdinc.h \
@@ -23,7 +23,7 @@ pkginclude_HEADERS = $(top_srcdir)/include/Constants.h \
 
 if ENABLE_DEBUG
   AM_CXXFLAGS = -I$(top_srcdir)/include \
-				-g  -fno-inline -DDEBUG -D_GLIBCXX_DEBUG
+				-g  -fno-inline -DDEBUG -D_GLIBCXX_DEBUG -ggdb
 else
   AM_CXXFLAGS = -I$(top_srcdir)/include \
 				-O2 
@@ -31,7 +31,7 @@ endif
 
 
 libipap_la_SOURCES =  Error.cpp \
-					  Constants.cpp \
+					  ConstantsIpAp.cpp \
 					  Logger.cpp \
 					  IpAp_field.cpp \
 					  IpAp_value_field.cpp \

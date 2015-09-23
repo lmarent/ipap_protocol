@@ -72,21 +72,18 @@ Logger *Logger::getInstance(const string defaultFile)
 Logger::Logger(const string defaultFile) :
     logLevel(4), threaded(1), canlog(0), numChannels(0), numLogfiles(0)
 {
-    /*
-      Logger is set to not threaded from QualityManager.cpp via setThreaded(0) if
-      and only if not a single quality component is configured as threaded
-    */
+    
 		
     unlink(defaultFile.c_str());
     //    setDefaultLogfile(defaultFile);
 
-/*
+
 #ifdef ENABLE_THREADS
     if (threaded) {
         mutexInit(&maccess);
     }
 #endif
-*/
+
     channels.resize(INITIAL_NB_CHANNELS);
     logfiles.resize(INITIAL_NB_LOGFILES);
 
@@ -107,13 +104,13 @@ Logger::~Logger()
         }
     }
 
-/*    
+   
 #ifdef ENABLE_THREADS
     if (threaded) {
         mutexDestroy(&maccess);
     }
 #endif
-*/
+
 }
 
 
@@ -139,7 +136,9 @@ int Logger::createChannel( const string prefix, const string filename, int newlo
     string fname;
 
     try {
-        //AUTOLOCK(threaded, &maccess);
+#ifdef ENABLE_THREADS			
+        AUTOLOCK(threaded, &maccess);
+#endif
 
         // if necessary enlarge storage arrays,
         // before (possibly) inserting a new entry
@@ -206,8 +205,10 @@ int Logger::moveChannels(string ofname, string nfname, int newlog)
     FILE *fdes, *ofdes;
 
     try {
-        //AUTOLOCK(threaded, &maccess);
-
+		
+#ifdef ENABLE_THREADS	
+        AUTOLOCK(threaded, &maccess);
+#endif
         // close and rename file
         for (fi = 0; fi < numLogfiles; fi++) {
             if (logfiles[fi].fname == ofname) {
@@ -370,7 +371,9 @@ void Logger::_write( int lvl, int ch, int nl, const char *fmt, va_list argp )
     } 
 
     try {
-        //AUTOLOCK(threaded, &maccess);
+#ifdef ENABLE_THREADS					
+        AUTOLOCK(threaded, &maccess);
+#endif
 
         FILE *file = logfiles[channels[ch].file_id].file;
         if (file == NULL) {

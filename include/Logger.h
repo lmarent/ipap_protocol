@@ -31,7 +31,7 @@
 
 #include "stdincpp.h"
 #include "Error.h"
-#include "Constants.h"
+#include "ConstantsIpAp.h"
 
 
 //! symbolic ids for logging levels
@@ -108,6 +108,10 @@ class Logger
 
     string logfile; //!< logger class default logfile name
 
+#ifdef ENABLE_THREADS
+    mutex_t maccess;  //!< mutex semaphore for thread safety blocking
+#endif
+
 private:
 
     void _write( int level, int channel, int newline, const char *fmt, va_list argp );
@@ -130,6 +134,11 @@ public:
                  closes all open message channels (files)
     */
     ~Logger();
+
+    //! set value of threading flag (see above)
+    inline void setThreaded( int thr ) {
+    	threaded = thr;
+    }
 
     //! \short  flush all logging channels (does not close files)
     void flush();

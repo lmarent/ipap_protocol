@@ -164,11 +164,11 @@ void IpAp_Field_Test::testAddFields()
 {
 	field_container.initialize_forward();
 	
-	CPPUNIT_ASSERT( field_container.get_num_fields() == TOT_FIELD_COUNT + 1 );
+	CPPUNIT_ASSERT( field_container.get_num_fields() == TOT_FIELD_COUNT );
 	
 	field_container.initialize_reverse();
 	
-	CPPUNIT_ASSERT( field_container.get_num_fields() == (TOT_FIELD_COUNT + 1)*2 );
+	CPPUNIT_ASSERT( field_container.get_num_fields() == (TOT_FIELD_COUNT) * 2 );
 	
 	// Gets one of the fields and verifies its data.
 	ipap_field tmpField = field_container.get_field( 0, IPAP_FT_UNITVALUE );

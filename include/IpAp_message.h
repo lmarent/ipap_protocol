@@ -294,7 +294,7 @@ class ipap_message
 	    * @param templid - Id of the template
 	    * @return reference to the template, if not found, it returns NULL.
 	    */
-	   ipap_template * get_template(uint16_t templid) const;
+	   ipap_template * get_template_object(uint16_t templid);
 
                    
 	   /**
@@ -309,12 +309,10 @@ class ipap_message
 	    * @param templid 	- Pointer to the template
 	    * 		 eno		- Enterprise field number id
 	    *        type		- Field type.
-	    * 	     length		- Field length 
 	    */
 	   void  add_field( uint16_t templid,
                        uint32_t eno,
-                       uint16_t type, 
-                       uint16_t length );
+                       uint16_t type );
                                                   
 	   /**
 	    * delete a template associated to the message.

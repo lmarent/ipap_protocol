@@ -173,6 +173,8 @@ ipap_value_field::operator= (const ipap_value_field &param)
 	{
 		valuebyte = NULL;
 	}
+	
+	return *this;
 }
 
 

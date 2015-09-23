@@ -425,14 +425,14 @@ ipap_field::ipap_snprint_string( char * str, size_t size,
             return snprintf( str, size, "%s", in );
         }
     }
-
+	
     if ( len < size ) {
         memcpy( str, in, len );
         str[len] = '\0';
         return len;
     }
 
-    return snprintf( str, size, "err" );
+    return snprintf( str, size, "%s", in );
 }
 
 int 
@@ -677,11 +677,15 @@ ipap_value_field
 ipap_field::get_ipap_value_field(uint8_t &_value8)
 { 
 	ipap_value_field field;
-	if (field_type.length == 1)
+	if (field_type.length == 1){
 		field.set_value_int8(_value8); 
-	else
-		throw ipap_bad_argument("Value does not agree with Field Type");
-	
+	}
+	else{
+		ostringstream s;
+		s << "Value does not agree with Field Type expected len:1 field len:";
+		s << (int) field_type.length;
+		throw ipap_bad_argument(s.str());
+	}
 	return field;
 }
 
@@ -689,11 +693,15 @@ ipap_value_field
 ipap_field::get_ipap_value_field(uint16_t &_value16)
 { 
 	ipap_value_field field;
-	if (field_type.length == 2)
+	if (field_type.length == 2){
 		field.set_value_int16(_value16); 
-	else
-		throw ipap_bad_argument("Value does not agree with Field Type");
-	
+	}
+	else{
+		ostringstream s;
+		s << "Value does not agree with Field Type expected len:2 field len:";
+		s << (int) field_type.length;
+		throw ipap_bad_argument(s.str());
+	}
 	return field;
 		
 }
@@ -702,11 +710,15 @@ ipap_value_field
 ipap_field::get_ipap_value_field(uint32_t &_value32)
 { 
 	ipap_value_field field;
-	if (field_type.length == 4)
+	if (field_type.length == 4){
 		field.set_value_int32(_value32); 
-	else
-		throw ipap_bad_argument("Value does not agree with Field Type");
-	
+	}
+	else{
+		ostringstream s;
+		s << "Value does not agree with Field Type expected len:4 field len:";
+		s << (int) field_type.length;
+		throw ipap_bad_argument(s.str());
+	}
 	return field;
 }
 
@@ -714,11 +726,15 @@ ipap_value_field
 ipap_field::get_ipap_value_field(uint64_t &_value64)
 { 
 	ipap_value_field field;
-	if (field_type.length == 8)
+	if (field_type.length == 8){
 		field.set_value_int64(_value64); 
-	else
-		throw ipap_bad_argument("Value does not agree with Field Type");
-	
+	}
+	else{
+		ostringstream s;
+		s << "Value does not agree with Field Type expected len:8 field len:";
+		s << (int) field_type.length;
+		throw ipap_bad_argument(s.str());
+	}
 	return field;		
 }
 
@@ -731,7 +747,8 @@ ipap_field::get_ipap_value_field(float &_fvalue)
 		field.set_value_float32(_fvalue); 
 		return field;
 	}else{
-		throw ipap_bad_argument("Value does not agree with Field Type");
+		string error = "Value does not agree with Field Type expected float value";
+		throw ipap_bad_argument(error);
 	}
 }
 
@@ -743,7 +760,8 @@ ipap_field::get_ipap_value_field(double dvalue)
 		field.set_value_float64(dvalue); 
 		return field;		
 	} else {
-		throw ipap_bad_argument("Value does not agree with Field Type");
+		string error = "Value does not agree with Field Type expected double value";
+		throw ipap_bad_argument(error);
 	}
 }
 
@@ -1098,7 +1116,9 @@ ipap_field::parse(string in )
             return parseBytes(in);
 			break;
 		default:
-			throw ipap_bad_argument("The field type is invalid");
+			ostringstream s;
+			s << "The field type is invalid coding:" << field_type.coding;
+			throw ipap_bad_argument(s.str());
 			break;
 	}
 }

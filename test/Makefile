@@ -95,7 +95,7 @@ CONFIG_CLEAN_VPATH_FILES =
 am__EXEEXT_1 = test_runner$(EXEEXT)
 am__dirstamp = $(am__leading_dot)dirstamp
 am_test_runner_OBJECTS = ../src/Error.$(OBJEXT) \
-	../src/Constants.$(OBJEXT) \
+	../src/ConstantsIpAp.$(OBJEXT) \
 	../src/Logger.$(OBJEXT) \
 	../src/IpAp_field.$(OBJEXT) \
 	../src/IpAp_value_field.$(OBJEXT) \
@@ -511,7 +511,7 @@ top_builddir = ..
 top_srcdir = ..
 AUTOMAKE_OPTIONS = foreign
 test_runner_SOURCES = ../src/Error.cpp \
-					  ../src/Constants.cpp \
+					  ../src/ConstantsIpAp.cpp \
 					  ../src/Logger.cpp \
 					  ../src/IpAp_field.cpp \
 					  ../src/IpAp_value_field.cpp \
@@ -534,11 +534,11 @@ test_runner_SOURCES = ../src/Error.cpp \
 
 # what flags you want to pass to the C compiler & linker
 AM_CXXFLAGS = -g -I../include $(CPPUNIT_CFLAGS) \
-				-fno-inline -D_GLIBCXX_DEBUG -DDEBUG -DPROFILING -DINTEL
+				-fno-inline -D_GLIBCXX_DEBUG -DDEBUG -DPROFILING -DINTEL -ggdb
 
 #AM_CPPFLAGS = -g -I../include $(CPPUNIT_CFLAGS)
 AM_CPPFLAGS = -g -I../include $(CPPUNIT_CFLAGS)\
-			    -fno-inline -D_GLIBCXX_DEBUG -DDEBUG -DPROFILING -DINTEL
+			    -fno-inline -D_GLIBCXX_DEBUG -DDEBUG -DPROFILING -DINTEL -ggdb
 
 AM_LDFLAGS = $(CPPUNIT_LIBS) -ldl
 LDADD = 
@@ -593,7 +593,7 @@ clean-checkPROGRAMS:
 	@: > ../src/$(DEPDIR)/$(am__dirstamp)
 ../src/Error.$(OBJEXT): ../src/$(am__dirstamp) \
 	../src/$(DEPDIR)/$(am__dirstamp)
-../src/Constants.$(OBJEXT):  \
+../src/ConstantsIpAp.$(OBJEXT):  \
 	../src/$(am__dirstamp) \
 	../src/$(DEPDIR)/$(am__dirstamp)
 ../src/Logger.$(OBJEXT): ../src/$(am__dirstamp) \
@@ -664,7 +664,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-include ../src/$(DEPDIR)/Constants.Po
+include ../src/$(DEPDIR)/ConstantsIpAp.Po
 include ../src/$(DEPDIR)/Error.Po
 include ../src/$(DEPDIR)/IpAp_data_record.Po
 include ../src/$(DEPDIR)/IpAp_field.Po

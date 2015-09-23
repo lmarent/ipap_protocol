@@ -122,8 +122,8 @@ am__uninstall_files_from_dir = { \
 am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgincludedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libipap_la_DEPENDENCIES =
-am_libipap_la_OBJECTS = Error.lo Constants.lo Logger.lo IpAp_field.lo \
-	IpAp_value_field.lo IpAp_field_container.lo \
+am_libipap_la_OBJECTS = Error.lo ConstantsIpAp.lo Logger.lo \
+	IpAp_field.lo IpAp_value_field.lo IpAp_field_container.lo \
 	IpAp_data_record.lo IpAp_field_key.lo IpAp_template.lo \
 	IpAp_template_container.lo IpAp_t.lo IpAp_message.lo
 libipap_la_OBJECTS = $(am_libipap_la_OBJECTS)
@@ -319,7 +319,7 @@ top_builddir = ..
 top_srcdir = ..
 ACLOCAL_AMFLAGS = -I m4
 lib_LTLIBRARIES = libipap.la
-pkginclude_HEADERS = $(top_srcdir)/include/Constants.h \
+pkginclude_HEADERS = $(top_srcdir)/include/ConstantsIpAp.h \
 				     $(top_srcdir)/include/Error.h \
 				     $(top_srcdir)/include/Logger.h \
 				     $(top_srcdir)/include/stdinc.h \
@@ -342,10 +342,10 @@ pkginclude_HEADERS = $(top_srcdir)/include/Constants.h \
 #				-O2 
 
 AM_CXXFLAGS = -I$(top_srcdir)/include \
-				-g  -fno-inline -DDEBUG -D_GLIBCXX_DEBUG
+				-g  -fno-inline -DDEBUG -D_GLIBCXX_DEBUG -ggdb
 
 libipap_la_SOURCES = Error.cpp \
-					  Constants.cpp \
+					  ConstantsIpAp.cpp \
 					  Logger.cpp \
 					  IpAp_field.cpp \
 					  IpAp_value_field.cpp \
@@ -440,7 +440,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-include ./$(DEPDIR)/Constants.Plo
+include ./$(DEPDIR)/ConstantsIpAp.Plo
 include ./$(DEPDIR)/Error.Plo
 include ./$(DEPDIR)/IpAp_data_record.Plo
 include ./$(DEPDIR)/IpAp_field.Plo

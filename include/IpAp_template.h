@@ -106,6 +106,7 @@ class ipap_template
 		uint16_t                			tid;			///< Template id
 		int 								maxfields; 		///< Maximum number of fields
 		templateFieldList_t			 		datafields;		///< Subset of data fields
+
 	public:
 
 		static const char *TEMPLATE_XML_TAGS[];

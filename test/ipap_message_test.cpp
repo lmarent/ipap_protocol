@@ -94,10 +94,10 @@ void IpAp_Message_Test::testAddTemplate()
 		// Verifies the field add method.
 		nfields = 4; // Maximum number of fields.
 		templatedataid = mes->new_data_template( nfields, IPAP_SETID_AUCTION_TEMPLATE );
-		mes->add_field(templatedataid, 0, IPAP_FT_IDAUCTION, 65535);
-		mes->add_field(templatedataid, 0, IPAP_FT_STARTSECONDS, 4);
-		mes->add_field(templatedataid, 0, IPAP_FT_ENDSECONDS, 4);	
-		mes->add_field(templatedataid, 0, IPAP_FT_AUCTIONINGALGORITHMNAME, 65535);
+		mes->add_field(templatedataid, 0, IPAP_FT_IDAUCTION);
+		mes->add_field(templatedataid, 0, IPAP_FT_STARTSECONDS);
+		mes->add_field(templatedataid, 0, IPAP_FT_ENDSECONDS);	
+		mes->add_field(templatedataid, 0, IPAP_FT_AUCTIONINGALGORITHMNAME);
 		num_templates = mes->get_num_templates();
 		CPPUNIT_ASSERT( num_templates == 1 );
 					
@@ -159,26 +159,26 @@ void IpAp_Message_Test::testExceptionAddTemplate()
 	
 
 	// Verifies that a data field cannot be added to a empty template
-	CPPUNIT_ASSERT_THROW( mes->add_field(templateAuctionid, 0, IPAP_FT_STARTSECONDS, 4), 
+	CPPUNIT_ASSERT_THROW( mes->add_field(templateAuctionid, 0, IPAP_FT_STARTSECONDS), 
 						  ipap_bad_argument);
 
-	CPPUNIT_ASSERT_THROW( mes->add_field(templateBidid, 0, IPAP_FT_STARTSECONDS, 4), 
+	CPPUNIT_ASSERT_THROW( mes->add_field(templateBidid, 0, IPAP_FT_STARTSECONDS), 
 						  ipap_bad_argument);
 
-	CPPUNIT_ASSERT_THROW( mes->add_field(templateAllocationid, 0, IPAP_FT_STARTSECONDS, 4), 
+	CPPUNIT_ASSERT_THROW( mes->add_field(templateAllocationid, 0, IPAP_FT_STARTSECONDS), 
 						  ipap_bad_argument);
 			
 	// Verifies that only add a valid field in the collection
-	CPPUNIT_ASSERT_THROW( mes->add_field(templateAuctionid, 0, 3000, 4),
+	CPPUNIT_ASSERT_THROW( mes->add_field(templateAuctionid, 0, 3000),
 						  ipap_bad_argument);
 						  
 	nfields = 3;
 	templateAuctionid = mes->new_data_template( nfields, IPAP_SETID_AUCTION_TEMPLATE );
 	// Verifies that only the maximum number of data fields can be inserted.
-	mes->add_field(templateAuctionid, 0, IPAP_FT_STARTSECONDS, 4);
-	mes->add_field(templateAuctionid, 0, IPAP_FT_ENDSECONDS, 4);
-	mes->add_field(templateAuctionid, 0, IPAP_FT_STARTMILLISECONDS, 8);
-	CPPUNIT_ASSERT_THROW( mes->add_field(templateAuctionid, 0, IPAP_FT_ENDMILLISECONDS, 8),
+	mes->add_field(templateAuctionid, 0, IPAP_FT_STARTSECONDS);
+	mes->add_field(templateAuctionid, 0, IPAP_FT_ENDSECONDS);
+	mes->add_field(templateAuctionid, 0, IPAP_FT_STARTMILLISECONDS);
+	CPPUNIT_ASSERT_THROW( mes->add_field(templateAuctionid, 0, IPAP_FT_ENDMILLISECONDS),
 						  ipap_bad_argument);
 	
 
@@ -225,10 +225,10 @@ void IpAp_Message_Test::testDataRecords()
 		
 		int nfields = 4;
 		templatedataid = mes->new_data_template( nfields, IPAP_SETID_AUCTION_TEMPLATE );
-		mes->add_field(templatedataid, 0, IPAP_FT_IDAUCTION, 65535);
-		mes->add_field(templatedataid, 0, IPAP_FT_STARTSECONDS, 4);
-		mes->add_field(templatedataid, 0, IPAP_FT_ENDSECONDS, 4);	
-		mes->add_field(templatedataid, 0, IPAP_FT_AUCTIONINGALGORITHMNAME, 65535);
+		mes->add_field(templatedataid, 0, IPAP_FT_IDAUCTION);
+		mes->add_field(templatedataid, 0, IPAP_FT_STARTSECONDS);
+		mes->add_field(templatedataid, 0, IPAP_FT_ENDSECONDS);	
+		mes->add_field(templatedataid, 0, IPAP_FT_AUCTIONINGALGORITHMNAME);
 
 		ipap_field field1 = mes->get_field_definition( 0, IPAP_FT_STARTSECONDS );
 		ipap_value_field fvalue1 = field1.get_ipap_value_field( starttime );
@@ -313,10 +313,10 @@ void IpAp_Message_Test::testExportImport()
 		mes->delete_all_templates();
 
 		templatedataid = mes->new_data_template( nfields, IPAP_SETID_AUCTION_TEMPLATE );
-		mes->add_field(templatedataid, 0, IPAP_FT_IDAUCTION, 65535);
-		mes->add_field(templatedataid, 0, IPAP_FT_STARTSECONDS, 4);
-		mes->add_field(templatedataid, 0, IPAP_FT_ENDSECONDS, 4);	
-		mes->add_field(templatedataid, 0, IPAP_FT_AUCTIONINGALGORITHMNAME, 65535);
+		mes->add_field(templatedataid, 0, IPAP_FT_IDAUCTION);
+		mes->add_field(templatedataid, 0, IPAP_FT_STARTSECONDS);
+		mes->add_field(templatedataid, 0, IPAP_FT_ENDSECONDS);	
+		mes->add_field(templatedataid, 0, IPAP_FT_AUCTIONINGALGORITHMNAME);
 
 		ipap_field field1 = mes->get_field_definition( 0, IPAP_FT_IDAUCTION );
 		ipap_value_field fvalue1 = field1.get_ipap_value_field( buf1, 1 );
