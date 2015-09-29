@@ -1360,6 +1360,10 @@ void ipap_message::ipap_decode_datarecord( ipap_template *templ,
     for ( i=0; i < templ->get_numfields(); i++ ) {
 
         len = templ->get_field(i).flength;
+
+#ifdef DEBUG
+	log->dlog(ch, "Starting to read field %d len:%d bytesleft:%d",i, len,bytesleft);
+#endif	
         if ( len == IPAP_FT_VARLEN ) {
             len =*p;
             p++;
@@ -1391,7 +1395,13 @@ void ipap_message::ipap_decode_datarecord( ipap_template *templ,
 			value = (templ->get_field(i).elem).decode(p,len, 0);
 		}
 
+#ifdef DEBUG
 		(templ->get_field(i).elem).snprint(salida, 30, value);
+		log->dlog(ch, "Reading field eno:%d ftype:%d value:%s", 
+					(templ->get_field(i).elem).get_field_type().eno,
+					(templ->get_field(i).elem).get_field_type().ftype,
+					 salida);
+#endif
 				
         g_data.insert_field((templ->get_field(i).elem).get_field_type().eno, 
 						    (templ->get_field(i).elem).get_field_type().ftype, value); 

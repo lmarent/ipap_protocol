@@ -119,11 +119,11 @@ void ipap_field_container::initialize_forward(void)
      "sourceMacAddress", "SourceMacAddress", "" );
    AddFieldType( 0, IPAP_FT_POSTDESTINATIONMACADDRESS, 6, IPAP_CODING_BYTES, 
      "postDestinationMacAddress", "PostDestinationMacAddress", "" );
-   AddFieldType( 0, IPAP_FT_IDAUCTION, 128, IPAP_CODING_STRING, 
+   AddFieldType( 0, IPAP_FT_IDAUCTION, 65535, IPAP_CODING_STRING, 
      "idAuction", "IdAuction", "" );
-   AddFieldType( 0, IPAP_FT_IDBID, 128, IPAP_CODING_STRING, 
+   AddFieldType( 0, IPAP_FT_IDBID, 65535, IPAP_CODING_STRING, 
      "idBid", "IdBid", "" );
-   AddFieldType( 0, IPAP_FT_IDALLOCATION, 128, IPAP_CODING_STRING, 
+   AddFieldType( 0, IPAP_FT_IDALLOCATION, 65535, IPAP_CODING_STRING, 
      "idAllocation", "IdAllocation", "" );
    AddFieldType( 0, IPAP_FT_STARTSECONDS, 8, IPAP_CODING_UINT, 
      "startSeconds", "StartSeconds", "" ),      
@@ -133,9 +133,9 @@ void ipap_field_container::initialize_forward(void)
      "startMilliSeconds", "StartMilliSeconds", "" ),      
    AddFieldType( 0, IPAP_FT_ENDMILLISECONDS, 8, IPAP_CODING_UINT, 
      "endMilliSeconds", "EndMilliSeconds", "" ),      
-   AddFieldType( 0, IPAP_FT_AUCTIONINGALGORITHMNAME, 128, IPAP_CODING_STRING, 
+   AddFieldType( 0, IPAP_FT_AUCTIONINGALGORITHMNAME, 65535, IPAP_CODING_STRING, 
      "auctioningAlgorithmName", "AuctioningAlgorithName", "" ),
-   AddFieldType( 0, IPAP_FT_IDRECORD, 128, IPAP_CODING_STRING, 
+   AddFieldType( 0, IPAP_FT_IDRECORD, 65535, IPAP_CODING_STRING, 
      "idRecord", "IdRecord", "" ),
    AddFieldType( 0, IPAP_FT_QUANTITY, 4, IPAP_CODING_FLOAT, 
      "quantity", "Quantity", "" ),
@@ -206,11 +206,11 @@ void ipap_field_container::initialize_reverse(void)
      "reverseSourceMacAddress", "SourceMacAddress", "" );
    AddFieldType( REV_PEN, IPAP_FT_POSTDESTINATIONMACADDRESS, 6, IPAP_CODING_BYTES, 
      "reversePostDestinationMacAddress", "PostDestinationMacAddress", "" );
-   AddFieldType( REV_PEN, IPAP_FT_IDAUCTION, 128, IPAP_CODING_STRING, 
+   AddFieldType( REV_PEN, IPAP_FT_IDAUCTION, 65535, IPAP_CODING_STRING, 
      "reverseIdAuction", "IdAuction", "" );
-   AddFieldType( REV_PEN, IPAP_FT_IDBID, 128, IPAP_CODING_STRING, 
+   AddFieldType( REV_PEN, IPAP_FT_IDBID, 65535, IPAP_CODING_STRING, 
      "reverseIdBid", "IdBid", "" );
-   AddFieldType( REV_PEN, IPAP_FT_IDALLOCATION, 128, IPAP_CODING_STRING, 
+   AddFieldType( REV_PEN, IPAP_FT_IDALLOCATION, 65535, IPAP_CODING_STRING, 
      "reverseIdAllocation", "IdAllocation", "" );
    AddFieldType( REV_PEN, IPAP_FT_STARTSECONDS, 8, IPAP_CODING_UINT, 
      "reverseStartSeconds", "StartSeconds", "" ),      
@@ -220,9 +220,9 @@ void ipap_field_container::initialize_reverse(void)
      "reverseStartMilliSeconds", "StartMilliSeconds", "" ),      
    AddFieldType( REV_PEN, IPAP_FT_ENDMILLISECONDS, 8, IPAP_CODING_UINT, 
      "reverseEndMilliSeconds", "EndMilliSeconds", "" ),      
-   AddFieldType( REV_PEN, IPAP_FT_AUCTIONINGALGORITHMNAME, 128, IPAP_CODING_STRING, 
+   AddFieldType( REV_PEN, IPAP_FT_AUCTIONINGALGORITHMNAME, 65535, IPAP_CODING_STRING, 
      "reverseAuctioningAlgorithmName", "AuctioningAlgorithName", "" ),
-   AddFieldType( REV_PEN, IPAP_FT_IDRECORD, 128, IPAP_CODING_STRING, 
+   AddFieldType( REV_PEN, IPAP_FT_IDRECORD, 65535, IPAP_CODING_STRING, 
      "reverseIdRecord", "IdRecord", "" ),
    AddFieldType( REV_PEN, IPAP_FT_QUANTITY, 8, IPAP_CODING_FLOAT, 
      "reverseQuantity", "Quantity", "" ),
