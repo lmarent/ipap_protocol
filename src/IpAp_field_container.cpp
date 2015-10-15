@@ -151,6 +151,26 @@ void ipap_field_container::initialize_forward(void)
      "postOctetTotalCount", "PostOctetTotalCount", "" ),
    AddFieldType( 0, IPAP_FT_RESERVEPRICE, 8, IPAP_CODING_DOUBLE, 
      "reservePrice", "ReservePrice", "" ),
+   AddFieldType( 0, IPAP_FT_IDRESOURCE, 65535, IPAP_CODING_STRING, 
+     "idResource", "IdResource", "" ),
+   AddFieldType( 0, IPAP_FT_SOURCETRANSPORTPORT, 2, IPAP_CODING_UINT, 
+     "sourceTransportPort", "SourceTransportPort", "" ),
+   AddFieldType( 0, IPAP_FT_DESTINATIONTRANSPORTPORT, 2, IPAP_CODING_UINT, 
+     "destinationTransportPort", "destinationTransportPort", "" ),
+   AddFieldType( 0, IPAP_FT_BIDINGTIMESECONDS, 4, IPAP_CODING_UINT, 
+     "bidingTimeSeconds", "BidingTimeSeconds", "" ); 
+   AddFieldType( 0, IPAP_FT_BIDINGTIMEMILLISECONDS, 8, IPAP_CODING_UINT, 
+     "bidingTimeMilliseconds", "BidingTimeMilliSeconds", "" );
+   AddFieldType( 0, IPAP_FT_BIDINGTIMEMICROSECONDS, 8, IPAP_CODING_NTP, 
+     "bidingTimeMicroseconds", "BidingTimeMicroSeconds", "" );
+   AddFieldType( 0, IPAP_FT_BIDINGTIMENANOSECONDS, 8, IPAP_CODING_NTP, 
+     "bidingTimeNanoseconds", "BidingTimeNanoSeconds", "" );
+   AddFieldType( 0, IPAP_FT_SOURCEAUCTIONPORT, 2, IPAP_CODING_UINT, 
+     "sourceAuctionPort", "SourceAuctionPort", "" );
+   AddFieldType( 0, IPAP_FT_DESTINATIONAUCTIONPORT, 2, IPAP_CODING_UINT, 
+     "destinationAuctionPort", "DestinationAuctionPort", "" );
+   AddFieldType( 0, IPAP_FT_IPVERSION, 1, IPAP_CODING_UINT, 
+     "ipVersion", "ipVersion", "" );
      
 
    AddFieldType( 0, 0, -1, 0, "", "", "" );
@@ -238,6 +258,26 @@ void ipap_field_container::initialize_reverse(void)
      "reversePostOctetTotalCount", "PostOctetTotalCount", "" ),
    AddFieldType( REV_PEN, IPAP_FT_RESERVEPRICE, 8, IPAP_CODING_DOUBLE, 
      "reverseReservePrice", "ReservePrice", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_IDRESOURCE, 65535, IPAP_CODING_STRING, 
+     "reverseIdResource", "ReverseIdResource", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_SOURCETRANSPORTPORT, 2, IPAP_CODING_UINT, 
+     "reverseSourceTransportPort", "ReverseSourceTransportPort", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_DESTINATIONTRANSPORTPORT, 2, IPAP_CODING_UINT, 
+     "reverseDestinationTransportPort", "ReversedestinationTransportPort", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_BIDINGTIMESECONDS, 4, IPAP_CODING_UINT, 
+     "reverseBidingTimeSeconds", "BidingTimeSeconds", "" ); 
+   AddFieldType( REV_PEN, IPAP_FT_BIDINGTIMEMILLISECONDS, 8, IPAP_CODING_UINT, 
+     "reverseBidingTimeMilliseconds", "BidingTimeMilliSeconds", "" );
+   AddFieldType( REV_PEN, IPAP_FT_BIDINGTIMEMICROSECONDS, 8, IPAP_CODING_NTP, 
+     "reverseBidingTimeMicroseconds", "BidingTimeMicroSeconds", "" );
+   AddFieldType( REV_PEN, IPAP_FT_BIDINGTIMENANOSECONDS, 8, IPAP_CODING_NTP, 
+     "reverseBidingTimeNanoseconds", "BidingTimeNanoSeconds", "" );
+   AddFieldType( REV_PEN, IPAP_FT_SOURCEAUCTIONPORT, 2, IPAP_CODING_UINT, 
+     "reverseSourceAuctionPort", "SourceAuctionPort", "" );
+   AddFieldType( REV_PEN, IPAP_FT_DESTINATIONAUCTIONPORT, 2, IPAP_CODING_UINT, 
+     "reverseDestinationAuctionPort", "DestinationAuctionPort", "" );
+   AddFieldType( REV_PEN, IPAP_FT_IPVERSION, 1, IPAP_CODING_UINT, 
+     "reverseIpVersion", "reverseIpVersion", "" );
 
 
    AddFieldType( REV_PEN, 0, -1, 0, "", "", "");

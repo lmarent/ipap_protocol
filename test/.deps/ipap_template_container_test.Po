@@ -228,8 +228,8 @@
  ../include/IpAp_field.h ../include/IpAp_def.h \
  ../include/IpAp_value_field.h ../include/IpAp_exception.h \
  ../include/Error.h ../include/IpAp_template.h ../include/IpAp_field.h \
- ../include/IpAp_field_container.h ../include/IpAp_template_container.h \
- ../include/IpAp_template.h
+ ../include/IpAp_field_key.h ../include/IpAp_field_container.h \
+ ../include/IpAp_template_container.h ../include/IpAp_template.h
 
 /usr/include/stdc-predef.h:
 
@@ -850,6 +850,8 @@
 ../include/IpAp_template.h:
 
 ../include/IpAp_field.h:
+
+../include/IpAp_field_key.h:
 
 ../include/IpAp_field_container.h:
 

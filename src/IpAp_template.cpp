@@ -26,6 +26,7 @@
 
 #include "IpAp_template.h"
 #include "IpAp_exception.h"
+#include "IpAp_create_map.h"
 
 const char *ipap_template::TEMPLATE_XML_TAGS[] = { "AUCTION", 
 											"ELEMENT",
@@ -34,6 +35,8 @@ const char *ipap_template::TEMPLATE_XML_TAGS[] = { "AUCTION",
 											"AUCTION",
 											"TO_DEFINE" };
 
+templateKeyList_t ipap_template::templateKeys;
+templateKeyList_t ipap_template::templateMandatoryFields;
 
 ipap_template::ipap_template(const ipap_template &rhs)
 {
@@ -182,6 +185,113 @@ ipap_template::get_field( int eno, int type )
         if( (((it->elem).get_field_type()).ftype == type) && (((it->elem).get_field_type()).eno==eno) )
 			return it->elem;
 	}
-    throw ipap_bad_argument("Field not found in the container");
+    throw Error("IpapTemplate: Field not found in the container eno:%d  ftype:%d", eno, type);
 }
 
+set<ipap_field_key> 
+ipap_template::getTemplateTypeKeys(ipap_templ_type_t templType)
+{
+	// Fill template keys.
+	if (ipap_template::templateKeys.size() == 0 ){
+		
+		// Fill auction keys 
+		set<ipap_field_key> auc_field_keys;
+		auc_field_keys.insert(ipap_field_key(0,IPAP_FT_IDAUCTION));
+		auc_field_keys.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
+		
+		// Fill bid keys
+		set<ipap_field_key> bid_field_keys;
+		bid_field_keys.insert(ipap_field_key(0,IPAP_FT_IDAUCTION));
+		bid_field_keys.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
+		bid_field_keys.insert(ipap_field_key(0,IPAP_FT_IDBID));
+		
+		// Fill allocation keys
+		set<ipap_field_key> all_field_keys;
+		all_field_keys.insert(ipap_field_key(0,IPAP_FT_IDAUCTION));
+		all_field_keys.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
+		all_field_keys.insert(ipap_field_key(0,IPAP_FT_IDBID));
+		all_field_keys.insert(ipap_field_key(0,IPAP_FT_IDALLOCATION));
+		
+		ipap_template::templateKeys = ipap_create_map<ipap_templ_type_t, set<ipap_field_key> >
+				(IPAP_SETID_AUCTION_TEMPLATE,auc_field_keys)
+				(IPAP_OPTNS_AUCTION_TEMPLATE,auc_field_keys)
+				(IPAP_SETID_BID_TEMPLATE,bid_field_keys)
+				(IPAP_OPTNS_BID_TEMPLATE,bid_field_keys)
+				(IPAP_SETID_ALLOCATION_TEMPLATE,all_field_keys)
+				(IPAP_OPTNS_ALLOCATION_TEMPLATE,all_field_keys);
+	}
+	
+	templateKeyIterList_t iter;
+	iter = ipap_template::templateKeys.find(templType);
+	return iter->second;
+}
+
+
+set<ipap_field_key> 
+ipap_template::getTemplateTypeMandatoryFields(ipap_templ_type_t templType)
+{
+	// Fill template keys.
+	if (ipap_template::templateMandatoryFields.size() == 0 ){
+		
+		// Fill data auctions fields
+		set<ipap_field_key> d_auc_fields;
+		d_auc_fields.insert(ipap_field_key(0,IPAP_FT_IDAUCTION));
+		d_auc_fields.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
+		d_auc_fields.insert(ipap_field_key(0,IPAP_FT_IPVERSION));
+		d_auc_fields.insert(ipap_field_key(0,IPAP_FT_DESTINATIONIPV4ADDRESS));
+		d_auc_fields.insert(ipap_field_key(0,IPAP_FT_DESTINATIONIPV6ADDRESS));
+		d_auc_fields.insert(ipap_field_key(0,IPAP_FT_DESTINATIONAUCTIONPORT));
+		
+		
+		// Fill option auctions fields
+		set<ipap_field_key> o_auc_fields;
+		o_auc_fields.insert(ipap_field_key(0,IPAP_FT_IDAUCTION));
+		o_auc_fields.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
+		o_auc_fields.insert(ipap_field_key(0,IPAP_FT_STARTSECONDS));
+		o_auc_fields.insert(ipap_field_key(0,IPAP_FT_ENDSECONDS));
+		o_auc_fields.insert(ipap_field_key(0,IPAP_FT_INTERVALSECONDS));
+		o_auc_fields.insert(ipap_field_key(0,IPAP_FT_AUCTIONINGALGORITHMNAME));		
+		
+		// Fill data bid fields
+		set<ipap_field_key> d_bid_fields;
+		d_bid_fields.insert(ipap_field_key(0,IPAP_FT_IDAUCTION));
+		d_bid_fields.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
+		d_bid_fields.insert(ipap_field_key(0,IPAP_FT_IDBID));
+		
+		// Fill option bid fields
+		set<ipap_field_key> o_bid_fields;
+		o_bid_fields.insert(ipap_field_key(0,IPAP_FT_IDAUCTION));
+		o_bid_fields.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
+		o_bid_fields.insert(ipap_field_key(0,IPAP_FT_IDBID));
+		o_bid_fields.insert(ipap_field_key(0,IPAP_FT_STARTSECONDS));
+		o_bid_fields.insert(ipap_field_key(0,IPAP_FT_ENDSECONDS));
+		
+		
+		// Fill data allocation fields
+		set<ipap_field_key> d_all_fields;
+		d_all_fields.insert(ipap_field_key(0,IPAP_FT_IDAUCTION));
+		d_all_fields.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
+		d_all_fields.insert(ipap_field_key(0,IPAP_FT_IDBID));
+		d_all_fields.insert(ipap_field_key(0,IPAP_FT_IDALLOCATION));
+		
+		// Fill option allocation fields
+		set<ipap_field_key> o_all_fields;
+		o_all_fields.insert(ipap_field_key(0,IPAP_FT_IDAUCTION));
+		o_all_fields.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
+		o_all_fields.insert(ipap_field_key(0,IPAP_FT_IDBID));
+		o_all_fields.insert(ipap_field_key(0,IPAP_FT_IDALLOCATION));
+		
+		
+		ipap_template::templateMandatoryFields = ipap_create_map<ipap_templ_type_t, set<ipap_field_key> >
+				(IPAP_SETID_AUCTION_TEMPLATE,d_auc_fields)
+				(IPAP_OPTNS_AUCTION_TEMPLATE,o_auc_fields)
+				(IPAP_SETID_BID_TEMPLATE,d_bid_fields)
+				(IPAP_OPTNS_BID_TEMPLATE,o_bid_fields)
+				(IPAP_SETID_ALLOCATION_TEMPLATE,d_all_fields)
+				(IPAP_OPTNS_ALLOCATION_TEMPLATE,o_all_fields);
+	}
+	
+	templateKeyIterList_t iter;
+	iter = ipap_template::templateMandatoryFields.find(templType);
+	return iter->second;
+}

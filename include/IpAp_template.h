@@ -30,6 +30,7 @@
 
 #include "stdincpp.h"
 #include "IpAp_field.h"
+#include "IpAp_field_key.h"
 
 
 
@@ -95,6 +96,9 @@ typedef vector<ipap_template_field_t> 			templateFieldList_t;
 typedef vector<ipap_template_field_t>::iterator templateFieldIterList_t;
 typedef vector<ipap_template_field_t>::const_iterator templateFieldConstIterList_t;
 
+typedef map<ipap_templ_type_t, set<ipap_field_key> >   			templateKeyList_t;
+typedef map<ipap_templ_type_t, set<ipap_field_key> >::iterator   templateKeyIterList_t;
+typedef map<ipap_templ_type_t, set<ipap_field_key> >::const_iterator   templateKeyConstIterList_t;
 
  
 class ipap_template
@@ -111,6 +115,11 @@ class ipap_template
 
 		static const char *TEMPLATE_XML_TAGS[];
 		
+		static templateKeyList_t templateKeys;
+
+		//! Maintains by template's type the list of mandatory fields.
+		static templateKeyList_t templateMandatoryFields;
+				
 		/**
 		 * Constructor for the class ipap_template
 		 */
@@ -239,8 +248,11 @@ class ipap_template
 	
 	
 		ipap_field  get_field( int eno, int type );
+		
+		static set<ipap_field_key> getTemplateTypeKeys(ipap_templ_type_t templType);
+		
+		static set<ipap_field_key> getTemplateTypeMandatoryFields(ipap_templ_type_t templType);
 };
-
 
 
 #endif // IPAP_TEMPLATE_H

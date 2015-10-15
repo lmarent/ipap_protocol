@@ -41,7 +41,8 @@
 class ipap_t
 {
     public: 
-		int              version;     			   ///< ipap version to export.
+		int              domain_id;				  ///< Id of the auction domain.
+		int              version;     			  ///< ipap version to export.
 		ipap_template_container templates;   	  ///< list of templates. 
 
 		unsigned char   *buffer;          		  ///< output buffer - the actual message when exported is put it here.

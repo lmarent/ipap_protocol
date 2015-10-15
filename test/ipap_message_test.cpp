@@ -21,8 +21,8 @@ class IpAp_Message_Test;
  */
 class ipap_message_test : public ipap_message {
   public:
-	ipap_message_test(int ipap_version, bool _encode_network)
-		: ipap_message(ipap_version, _encode_network) { }
+	ipap_message_test(int domain_id, int ipap_version, bool _encode_network)
+		: ipap_message(domain_id, ipap_version, _encode_network) { }
    
     ipap_message_test( unsigned char * param, size_t message_length, bool _encode_network)
 		: ipap_message(param, message_length, _encode_network) { }
@@ -63,7 +63,8 @@ void IpAp_Message_Test::setUp() {
 	
 	try 
 	{
-		mes = new ipap_message_test( IPAP_VERSION, false);
+		int domain_id = 6;
+		mes = new ipap_message_test( domain_id, IPAP_VERSION, false);
 	}
 	catch(ipap_bad_argument &e)
 	{
@@ -72,6 +73,7 @@ void IpAp_Message_Test::setUp() {
 	catch(Error &e)
 	{
 		cout << "Error setting up the log file: " << endl;
+		throw e;
 	}
 	
 }
@@ -87,7 +89,7 @@ void IpAp_Message_Test::testAddTemplate()
 		
 		int nfields;
 		int result;
-		uint32_t time = 234234;
+		uint64_t time = 234234;
 		
 		uint8_t   buf[5]  = { 1, 2, 3, 4 };
 						
@@ -120,7 +122,7 @@ void IpAp_Message_Test::testAddTemplate()
 		
 		mes->delete_all_templates();
 				
-		export_fields_t a[3]; 
+		ipap_fields_t a[3]; 
 		a[0].eno = 0;
 		a[0].ienum = IPAP_FT_STARTSECONDS;
 		a[0].length = 8;
@@ -132,8 +134,11 @@ void IpAp_Message_Test::testAddTemplate()
 		a[2].eno = 0;
 		a[2].ienum = IPAP_FT_UNITBUDGET;
 		a[2].length = 8;
-				
-		mes->make_template(a, 3, IPAP_SETID_ALLOCATION_TEMPLATE);
+		
+		
+		uint16_t templid= 256;
+		
+		mes->make_template(a, 3, IPAP_SETID_ALLOCATION_TEMPLATE, templid);
 		num_templates = mes->get_num_templates();
 		CPPUNIT_ASSERT( num_templates == 1 );
 	
@@ -141,6 +146,7 @@ void IpAp_Message_Test::testAddTemplate()
 	catch(ipap_bad_argument &e)
 	{
 		cout << "Error: " << e.what() << endl;
+		throw e;
 	}
 }
 
@@ -184,7 +190,7 @@ void IpAp_Message_Test::testExceptionAddTemplate()
 
 	mes->delete_all_templates();
 
-	export_fields_t a[3]; 
+	ipap_fields_t a[3]; 
 	a[0].eno = 0;
 	a[0].ienum = IPAP_FT_STARTSECONDS;
 	a[0].length = 8;
@@ -197,7 +203,8 @@ void IpAp_Message_Test::testExceptionAddTemplate()
 	a[2].ienum = IPAP_FT_UNITBUDGET;
 	a[2].length = 8;
 
-	CPPUNIT_ASSERT_THROW( mes->make_template(a, 4, IPAP_SETID_ALLOCATION_TEMPLATE), 
+	uint16_t templid = 256;
+	CPPUNIT_ASSERT_THROW( mes->make_template(a, 4, IPAP_SETID_ALLOCATION_TEMPLATE, templid), 
 							ipap_bad_argument);
 	
 }
@@ -208,8 +215,8 @@ void IpAp_Message_Test::testDataRecords()
 
 	uint16_t templatedataid = 0;
 	uint16_t templatescopeid = 0;
-	uint32_t starttime = 100;
-	uint32_t endtime = 200;
+	uint64_t starttime = 100;
+	uint64_t endtime = 200;
 	uint64_t octdel = 100;
 	uint64_t packdel = 300;
 	uint64_t packdel2 = 400;
@@ -284,6 +291,7 @@ void IpAp_Message_Test::testDataRecords()
 	catch(ipap_bad_argument &e)
 	{
 		cout << "Error: " << e.what() << endl;
+		throw e;
 	}
 }
 
@@ -293,8 +301,8 @@ void IpAp_Message_Test::testExportImport()
 	uint16_t templatedataid = 0;
 	uint16_t templatescopeid = 0;
 
-	uint32_t starttime = 100;
-	uint32_t endtime = 200;
+	uint64_t starttime = 100;
+	uint64_t endtime = 200;
 	uint64_t octdel = 100;
 	uint64_t packdel = 300;
 	uint64_t packdel2 = 400;
@@ -364,6 +372,7 @@ void IpAp_Message_Test::testExportImport()
 	catch(ipap_bad_argument &e)
 	{
 		cout << "Error: " << e.what() << endl;
+		throw e;
 	}
 	
 	

@@ -128,5 +128,7 @@
 #define strtof(nptr,endptr) strtod(nptr,endptr)
 #endif
 
+extern int g_timeout;
+
 #endif // __STDINC_H
 

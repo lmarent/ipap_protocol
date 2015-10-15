@@ -163,7 +163,7 @@ void IpAp_Field_Test::testException()
 void IpAp_Field_Test::testAddFields()
 {
 	field_container.initialize_forward();
-	
+		
 	CPPUNIT_ASSERT( field_container.get_num_fields() == TOT_FIELD_COUNT );
 	
 	field_container.initialize_reverse();

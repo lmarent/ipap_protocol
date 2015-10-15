@@ -128,5 +128,18 @@ void IpAp_Templates_Test::testAssign()
 	
 	CPPUNIT_ASSERT(template4 == *template5);
 	
+	set<ipap_field_key> set_key = ipap_template::getTemplateTypeKeys(IPAP_SETID_AUCTION_TEMPLATE);
+	
+	CPPUNIT_ASSERT(set_key.size() == 2);
+
+	set<ipap_field_key> set_key2 = ipap_template::getTemplateTypeKeys(IPAP_SETID_BID_TEMPLATE);
+	
+	CPPUNIT_ASSERT(set_key2.size() == 3);
+	
+	set<ipap_field_key> set_key3 = ipap_template::getTemplateTypeKeys(IPAP_SETID_ALLOCATION_TEMPLATE);
+	
+	CPPUNIT_ASSERT(set_key3.size() == 4);
+	
+	
 }
 // EOF

@@ -31,17 +31,22 @@
 #include "Error.h"
 
 
+const int ERROR_MSG_BUFSIZE = 8192;
+
 class ipap_bad_argument: public Error
 {
 
 public:
+
+	
 	/** Constructor (C strings). Creates bad argument Exception
      *  @param message C-style string error message.
      *                 The string contents are copied upon construction.
      *                 Hence, responsibility for deleting the \c char* lies
      *                 with the caller. 
-     */
-	ipap_bad_argument(const char* message);
+     *  printf-style constructor
+     */    
+    ipap_bad_argument(const char *fmt, ... );
 	
 	/** Constructor (C++ STL strings).
      *  @param message The error message.
@@ -62,17 +67,31 @@ public:
     
 }; 
 
-inline ipap_bad_argument::ipap_bad_argument(const char* message):
-Error(0,message)
-{
-
-}
 
 inline ipap_bad_argument::ipap_bad_argument(const std::string& message):
 Error(0,message)
 {
 
 }
+
+inline ipap_bad_argument::ipap_bad_argument(const char *fmt, ...):
+Error(0,"")
+{
+    va_list argp;
+    char buf[ERROR_MSG_BUFSIZE];
+
+    va_start(argp, fmt);
+
+    if (vsprintf( buf, fmt, argp ) < 0) {
+        throw (Error("error constructing error string"));
+    }
+    
+    va_end(argp);
+
+    error = buf;
+    errorNo = 0;
+}
+
 
 inline ipap_bad_argument::~ipap_bad_argument()
 {
@@ -83,5 +102,7 @@ inline const char* ipap_bad_argument::what()
 {
 	 return (Error::getError()).c_str();
 }
+
+
 
 #endif // IPAP_EXCEPTION_H

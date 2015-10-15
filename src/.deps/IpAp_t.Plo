@@ -198,7 +198,8 @@ IpAp_t.lo: IpAp_t.cpp /usr/include/stdc-predef.h ../include/IpAp_t.h \
  /usr/include/c++/4.8/iomanip /usr/include/c++/4.8/stdexcept \
  ../include/IpAp_field.h ../include/IpAp_def.h \
  ../include/IpAp_value_field.h ../include/IpAp_exception.h \
- ../include/Error.h ../include/IpAp_template_container.h
+ ../include/Error.h ../include/IpAp_field_key.h \
+ ../include/IpAp_template_container.h
 
 /usr/include/stdc-predef.h:
 
@@ -749,5 +750,7 @@ IpAp_t.lo: IpAp_t.cpp /usr/include/stdc-predef.h ../include/IpAp_t.h \
 ../include/IpAp_exception.h:
 
 ../include/Error.h:
+
+../include/IpAp_field_key.h:
 
 ../include/IpAp_template_container.h:

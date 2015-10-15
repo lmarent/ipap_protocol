@@ -29,7 +29,7 @@
 
 
 ipap_t::ipap_t():
-version(IPAP_VERSION), buffer(NULL), nrecords(0), offset(0), 
+domain_id(0), version(IPAP_VERSION), buffer(NULL), nrecords(0), offset(0), 
 buffer_lenght(0), seqno(0), cs_tid(0), cs_bytes(0), cs_offset(0), 
 cs_header(NULL), length(0), exporttime(0)
 {
@@ -41,11 +41,12 @@ cs_header(NULL), length(0), exporttime(0)
 
 
 ipap_t::ipap_t(const ipap_t& rhs):
-version(IPAP_VERSION), buffer(NULL), nrecords(0), offset(0), 
+domain_id(0), version(IPAP_VERSION), buffer(NULL), nrecords(0), offset(0), 
 buffer_lenght(0), seqno(0), cs_tid(0), cs_bytes(0), cs_offset(0), 
 cs_header(NULL), length(0), exporttime(0)
 {
 
+	domain_id = rhs.domain_id;
 	version = rhs.version;
 	templates = rhs.templates;
 	nrecords = rhs.nrecords;
@@ -85,6 +86,7 @@ ipap_t &
 ipap_t::operator=(const ipap_t & rhs)
 {
 
+	domain_id = rhs.domain_id;
 	version = rhs.version;
 	templates = rhs.templates;
 	nrecords = rhs.nrecords;
@@ -116,7 +118,8 @@ ipap_t::operator=(const ipap_t & rhs)
 bool 
 ipap_t::operator== (const ipap_t& rhs)
 {	
-	if ( (version != rhs.version) ||
+	if ( (domain_id != rhs.domain_id) ||
+	   (version != rhs.version) ||
 	   (templates != rhs.templates) ||
 	   (nrecords != rhs.nrecords) ||
 	   (offset != rhs.offset) ||

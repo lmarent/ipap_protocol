@@ -57,7 +57,7 @@
  **   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
  */   
 
-#define IPAP_HDR_BYTES             	12
+#define IPAP_HDR_BYTES             	16
 #define IPAP_SETID_AUCTEMPLATE     	1  // Auction Template
 #define IPAP_SETID_BIDTEMPLATE     	2  // Bid Template
 #define IPAP_SETID_ALLTEMPLATE     	3  // Allocation Template
@@ -87,7 +87,7 @@ typedef struct {
     int       eno;		/* IPFIX enterprize number, 0 for standard element */
     uint16_t  ienum;		/* IPFIX information element number */
     uint16_t  length;		/* length of this element in bytes - use 65535 for varlen elements */
-} export_fields_t;
+} ipap_fields_t;
 
 
 typedef vector<ipap_data_record>   dataRecordList_t;
@@ -133,7 +133,7 @@ class ipap_message
 	   /**
 	    * Alloc memory for buffers and pointers used to construct the message
 	    */
-	   void init( int ipap_version );
+	   void init( int domain_id, int ipap_version );
 	   	   
 	   /**
 	    * Adds a field of vendor type to the collection of fields
@@ -242,8 +242,8 @@ class ipap_message
 
 	   /**
 	    * Create a new class ipap_message
-	    * @param By default it sets the version in IPAP and encode in true, 
-	    * 		    the source id is set to 0.
+	    * @param By default it sets the version to IPAP_VERSION,
+	    * 	     encode in true, and the domain id is set to 0.
 	    */
 	   ipap_message();
 
@@ -255,10 +255,11 @@ class ipap_message
 
 	   /**
 	    * Create a new class ipap_message
-	    * @param ipap_version 	 - message version. 
+	    * @param  domain_id      - domain auction id
+	    * 		  ipap_version 	 - message version. 
 	    *  		 _encode_network - establish whether the message is going to be network encoded or not. 
 	    */
-	   ipap_message( int ipap_version, bool _encode_network);
+	   ipap_message( int domain_id, int ipap_version, bool _encode_network);
 	   
 	   /**
 	    * Create a new class ipap_message
@@ -296,6 +297,13 @@ class ipap_message
 	    */
 	   ipap_template * get_template_object(uint16_t templid);
 
+	   /**
+	    * Find a return a reference to a template with id: templid 
+	    * It makes an object copy.
+	    * @param templid - Id of the template
+	    * @return reference to the template, if not found, it returns NULL.
+	    */
+	   ipap_template * get_template_object(uint16_t templid) const ;
                    
 	   /**
 	    * Get a field definition from the container field
@@ -332,9 +340,12 @@ class ipap_message
 	    * 		 type		- type of template to create.
 	    * @return template id  
 	    */
-	   uint16_t make_template( export_fields_t *fields, 
+	   uint16_t make_template( ipap_fields_t *fields, 
 							   int nfields,
-							   ipap_templ_type_t type );
+							   ipap_templ_type_t type,
+							   uint16_t templid );
+	   
+	   void make_template(ipap_template *paramTempl);
 	   
 	   /**
 	    * Export the message to the internal buffer. This function must be
@@ -395,6 +406,38 @@ class ipap_message
 	   dateRecordListConstIter_t begin(void) const;
 	   
 	   dateRecordListConstIter_t end(void) const;
+	   
+	   /**
+	    * Get the domain that this message belongs to
+	    * @return domain id
+	    */	   
+	   int get_domain(); 
+	   
+	   /**
+	    * Get the domain that this message belongs to
+	    * @return domain id
+	    */	   
+	   int get_domain() const;
+	   
+	   uint16_t get_last_template_id();
+	   
+	   uint16_t get_last_template_id() const;
+	   
+	   int get_version();
+	   
+	   int get_version() const;
+	   
+	   void set_seqno(uint32_t _seqno);
+	   
+	   uint32_t get_seqno();
+	   
+	   uint32_t get_seqno() const;
+	   
+	   void set_exporttime(uint32_t _exporttime);
+	   
+	   uint32_t get_exporttime();
+	   
+	   uint32_t get_exporttime() const; 
 };
 
 

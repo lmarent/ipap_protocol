@@ -1,7 +1,5 @@
 ACLOCAL_AMFLAGS = -I m4
 
-pkgconfig_DATA = libanslp-0.0.pc
-
 lib_LTLIBRARIES = libipap.la
 
 pkginclude_HEADERS = $(top_srcdir)/include/ConstantsIpAp.h \
@@ -9,7 +7,7 @@ pkginclude_HEADERS = $(top_srcdir)/include/ConstantsIpAp.h \
 				     $(top_srcdir)/include/Logger.h \
 				     $(top_srcdir)/include/stdinc.h \
 				     $(top_srcdir)/include/stdincpp.h \
-					 $(top_srcdir)/include/IpAp.h \
+				     $(top_srcdir)/include/IpAp_create_map.h \
 					 $(top_srcdir)/include/IpAp_data_record.h \
 					 $(top_srcdir)/include/IpAp_def.h \
 				     $(top_srcdir)/include/IpAp_exception.h \
