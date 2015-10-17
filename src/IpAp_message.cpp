@@ -1061,15 +1061,22 @@ ipap_message::get_offset(void) const
     log->dlog(ch, "starting get_offset");
 #endif
 	
+	int offset = 0;
+	
 	if (message != NULL){
 		if (require_output == true){
-			return 0;
+			offset = -1;
 		}
 		return message->offset;
 	}
 	else{
-		return 0;
+		offset = -2;
 	}
+
+#ifdef DEBUG
+    log->dlog(ch, "ending get_offset: %d", offset);
+#endif	
+	return offset;
 }
 
 ipap_message::ipap_message(unsigned char * param, size_t message_length, bool _encode_network):
