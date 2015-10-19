@@ -1248,20 +1248,31 @@ ipap_message::ipap_decode_trecord( int setid,
         // Replace the template.
         message->templates.delete_template( templid );
     }
-    catch(ipap_bad_argument bad){
-		// The template must be created
+    catch(ipap_bad_argument &bad){
+		continue;
 	}	
+
+#ifdef DEBUG
+	log->dlog(ch, "It is going to create the template");
+#endif
 	
 	/** alloc mem
 	*/
 	switch( setid ) {
       case IPAP_SETID_AUCTION_TEMPLATE:
       case IPAP_SETID_BID_TEMPLATE:
-      case IPAP_SETID_ALLOCATION_TEMPLATE:			
+      case IPAP_SETID_ALLOCATION_TEMPLATE:
+	  case IPAP_OPTNS_AUCTION_TEMPLATE:
+      case IPAP_OPTNS_BID_TEMPLATE:
+      case IPAP_OPTNS_ALLOCATION_TEMPLATE:
       
 			templid = new_data_template( nfields, (ipap_templ_type_t) setid );
 			break;
+	  default:
+		    throw ipap_bad_argument("Invalid template type"); 
+	        break;
 	}
+	
 	t = message->templates.get_template(templid);	
     t->set_id(templid);
     t->set_maxfields(nfields);
