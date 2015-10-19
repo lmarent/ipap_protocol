@@ -1249,7 +1249,7 @@ ipap_message::ipap_decode_trecord( int setid,
         message->templates.delete_template( templid );
     }
     catch(ipap_bad_argument &bad){
-		continue;
+		// Continue.
 	}	
 
 #ifdef DEBUG
