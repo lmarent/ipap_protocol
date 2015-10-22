@@ -1247,8 +1247,7 @@ ipap_message::ipap_decode_trecord( int setid,
 		t = message->templates.get_template(templid);
         // Replace the template.
         message->templates.delete_template( templid );
-    }
-    catch(ipap_bad_argument &bad){
+    } catch(ipap_bad_argument &bad) {
 		// Continue.
 	}	
 
@@ -1266,43 +1265,58 @@ ipap_message::ipap_decode_trecord( int setid,
       case IPAP_OPTNS_BID_TEMPLATE:
       case IPAP_OPTNS_ALLOCATION_TEMPLATE:
       
-			templid = new_data_template( nfields, (ipap_templ_type_t) setid );
+      		t = new ipap_template();
+		
+			/** generate template id, todo!
+			*/
+			t->set_id( templid );
+			t->set_maxfields( nfields );
+		
+			if (g_lasttid < templid){
+				g_lasttid = templid;
+			}
+
+
+			/** add template to template container
+			*/
+			(message->templates).add_template(t);
+		
+			/**
+			* The message change, so it requires a new output 
+			*/
+			require_output = true;
+			t->set_type((ipap_templ_type_t) setid);
+			
 #ifdef DEBUG
 			log->dlog(ch, "create created with id: %d", templid );
 #endif			
+
+#ifdef DEBUG
+		    log->dlog(ch, "Method ipap_decode_trecord - type of template::%d", 
+						t->get_type());
+#endif	    
+			/**
+			 *  read field definitions
+			*/
+		    try{ 
+				for( i=0;  i < nfields; i++ ) {
+					if (offset >= len)
+						throw ipap_bad_argument("Field in template has a longer length than message"); 
+					else
+						read_field(t, buf+offset, len-offset, &offset);
+				}
+				*nread = offset;		
+			} catch (ipap_bad_argument bad) {
+				message->templates.get_template(templid);
+				throw ipap_bad_argument("Could not read the template information"); 
+			}
+			
 			break;
 	  default:
 		    throw ipap_bad_argument("Invalid template type"); 
 	        break;
 	}
 	
-	t = message->templates.get_template(templid);	
-    t->set_id(templid);
-    t->set_maxfields(nfields);
-
-#ifdef DEBUG
-		  log->dlog(ch, "Method ipap_decode_trecord - type of template::%d", 
-						t->get_type());
-#endif	    
-
-    /** read field definitions
-     */
-    try
-    {
-		for( i=0;  i < nfields; i++ ) {
-			if (offset >= len)
-				throw ipap_bad_argument("Field in template has a longer length than message"); 
-			else
-				read_field(t, buf+offset, len-offset, &offset);
-		}
-		*nread = offset;		
-	}
-	catch (ipap_bad_argument bad)
-	{
-		message->templates.get_template(templid);
-		throw ipap_bad_argument("Could not read the template information"); 
-	}
-
 }
 
 
