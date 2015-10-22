@@ -1187,7 +1187,7 @@ ipap_message::ipap_decode_trecord( int setid,
     const uint8_t * buf = reinterpret_cast<const uint8_t*>(buf2);
 
 #ifdef DEBUG
-    log->dlog(ch, "Starting method ipap_decode_trecord");
+    log->dlog(ch, "Starting method ipap_decode_trecord %d", setid);
 #endif	
 
     /** read template header
@@ -1267,6 +1267,9 @@ ipap_message::ipap_decode_trecord( int setid,
       case IPAP_OPTNS_ALLOCATION_TEMPLATE:
       
 			templid = new_data_template( nfields, (ipap_templ_type_t) setid );
+#ifdef DEBUG
+			log->dlog(ch, "create created with id: %d", templid );
+#endif			
 			break;
 	  default:
 		    throw ipap_bad_argument("Invalid template type"); 
