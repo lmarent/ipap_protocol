@@ -1503,7 +1503,7 @@ ipap_message::get_template(uint16_t templid)
 {
 
 #ifdef DEBUG
-    log->dlog(ch, "Starting method get_template");
+    log->dlog(ch, "Starting method get_template - id: %d", (int) templid);
 #endif
 
 	if (message != NULL)
