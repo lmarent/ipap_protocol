@@ -525,6 +525,9 @@ ipap_field::ipap_snprint_float( char * str, size_t size,
 	float value;
 	
 	memcpy (&value, in.get_value_byte(), sizeof(float) );
+	
+	std::cout << "value float " << value << endl;
+	
     return snprintf( str, size, "%7f", value );
 
 }
