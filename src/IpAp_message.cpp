@@ -1506,10 +1506,16 @@ ipap_message::get_template(uint16_t templid)
     log->dlog(ch, "Starting method get_template - id: %d", (int) templid);
 #endif
 
+	ipap_template * templ = NULL;
+
 	if (message != NULL)
-		return message->templates.get_template(templid);
-	else
-		return NULL;
+		templ = message->templates.get_template(templid);
+
+#ifdef DEBUG
+    log->dlog(ch, "Ending get_template");
+#endif
+
+	return templ;
 }
 
 ipap_template * 
