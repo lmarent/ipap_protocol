@@ -1442,7 +1442,6 @@ void ipap_message::ipap_decode_datarecord( ipap_template *templ,
     uint8_t       *p;
     int           i, len, bytesleft;
     ipap_data_record g_data(templ->get_template_id());
-    char salida[30];
 
 #ifdef DEBUG
     log->dlog(ch, "Starting method ipap_decode_datarecord");
@@ -1493,11 +1492,10 @@ void ipap_message::ipap_decode_datarecord( ipap_template *templ,
 		}
 
 #ifdef DEBUG
-		(templ->get_field(i).elem).snprint(salida, 30, value);
 		log->dlog(ch, "Reading field eno:%d ftype:%d value:%s", 
 					(templ->get_field(i).elem).get_field_type().eno,
 					(templ->get_field(i).elem).get_field_type().ftype,
-					 salida);
+					((templ->get_field(i).elem).writeValue(value)).c_str());
 #endif
 				
         g_data.insert_field((templ->get_field(i).elem).get_field_type().eno, 
