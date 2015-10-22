@@ -523,6 +523,10 @@ ipap_field::ipap_snprint_float( char * str, size_t size,
 {
 
 	float value;
+
+	if (in.get_value_byte() == NULL) {
+		std::cout << "error assigning float " << value << endl;
+	}
 	
 	memcpy (&value, in.get_value_byte(), sizeof(float) );
 	
