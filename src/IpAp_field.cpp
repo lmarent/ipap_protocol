@@ -483,8 +483,8 @@ ipap_field::ipap_decode_float( uint8_t *in,  size_t len, int relay_f )
 	float fvalue;
     ipap_value_field value;
     
-    std::cout << "decode float size :" << len << "size of float:" <<  sizeof(float) << endl;
-    
+    assert(sizeof(float) == 4);
+        
     if (len == sizeof(float)){
 		memcpy ( &fvalue, in, sizeof(float) );
         value = get_ipap_value_field(fvalue);
