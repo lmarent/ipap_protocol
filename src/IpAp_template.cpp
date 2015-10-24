@@ -241,15 +241,14 @@ ipap_template::getTemplateTypeMandatoryFields(ipap_templ_type_t templType)
 		d_auc_fields.insert(ipap_field_key(0,IPAP_FT_DESTINATIONIPV4ADDRESS));
 		d_auc_fields.insert(ipap_field_key(0,IPAP_FT_DESTINATIONIPV6ADDRESS));
 		d_auc_fields.insert(ipap_field_key(0,IPAP_FT_DESTINATIONAUCTIONPORT));
-		
-		
+		d_auc_fields.insert(ipap_field_key(0,IPAP_FT_STARTSECONDS));
+		d_auc_fields.insert(ipap_field_key(0,IPAP_FT_ENDSECONDS));
+		d_auc_fields.insert(ipap_field_key(0,IPAP_FT_INTERVALSECONDS));
+			
 		// Fill option auctions fields
 		set<ipap_field_key> o_auc_fields;
 		o_auc_fields.insert(ipap_field_key(0,IPAP_FT_IDAUCTION));
 		o_auc_fields.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
-		o_auc_fields.insert(ipap_field_key(0,IPAP_FT_STARTSECONDS));
-		o_auc_fields.insert(ipap_field_key(0,IPAP_FT_ENDSECONDS));
-		o_auc_fields.insert(ipap_field_key(0,IPAP_FT_INTERVALSECONDS));
 		o_auc_fields.insert(ipap_field_key(0,IPAP_FT_AUCTIONINGALGORITHMNAME));		
 		
 		// Fill data bid fields

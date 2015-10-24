@@ -70,7 +70,7 @@ ipap_template_container::get_template(uint16_t templid)
 
 	templateListIter_t it;
 	for( it=templateList.begin(); it != templateList.end(); ++it) {
-		if ( it->first ==  templid  ){			
+		if ( it->first == templid  ){			
 			return it->second;
 		}		
 	}
