@@ -588,14 +588,16 @@ void ipap_message::_write_hdr( void )
 		INSERTU16( message->buffer+buflen, buflen, message->version );
 		INSERTU16( message->buffer+buflen, buflen, message->offset + IPAP_HDR_BYTES );
 		INSERTU32( message->buffer+buflen, buflen, now );
-		INSERTU32( message->buffer+buflen, buflen, message->nrecords);
+		INSERTU32( message->buffer+buflen, buflen, message->seqno);
+		INSERTU32( message->buffer+buflen, buflen, message->ackseqno);		
 		INSERTU32( message->buffer+buflen, buflen, message->domain_id );
 	}
 	else{
 		INSERT_U16_NOENCODE( message->buffer+buflen, buflen, message->version );
 		INSERT_U16_NOENCODE( message->buffer+buflen, buflen, message->offset + IPAP_HDR_BYTES );
 		INSERT_U32_NOENCODE( message->buffer+buflen, buflen, now );
-		INSERT_U32_NOENCODE( message->buffer+buflen, buflen, message->nrecords);
+		INSERT_U32_NOENCODE( message->buffer+buflen, buflen, message->seqno);
+		INSERT_U32_NOENCODE( message->buffer+buflen, buflen, message->ackseqno);		
 		INSERT_U32_NOENCODE( message->buffer+buflen, buflen, message->domain_id );
 	}
 	message->length = message->offset + IPAP_HDR_BYTES;
@@ -1113,7 +1115,7 @@ ipap_message::ipap_parse_hdr( unsigned char *mes, int offset )
 #endif
 	
     uint16_t _count, _length, _version;
-    uint32_t _sysuptime, _unixtime, _exporttime, _seqno, _domainid; 
+    uint32_t _sysuptime, _unixtime, _exporttime, _seqno, _ackseqno, _domainid; 
         
     if (encode_network == true){
 		READ16(_version, mes);
@@ -1133,13 +1135,15 @@ ipap_message::ipap_parse_hdr( unsigned char *mes, int offset )
 		      READ16(_length, mes+2);
 		      READ32(_exporttime, mes+4);		      
 		      READ32(_seqno, mes+8);
-		      READ32(_domainid, mes+12);
+		      READ32(_ackseqno, mes+12);
+		      READ32(_domainid, mes+16);
 		  }
 		  else{
 			  READ16_NOENCODE(_length,mes+2);
 			  READ32_NOENCODE(_exporttime,mes+4);
 			  READ32_NOENCODE(_seqno,mes+8);
-			  READ32_NOENCODE(_domainid, mes+12);
+			  READ32_NOENCODE(_ackseqno, mes+12);
+			  READ32_NOENCODE(_domainid, mes+16);
 		  }
 #ifdef DEBUG
 		  log->dlog(ch, "Header received - lengh:%d exporttime %d seqno:%d domainid:%d", _length, _exporttime, _seqno, _domainid );
@@ -1151,6 +1155,7 @@ ipap_message::ipap_parse_hdr( unsigned char *mes, int offset )
           message->length = _length;
           message->exporttime = _exporttime;
           message->seqno = _seqno;
+          message->ackseqno = _ackseqno;
           message->domain_id = _domainid;
           break;
 
@@ -2013,4 +2018,44 @@ void ipap_message::set_exporttime(uint32_t _exporttime)
 	} else {
 		throw  ipap_bad_argument("IpAp_message: set exporttime, message not initiazed");
 	}
+}
+
+/*
+ * name:        set_ackseqno()
+ * parameters:
+ */
+void ipap_message::set_ackseqno(uint32_t _ackseqno)
+{
+	if (message != NULL){
+		message->ackseqno = _ackseqno;
+	} else {
+		throw  ipap_bad_argument("IpAp_message: set ackseqno, message not initiazed");
+	}
+}
+
+/*
+ * name:        get_ackseqno()
+ * parameters:
+ */	   
+uint32_t ipap_message::get_ackseqno()
+{
+	if (message != NULL){
+		return message->ackseqno;
+	} else{
+		return 0;
+	}	
+}
+
+
+/*
+ * name:        get_ackseqno()
+ * parameters:
+ */	   
+uint32_t ipap_message::get_ackseqno() const
+{
+	if (message != NULL){
+		return message->ackseqno;
+	} else{
+		return 0;
+	}	
 }

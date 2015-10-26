@@ -55,9 +55,13 @@
  **   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
  **   |                       Sequence Number                         |
  **   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ **   |                     ACK Sequence Number                       |
+ **   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ **   |                           DomainId                       	  |
+ **   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
  */   
 
-#define IPAP_HDR_BYTES             	16
+#define IPAP_HDR_BYTES             	20
 #define IPAP_SETID_AUCTEMPLATE     	1  // Auction Template
 #define IPAP_SETID_BIDTEMPLATE     	2  // Bid Template
 #define IPAP_SETID_ALLTEMPLATE     	3  // Allocation Template
@@ -419,24 +423,82 @@ class ipap_message
 	    */	   
 	   int get_domain() const;
 	   
+	   /**
+	    * Get the last template id created as part of this message
+	    * @return last template id.
+	    */	
 	   uint16_t get_last_template_id();
 	   
+	   /**
+	    * Get the last template id created as part of this message
+	    * @return last template id.
+	    */
 	   uint16_t get_last_template_id() const;
 	   
+	   /**
+	    * Get message version
+	    * @return version.
+	    */	
 	   int get_version();
 	   
+	   /**
+	    * Get message version
+	    * @return version.
+	    */	
 	   int get_version() const;
 	   
+	   /**
+	    * Set the message sequence number
+	    * @return 
+	    */	
 	   void set_seqno(uint32_t _seqno);
 	   
+	   /**
+	    * Get the message sequence number
+	    * @return 
+	    */	
 	   uint32_t get_seqno();
 	   
+	   /**
+	    * Get the message sequence number
+	    * @return 
+	    */	
 	   uint32_t get_seqno() const;
 	   
+	   /**
+	    * Set the acknowledge message sequence number
+	    * @return 
+	    */	
+	   void set_ackseqno(uint32_t _ackseqno);
+	   
+	   /**
+	    * Get the acknowledge message sequence number
+	    * @return 
+	    */	
+	   uint32_t get_ackseqno();
+
+	   /**
+	    * Get the acknowledge message sequence number
+	    * @return 
+	    */	
+	   uint32_t get_ackseqno() const;
+	   
+	   /**
+	    * Set the export time
+	    * @return 
+	    */	
 	   void set_exporttime(uint32_t _exporttime);
 	   
+	   /**
+	    * Get the export time
+	    * @return 
+	    */	
 	   uint32_t get_exporttime();
 	   
+	   /**
+	    * Get the export time
+	    * @return 
+	    */	
 	   uint32_t get_exporttime() const; 
 };
 

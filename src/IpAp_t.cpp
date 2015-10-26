@@ -30,7 +30,7 @@
 
 ipap_t::ipap_t():
 domain_id(0), version(IPAP_VERSION), buffer(NULL), nrecords(0), offset(0), 
-buffer_lenght(0), seqno(0), cs_tid(0), cs_bytes(0), cs_offset(0), 
+buffer_lenght(0), seqno(0), ackseqno(0), cs_tid(0), cs_bytes(0), cs_offset(0), 
 cs_header(NULL), length(0), exporttime(0)
 {
 
@@ -42,7 +42,7 @@ cs_header(NULL), length(0), exporttime(0)
 
 ipap_t::ipap_t(const ipap_t& rhs):
 domain_id(0), version(IPAP_VERSION), buffer(NULL), nrecords(0), offset(0), 
-buffer_lenght(0), seqno(0), cs_tid(0), cs_bytes(0), cs_offset(0), 
+buffer_lenght(0), seqno(0), ackseqno(0), cs_tid(0), cs_bytes(0), cs_offset(0), 
 cs_header(NULL), length(0), exporttime(0)
 {
 
@@ -51,7 +51,8 @@ cs_header(NULL), length(0), exporttime(0)
 	templates = rhs.templates;
 	nrecords = rhs.nrecords;
 	offset = rhs.offset;
-	seqno = rhs.seqno;	
+	seqno = rhs.seqno;
+	ackseqno = rhs.ackseqno;
 	buffer_lenght = rhs.buffer_lenght;
 	if (buffer_lenght > 0){
 		buffer = new unsigned char[buffer_lenght];
@@ -92,6 +93,7 @@ ipap_t::operator=(const ipap_t & rhs)
 	nrecords = rhs.nrecords;
 	offset = rhs.offset;
 	seqno = rhs.seqno;
+	ackseqno = rhs.ackseqno;
 	buffer_lenght = rhs.buffer_lenght;	
 	if (buffer_lenght > 0){
 		buffer = new unsigned char[buffer_lenght];
@@ -124,7 +126,8 @@ ipap_t::operator== (const ipap_t& rhs)
 	   (nrecords != rhs.nrecords) ||
 	   (offset != rhs.offset) ||
 	   (buffer_lenght != rhs.buffer_lenght) ||
-	   (seqno != rhs.seqno)  
+	   (seqno != rhs.seqno)  || 
+	   (ackseqno != rhs.ackseqno)
 	   ){
 		
 		return false;

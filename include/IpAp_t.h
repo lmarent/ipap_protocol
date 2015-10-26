@@ -49,7 +49,8 @@ class ipap_t
 		int         	nrecords;        		  ///< no. of records in buffer.
 		size_t      	offset;           		  ///< Number of bytes in the buffer, output buffer fill level.
 		int 			buffer_lenght;    		  ///< output buffer allocated length, it is readjusted as more memory is needed.
-		uint32_t   		seqno;            		  ///< sequence no. of next message.
+		uint32_t   		seqno;            		  ///< sequence no. of the message.
+		uint32_t        ackseqno;				  ///< Ack sequence no. for the message.
 
 		int        		cs_tid;            		  ///< template id of current dataset 
 		int        		cs_bytes;          		  ///< size of current set

@@ -306,6 +306,9 @@ void IpAp_Message_Test::testExportImport()
 	uint64_t octdel = 100;
 	uint64_t packdel = 300;
 	uint64_t packdel2 = 400;
+	uint32_t seqNbr = 4;
+	uint32_t ackSeqNbr = 4;
+	
 	int num_templates = 0;
 	unsigned char *buf1  = (unsigned char *) "1";
 	unsigned char *buf1a = (unsigned char *) "2";
@@ -354,8 +357,10 @@ void IpAp_Message_Test::testExportImport()
 		data2.insert_field(0, IPAP_FT_ENDSECONDS, fvalue3);
 		data2.insert_field(0, IPAP_FT_AUCTIONINGALGORITHMNAME, fvalue4a);
 		mes->include_data(templatedataid, data2);
-		
+		mes->set_seqno(seqNbr);
+		mes->set_ackseqno(ackSeqNbr);
 		mes->output();
+		
 		message = mes->get_message();
 		offset = mes->get_offset();
 		
@@ -366,6 +371,8 @@ void IpAp_Message_Test::testExportImport()
 		CPPUNIT_ASSERT( num_templates == 1 );
 		
 		std::cout << "import offset:" << msgb.get_offset() << std::endl;
+		
+		CPPUNIT_ASSERT(msgb.get_ackseqno() == ackSeqNbr);
 		
 		CPPUNIT_ASSERT( msgb.operator==( *mes) );
 	}
