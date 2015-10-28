@@ -197,18 +197,15 @@ ipap_template::getTemplateTypeKeys(ipap_templ_type_t templType)
 		// Fill auction keys 
 		set<ipap_field_key> auc_field_keys;
 		auc_field_keys.insert(ipap_field_key(0,IPAP_FT_IDAUCTION));
-		auc_field_keys.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
 		
 		// Fill bid keys
 		set<ipap_field_key> bid_field_keys;
 		bid_field_keys.insert(ipap_field_key(0,IPAP_FT_IDAUCTION));
-		bid_field_keys.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
 		bid_field_keys.insert(ipap_field_key(0,IPAP_FT_IDBID));
 		
 		// Fill allocation keys
 		set<ipap_field_key> all_field_keys;
 		all_field_keys.insert(ipap_field_key(0,IPAP_FT_IDAUCTION));
-		all_field_keys.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
 		all_field_keys.insert(ipap_field_key(0,IPAP_FT_IDBID));
 		all_field_keys.insert(ipap_field_key(0,IPAP_FT_IDALLOCATION));
 		
@@ -254,14 +251,14 @@ ipap_template::getTemplateTypeMandatoryFields(ipap_templ_type_t templType)
 		// Fill data bid fields
 		set<ipap_field_key> d_bid_fields;
 		d_bid_fields.insert(ipap_field_key(0,IPAP_FT_IDAUCTION));
-		d_bid_fields.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
 		d_bid_fields.insert(ipap_field_key(0,IPAP_FT_IDBID));
+		d_bid_fields.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
 		
 		// Fill option bid fields
 		set<ipap_field_key> o_bid_fields;
 		o_bid_fields.insert(ipap_field_key(0,IPAP_FT_IDAUCTION));
-		o_bid_fields.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
 		o_bid_fields.insert(ipap_field_key(0,IPAP_FT_IDBID));
+		o_bid_fields.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
 		o_bid_fields.insert(ipap_field_key(0,IPAP_FT_STARTSECONDS));
 		o_bid_fields.insert(ipap_field_key(0,IPAP_FT_ENDSECONDS));
 		
@@ -269,16 +266,16 @@ ipap_template::getTemplateTypeMandatoryFields(ipap_templ_type_t templType)
 		// Fill data allocation fields
 		set<ipap_field_key> d_all_fields;
 		d_all_fields.insert(ipap_field_key(0,IPAP_FT_IDAUCTION));
-		d_all_fields.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
 		d_all_fields.insert(ipap_field_key(0,IPAP_FT_IDBID));
 		d_all_fields.insert(ipap_field_key(0,IPAP_FT_IDALLOCATION));
+		d_all_fields.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
 		
 		// Fill option allocation fields
 		set<ipap_field_key> o_all_fields;
 		o_all_fields.insert(ipap_field_key(0,IPAP_FT_IDAUCTION));
-		o_all_fields.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
 		o_all_fields.insert(ipap_field_key(0,IPAP_FT_IDBID));
 		o_all_fields.insert(ipap_field_key(0,IPAP_FT_IDALLOCATION));
+		o_all_fields.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
 		
 		
 		ipap_template::templateMandatoryFields = ipap_create_map<ipap_templ_type_t, set<ipap_field_key> >

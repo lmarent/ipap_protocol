@@ -352,6 +352,21 @@ class ipap_message
 	   void make_template(ipap_template *paramTempl);
 	   
 	   /**
+	    * This method establish the template export time, this prevents from
+	    * sending again messages that include templates already transmitted.
+	    * @param templid 	- number of the template to set the export time.
+	    * 		 time	 	- transmission time.
+	    */	   
+	   void set_template_timesend(uint16_t templid, time_t time);
+	   
+	   /**
+	    * This method returns template's export time. When greater than zero 
+	    * this field prevents from sending templates in messages.
+	    * @param templid 	- number of the template to set the export time.
+	    */	   	   
+	   time_t get_template_timesend(uint16_t templid);
+	   
+	   /**
 	    * Export the message to the internal buffer. This function must be
 	    * executed before associating the message as an spec object.
 	    */

@@ -523,6 +523,54 @@ ipap_message::make_template(ipap_template *templ)
 	}
 }
 
+void 
+ipap_message::set_template_timesend(uint16_t templid, time_t time)
+{
+
+#ifdef DEBUG
+    log->dlog(ch, "Starting method set_template_timesend - templateId:%d", templid);
+#endif
+
+    ipap_template *t = NULL;
+	try
+	{
+		t = message->templates.get_template(templid);
+		
+		if (t != NULL)
+			t->set_time_send(time);
+		
+	} catch (ipap_bad_argument &e) {
+#ifdef DEBUG
+    log->dlog(ch, "template not found:%d", templid);
+#endif	
+	}		
+}
+
+time_t 
+ipap_message::get_template_timesend(uint16_t templid)
+{
+
+#ifdef DEBUG
+    log->dlog(ch, "Starting method get_template_timesend - templateId:%d", templid);
+#endif
+
+    ipap_template *t = NULL;
+	try
+	{
+		t = message->templates.get_template(templid);
+		
+		if (t != NULL)
+			return t->get_tsend();
+		
+	} catch (ipap_bad_argument &e) {
+#ifdef DEBUG
+	    log->dlog(ch, "template not found:%d", templid);
+#endif	
+		throw e;
+	}		
+}
+
+
 void ipap_message::finish_cs( void )
 {
 
@@ -829,6 +877,11 @@ ipap_message::output_set( uint16_t templid )
      */
     if (templ==NULL)
         throw ipap_bad_argument("template not included in the message");
+  
+#ifdef DEBUG
+    log->dlog(ch, "template send at %d ", templ->get_tsend());
+#endif 
+  
     	
     /** writes the templates if it was not done before
      */
@@ -1663,8 +1716,7 @@ ipap_message::ipap_import( unsigned char  *buffer, size_t message_length )
 			}
             nread += setlen;
         }
-        else if ( setid > 255 )
-        {
+        else if ( setid > 255 ) {
             /** get template
              */
             ipap_template *templ = get_template(setid);
@@ -1692,8 +1744,7 @@ ipap_message::ipap_import( unsigned char  *buffer, size_t message_length )
                 }
                 nread += setlen;
             }
-        }
-        else {
+        } else {
             // mlogf( 0, "[%s] set%d: invalid set id %d, set skipped!\n",
             //       func, i+1, setid );
             nread += setlen;
