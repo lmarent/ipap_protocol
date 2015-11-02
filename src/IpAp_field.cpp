@@ -527,13 +527,11 @@ ipap_field::ipap_snprint_float( char * str, size_t size,
 	float value;
 
 	if (in.get_value_byte() == NULL) {
-		std::cout << "error assigning float " << value << endl;
+		throw ipap_bad_argument("error assigning float %f", value  );
 	}
 	
 	memcpy (&value, in.get_value_byte(), sizeof(float) );
-	
-	std::cout << "value float " << value << endl;
-	
+		
     return snprintf( str, size, "%7f", value );
 
 }
@@ -691,7 +689,8 @@ ipap_field::get_ipap_value_field(uint8_t &_value8)
 	}
 	else{
 		ostringstream s;
-		s << "Value does not agree with Field Type expected len:1 field len:";
+		s << "Field eno:" << get_field_type().eno << " ftype:" << get_field_type().ftype; 
+		s << " value does not agree with Field Type expected len:1 field len:";
 		s << (int) field_type.length;
 		throw ipap_bad_argument(s.str());
 	}
@@ -707,7 +706,8 @@ ipap_field::get_ipap_value_field(uint16_t &_value16)
 	}
 	else{
 		ostringstream s;
-		s << "Value does not agree with Field Type expected len:2 field len:";
+		s << "Field eno:" << get_field_type().eno << " ftype:" << get_field_type().ftype; 
+		s << " value does not agree with Field Type expected len:2 field len:";
 		s << (int) field_type.length;
 		throw ipap_bad_argument(s.str());
 	}
@@ -724,7 +724,8 @@ ipap_field::get_ipap_value_field(uint32_t &_value32)
 	}
 	else{
 		ostringstream s;
-		s << "Value does not agree with Field Type expected len:4 field len:";
+		s << "Field eno:" << get_field_type().eno << " ftype:" << get_field_type().ftype; 
+		s << " value does not agree with Field Type expected len:4 field len:";
 		s << (int) field_type.length;
 		throw ipap_bad_argument(s.str());
 	}
@@ -740,7 +741,8 @@ ipap_field::get_ipap_value_field(uint64_t &_value64)
 	}
 	else{
 		ostringstream s;
-		s << "Value does not agree with Field Type expected len:8 field len:";
+		s << "Field eno:" << get_field_type().eno << " ftype:" << get_field_type().ftype; 
+		s << " value does not agree with Field Type expected len:8 field len:";
 		s << (int) field_type.length;
 		throw ipap_bad_argument(s.str());
 	}
@@ -756,8 +758,10 @@ ipap_field::get_ipap_value_field(float &_fvalue)
 		field.set_value_float32(_fvalue); 
 		return field;
 	}else{
-		string error = "Value does not agree with Field Type expected float value";
-		throw ipap_bad_argument(error);
+		ostringstream s;
+		s << "Field eno:" << get_field_type().eno << " ftype:" << get_field_type().ftype;
+		s << " value does not agree with Field Type expected float value";
+		throw ipap_bad_argument(s.str());
 	}
 }
 
@@ -769,8 +773,10 @@ ipap_field::get_ipap_value_field(double dvalue)
 		field.set_value_float64(dvalue); 
 		return field;		
 	} else {
-		string error = "Value does not agree with Field Type expected double value";
-		throw ipap_bad_argument(error);
+		ostringstream s;
+		s << "Field eno:" << get_field_type().eno << " ftype:" << get_field_type().ftype;
+		s << " value does not agree with Field Type expected double value";
+		throw ipap_bad_argument(s.str());
 	}
 }
 

@@ -67,6 +67,7 @@ using namespace __gnu_cxx;
 #include <streambuf>
 #include <exception>
 #include <stdexcept>
+#include <limits>
 
 
 using namespace std;

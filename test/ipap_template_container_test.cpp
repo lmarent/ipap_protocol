@@ -98,14 +98,14 @@ void IpAp_Container_Template_Test::testAssign()
 	template1->add_field((field3.get_field_type()).length, KNOWN, 1, field3);
 
 	template2->set_id(2);
-	template2->set_type(IPAP_SETID_BID_TEMPLATE);
+	template2->set_type(IPAP_SETID_BID_OBJECT_TEMPLATE);
 	template2->set_maxfields(3);
 	template2->add_field((field1.get_field_type()).length, KNOWN, 1, field1);
 	template2->add_field((field2.get_field_type()).length, KNOWN, 1, field2);
 	template2->add_field((field3.get_field_type()).length, KNOWN, 1, field3);
 		
 	template3->set_id(3);
-	template3->set_type(IPAP_SETID_ALLOCATION_TEMPLATE);
+	template3->set_type(IPAP_OPTNS_BID_OBJECT_TEMPLATE);
 	template3->set_maxfields(3);
 	template3->add_field((field1.get_field_type()).length, KNOWN, 1, field1);
 	template3->add_field((field2.get_field_type()).length, KNOWN, 1, field2);

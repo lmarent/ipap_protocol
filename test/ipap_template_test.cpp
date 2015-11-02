@@ -112,7 +112,7 @@ void IpAp_Templates_Test::testAssign()
 	CPPUNIT_ASSERT(*template1 == *template2);
 
 	template3->set_id(1);
-	template3->set_type(IPAP_SETID_ALLOCATION_TEMPLATE);
+	template3->set_type(IPAP_SETID_BID_OBJECT_TEMPLATE);
 	template3->set_maxfields(3);
 	template3->add_field((field1.get_field_type()).length, KNOWN, 1, field1);
 	template3->add_field((field2.get_field_type()).length, KNOWN, 1, field2);
@@ -130,16 +130,19 @@ void IpAp_Templates_Test::testAssign()
 	
 	set<ipap_field_key> set_key = ipap_template::getTemplateTypeKeys(IPAP_SETID_AUCTION_TEMPLATE);
 	
-	CPPUNIT_ASSERT(set_key.size() == 2);
+	CPPUNIT_ASSERT(set_key.size() == 1);
 
-	set<ipap_field_key> set_key2 = ipap_template::getTemplateTypeKeys(IPAP_SETID_BID_TEMPLATE);
+	set<ipap_field_key> set_key2 = ipap_template::getTemplateTypeKeys(IPAP_SETID_BID_OBJECT_TEMPLATE);
 	
-	CPPUNIT_ASSERT(set_key2.size() == 3);
+	CPPUNIT_ASSERT(set_key2.size() == 2);
 	
-	set<ipap_field_key> set_key3 = ipap_template::getTemplateTypeKeys(IPAP_SETID_ALLOCATION_TEMPLATE);
+	set<ipap_templ_type_t> set_templ = ipap_template::getObjectTemplateTypes(IPAP_AUCTION);
 	
-	CPPUNIT_ASSERT(set_key3.size() == 4);
+	CPPUNIT_ASSERT(set_templ.size() == 2);
 	
+	ipap_object_type_t obj_type = ipap_template::getObjectType(IPAP_SETID_AUCTION_TEMPLATE);
+	
+	CPPUNIT_ASSERT(obj_type == IPAP_AUCTION);
 	
 }
 // EOF

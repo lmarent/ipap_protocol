@@ -1252,11 +1252,14 @@ ipap_message::ipap_decode_trecord( int setid,
      */
     switch( setid ) {
       case IPAP_SETID_AUCTION_TEMPLATE:
-      case IPAP_SETID_BID_TEMPLATE:
-      case IPAP_SETID_ALLOCATION_TEMPLATE:
       case IPAP_OPTNS_AUCTION_TEMPLATE:
-      case IPAP_OPTNS_BID_TEMPLATE:
-      case IPAP_OPTNS_ALLOCATION_TEMPLATE:
+      case IPAP_SETID_BID_OBJECT_TEMPLATE:
+      case IPAP_OPTNS_BID_OBJECT_TEMPLATE:
+	  case IPAP_SETID_ASK_OBJECT_TEMPLATE:
+      case IPAP_OPTNS_ASK_OBJECT_TEMPLATE:
+	  case IPAP_SETID_ALLOC_OBJECT_TEMPLATE:
+	  case IPAP_OPTNS_ALLOC_OBJECT_TEMPLATE:
+      
                     
           if ( len<4 )
              throw ipap_bad_argument("invalid message lenght");
@@ -1317,11 +1320,13 @@ ipap_message::ipap_decode_trecord( int setid,
 	*/
 	switch( setid ) {
       case IPAP_SETID_AUCTION_TEMPLATE:
-      case IPAP_SETID_BID_TEMPLATE:
-      case IPAP_SETID_ALLOCATION_TEMPLATE:
-	  case IPAP_OPTNS_AUCTION_TEMPLATE:
-      case IPAP_OPTNS_BID_TEMPLATE:
-      case IPAP_OPTNS_ALLOCATION_TEMPLATE:
+      case IPAP_OPTNS_AUCTION_TEMPLATE:
+      case IPAP_SETID_BID_OBJECT_TEMPLATE:
+      case IPAP_OPTNS_BID_OBJECT_TEMPLATE:
+	  case IPAP_SETID_ASK_OBJECT_TEMPLATE:
+      case IPAP_OPTNS_ASK_OBJECT_TEMPLATE:
+	  case IPAP_SETID_ALLOC_OBJECT_TEMPLATE:
+	  case IPAP_OPTNS_ALLOC_OBJECT_TEMPLATE:
       
       		t = new ipap_template();
 		
@@ -1697,11 +1702,13 @@ ipap_message::ipap_import( unsigned char  *buffer, size_t message_length )
 		/** read rest of ipap message
          */
         if ( (setid == IPAP_SETID_AUCTION_TEMPLATE)
-             || (setid == IPAP_SETID_BID_TEMPLATE)
-             || (setid == IPAP_SETID_ALLOCATION_TEMPLATE)
              || (setid == IPAP_OPTNS_AUCTION_TEMPLATE)
-             || (setid == IPAP_OPTNS_BID_TEMPLATE)
-             || (setid == IPAP_OPTNS_ALLOCATION_TEMPLATE) ) {
+             || (setid == IPAP_SETID_BID_OBJECT_TEMPLATE)
+             || (setid == IPAP_OPTNS_BID_OBJECT_TEMPLATE) 
+             || (setid == IPAP_SETID_ASK_OBJECT_TEMPLATE)
+             || (setid == IPAP_OPTNS_ASK_OBJECT_TEMPLATE) 
+             || (setid == IPAP_SETID_ALLOC_OBJECT_TEMPLATE)
+             || (setid == IPAP_OPTNS_ALLOC_OBJECT_TEMPLATE) ) {
             /** parse a template set ( option or normal template ).
              */
 

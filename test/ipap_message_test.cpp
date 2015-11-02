@@ -108,7 +108,7 @@ void IpAp_Message_Test::testAddTemplate()
 		num_templates = mes->get_num_templates();
 		CPPUNIT_ASSERT( num_templates == 0 );
 				
-		templatedataid = mes->new_data_template( nfields, IPAP_SETID_BID_TEMPLATE );
+		templatedataid = mes->new_data_template( nfields, IPAP_SETID_BID_OBJECT_TEMPLATE );
 		num_templates = mes->get_num_templates();
 		CPPUNIT_ASSERT( num_templates == 1 );
 						
@@ -138,7 +138,7 @@ void IpAp_Message_Test::testAddTemplate()
 		
 		uint16_t templid= 256;
 		
-		mes->make_template(a, 3, IPAP_SETID_ALLOCATION_TEMPLATE, templid);
+		mes->make_template(a, 3, IPAP_OPTNS_BID_OBJECT_TEMPLATE, templid);
 		num_templates = mes->get_num_templates();
 		CPPUNIT_ASSERT( num_templates == 1 );
 	
@@ -156,8 +156,13 @@ void IpAp_Message_Test::testExceptionAddTemplate()
 
 	int nfields = 0;
 	CPPUNIT_ASSERT_THROW( mes->new_data_template( nfields, IPAP_SETID_AUCTION_TEMPLATE ),ipap_bad_argument);
-	CPPUNIT_ASSERT_THROW( mes->new_data_template( nfields, IPAP_SETID_BID_TEMPLATE ),ipap_bad_argument);
-	CPPUNIT_ASSERT_THROW( mes->new_data_template( nfields, IPAP_SETID_ALLOCATION_TEMPLATE ),ipap_bad_argument);
+	CPPUNIT_ASSERT_THROW( mes->new_data_template( nfields, IPAP_OPTNS_AUCTION_TEMPLATE ),ipap_bad_argument);
+	CPPUNIT_ASSERT_THROW( mes->new_data_template( nfields, IPAP_SETID_BID_OBJECT_TEMPLATE ),ipap_bad_argument);
+	CPPUNIT_ASSERT_THROW( mes->new_data_template( nfields, IPAP_OPTNS_BID_OBJECT_TEMPLATE ),ipap_bad_argument);
+	CPPUNIT_ASSERT_THROW( mes->new_data_template( nfields, IPAP_SETID_ASK_OBJECT_TEMPLATE ),ipap_bad_argument);
+	CPPUNIT_ASSERT_THROW( mes->new_data_template( nfields, IPAP_OPTNS_ASK_OBJECT_TEMPLATE ),ipap_bad_argument);
+	CPPUNIT_ASSERT_THROW( mes->new_data_template( nfields, IPAP_SETID_ALLOC_OBJECT_TEMPLATE ),ipap_bad_argument);
+	CPPUNIT_ASSERT_THROW( mes->new_data_template( nfields, IPAP_OPTNS_ALLOC_OBJECT_TEMPLATE ),ipap_bad_argument);
 
 	uint16_t templateAuctionid = 0;
 	uint16_t templateBidid = 0;
@@ -204,7 +209,7 @@ void IpAp_Message_Test::testExceptionAddTemplate()
 	a[2].length = 8;
 
 	uint16_t templid = 256;
-	CPPUNIT_ASSERT_THROW( mes->make_template(a, 4, IPAP_SETID_ALLOCATION_TEMPLATE, templid), 
+	CPPUNIT_ASSERT_THROW( mes->make_template(a, 4, IPAP_SETID_BID_OBJECT_TEMPLATE, templid), 
 							ipap_bad_argument);
 	
 }
@@ -363,15 +368,11 @@ void IpAp_Message_Test::testExportImport()
 		
 		message = mes->get_message();
 		offset = mes->get_offset();
-		
-		std::cout << "offset:" << offset << std::endl;
-		
+				
 		ipap_message_test msgb (message, offset, false);
 		num_templates = msgb.get_num_templates();
 		CPPUNIT_ASSERT( num_templates == 1 );
-		
-		std::cout << "import offset:" << msgb.get_offset() << std::endl;
-		
+				
 		CPPUNIT_ASSERT(msgb.get_ackseqno() == ackSeqNbr);
 		
 		CPPUNIT_ASSERT( msgb.operator==( *mes) );

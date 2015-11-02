@@ -39,7 +39,7 @@
 #define IPAP_CODING_DOUBLE 8
 
 #define REV_PEN 29305
-#define TOT_FIELD_COUNT    50
+#define TOT_FIELD_COUNT    51
 
 typedef int (*ipap_encode_func) (void *, void*, size_t);
 typedef int (*ipap_decode_func) (void *, void*, size_t);
@@ -90,8 +90,8 @@ typedef struct
 #define IPAP_FT_SOURCEMACADDRESS             	22
 #define IPAP_FT_POSTDESTINATIONMACADDRESS    	23
 #define IPAP_FT_IDAUCTION			    		24
-#define IPAP_FT_IDBID			    			25
-#define IPAP_FT_IDALLOCATION					26
+#define IPAP_FT_IDBIDDINGOBJECT    				25
+#define IPAP_FT_BIDDINGOBJECTTYPE				26
 #define IPAP_FT_STARTSECONDS             		27
 #define IPAP_FT_ENDSECONDS               		28
 #define IPAP_FT_STARTMILLISECONDS        		29
@@ -115,8 +115,7 @@ typedef struct
 #define IPAP_FT_SOURCEAUCTIONPORT          		47
 #define IPAP_FT_DESTINATIONAUCTIONPORT          48
 #define IPAP_FT_IPVERSION                    	49
-
-
+#define IPAP_FT_AUCTIONINGOBJECTSTATUS			50
 
 
 
@@ -147,8 +146,8 @@ typedef struct
 #define IPAP_CN_SOURCEMACADDRESS             	"ie0_22"
 #define IPAP_CN_POSTDESTINATIONMACADDRESS    	"ie0_23"
 #define IPAP_CN_IDAUCTION			    		"ie0_24"
-#define IPAP_CN_IDBID			    			"ie0_25"
-#define IPAP_CN_IDALLOCATION					"ie0_26"
+#define IPAP_CN_IDBIDDINGOBJECT	    			"ie0_25"
+#define IPAP_CN_BIDDINGOBJECTTYPE				"ie0_26"
 #define IPAP_CN_STARTSECONDS             		"ie0_27"
 #define IPAP_CN_ENDSECONDS               		"ie0_28"
 #define IPAP_CN_STARTMILLISECONDS        		"ie0_29"
@@ -172,6 +171,7 @@ typedef struct
 #define IPAP_CN_SOURCEAUCTIONPORT          		"ie0_47"
 #define IPAP_CN_DESTINATIONAUCTIONPORT          "ie0_48"
 #define IPAP_CN_IPVERSION                    	"ie0_49"
+#define IPAP_CN_AUCTIONINGOBJECTSTATUS			"ie0_50"
  
   
 #endif // IPAP_DEF_H

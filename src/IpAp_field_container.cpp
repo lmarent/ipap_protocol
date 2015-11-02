@@ -121,10 +121,10 @@ void ipap_field_container::initialize_forward(void)
      "postDestinationMacAddress", "PostDestinationMacAddress", "" );
    AddFieldType( 0, IPAP_FT_IDAUCTION, 65535, IPAP_CODING_STRING, 
      "idAuction", "IdAuction", "" );
-   AddFieldType( 0, IPAP_FT_IDBID, 65535, IPAP_CODING_STRING, 
-     "idBid", "IdBid", "" );
-   AddFieldType( 0, IPAP_FT_IDALLOCATION, 65535, IPAP_CODING_STRING, 
-     "idAllocation", "IdAllocation", "" );
+   AddFieldType( 0, IPAP_FT_IDBIDDINGOBJECT, 65535, IPAP_CODING_STRING, 
+     "idBiddingObject", "IdBidingObject", "" );
+   AddFieldType( 0, IPAP_FT_BIDDINGOBJECTTYPE, 1, IPAP_CODING_UINT, 
+     "biddingObjectType", "biddingObjectType", "" );
    AddFieldType( 0, IPAP_FT_STARTSECONDS, 8, IPAP_CODING_UINT, 
      "startSeconds", "StartSeconds", "" ),      
    AddFieldType( 0, IPAP_FT_ENDSECONDS, 8, IPAP_CODING_UINT, 
@@ -171,6 +171,8 @@ void ipap_field_container::initialize_forward(void)
      "destinationAuctionPort", "DestinationAuctionPort", "" );
    AddFieldType( 0, IPAP_FT_IPVERSION, 1, IPAP_CODING_UINT, 
      "ipVersion", "ipVersion", "" );
+   AddFieldType( 0, IPAP_FT_AUCTIONINGOBJECTSTATUS, 2, IPAP_CODING_UINT, 
+     "auctioningObjectStatus", "auctioningObjectStatus", "" );
      
 
    AddFieldType( 0, 0, -1, 0, "", "", "" );
@@ -228,10 +230,10 @@ void ipap_field_container::initialize_reverse(void)
      "reversePostDestinationMacAddress", "PostDestinationMacAddress", "" );
    AddFieldType( REV_PEN, IPAP_FT_IDAUCTION, 65535, IPAP_CODING_STRING, 
      "reverseIdAuction", "IdAuction", "" );
-   AddFieldType( REV_PEN, IPAP_FT_IDBID, 65535, IPAP_CODING_STRING, 
-     "reverseIdBid", "IdBid", "" );
-   AddFieldType( REV_PEN, IPAP_FT_IDALLOCATION, 65535, IPAP_CODING_STRING, 
-     "reverseIdAllocation", "IdAllocation", "" );
+   AddFieldType( REV_PEN, IPAP_FT_IDBIDDINGOBJECT, 65535, IPAP_CODING_STRING, 
+     "reverseIdBiddingObject", "IdBiddingObject", "" );
+   AddFieldType( REV_PEN, IPAP_FT_BIDDINGOBJECTTYPE, 1, IPAP_CODING_UINT, 
+     "reverseBiddingObjectType", "BiddingObjectType", "" );
    AddFieldType( REV_PEN, IPAP_FT_STARTSECONDS, 8, IPAP_CODING_UINT, 
      "reverseStartSeconds", "StartSeconds", "" ),      
    AddFieldType( REV_PEN, IPAP_FT_ENDSECONDS, 8, IPAP_CODING_UINT, 
@@ -278,6 +280,8 @@ void ipap_field_container::initialize_reverse(void)
      "reverseDestinationAuctionPort", "DestinationAuctionPort", "" );
    AddFieldType( REV_PEN, IPAP_FT_IPVERSION, 1, IPAP_CODING_UINT, 
      "reverseIpVersion", "reverseIpVersion", "" );
+   AddFieldType( REV_PEN, IPAP_FT_AUCTIONINGOBJECTSTATUS, 2, IPAP_CODING_UINT, 
+     "revauctioningObjectStatus", "revauctioningObjectStatus", "" );
 
 
    AddFieldType( REV_PEN, 0, -1, 0, "", "", "");

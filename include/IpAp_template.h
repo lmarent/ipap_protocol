@@ -32,19 +32,34 @@
 #include "IpAp_field.h"
 #include "IpAp_field_key.h"
 
+typedef enum 
+{
+    IPAP_INVALID = -1,
+    IPAP_AUCTION = 0, 
+    IPAP_BID,
+    IPAP_ASK,
+    IPAP_ALLOCATION,
+    IPAP_MAX_OBJECT_TYPE
+} ipap_object_type_t;
 
 
 typedef enum 
 {
     IPAP_SETID_AUCTION_TEMPLATE = 0, 
-    IPAP_SETID_BID_TEMPLATE,
-    IPAP_SETID_ALLOCATION_TEMPLATE,
     IPAP_OPTNS_AUCTION_TEMPLATE,
-    IPAP_OPTNS_BID_TEMPLATE,
-    IPAP_OPTNS_ALLOCATION_TEMPLATE
+    IPAP_SETID_BID_OBJECT_TEMPLATE,
+    IPAP_OPTNS_BID_OBJECT_TEMPLATE,
+    IPAP_SETID_ASK_OBJECT_TEMPLATE,
+    IPAP_OPTNS_ASK_OBJECT_TEMPLATE,
+    IPAP_SETID_ALLOC_OBJECT_TEMPLATE,
+    IPAP_OPTNS_ALLOC_OBJECT_TEMPLATE
 } ipap_templ_type_t;
 
-
+typedef enum
+{
+	IPAP_RECORD = 0,
+	IPAP_OPTIONS
+} ipap_templ_subtype_t;
 
 typedef enum
 {
@@ -96,10 +111,14 @@ typedef vector<ipap_template_field_t> 			templateFieldList_t;
 typedef vector<ipap_template_field_t>::iterator templateFieldIterList_t;
 typedef vector<ipap_template_field_t>::const_iterator templateFieldConstIterList_t;
 
+typedef map<ipap_object_type_t, set<ipap_templ_type_t> >					objectTemplateList_t;
+typedef map<ipap_object_type_t, set<ipap_templ_type_t> >::iterator			objectTemplateIterList_t;
+typedef map<ipap_object_type_t, set<ipap_templ_type_t> >::const_iterator	objectTemplateConstIterList_t;
+
 typedef map<ipap_templ_type_t, set<ipap_field_key> >   			templateKeyList_t;
 typedef map<ipap_templ_type_t, set<ipap_field_key> >::iterator   templateKeyIterList_t;
 typedef map<ipap_templ_type_t, set<ipap_field_key> >::const_iterator   templateKeyConstIterList_t;
-
+ 			
  
 class ipap_template
 {
@@ -119,7 +138,16 @@ class ipap_template
 
 		//! Maintains by template's type the list of mandatory fields.
 		static templateKeyList_t templateMandatoryFields;
-				
+		
+		//! Maintains the list of templates types by object
+		static objectTemplateList_t objectTemplates;
+		
+		//! Maintain the relationship between the template type and the object type to which it is part of. 
+		static map<ipap_templ_type_t, ipap_object_type_t> templateObjectRel;
+		
+		//! Maintain record and option templates.
+		static map<ipap_templ_subtype_t, set<ipap_templ_type_t> > templatesBySubtype;
+		
 		/**
 		 * Constructor for the class ipap_template
 		 */
@@ -252,6 +280,34 @@ class ipap_template
 		static set<ipap_field_key> getTemplateTypeKeys(ipap_templ_type_t templType);
 		
 		static set<ipap_field_key> getTemplateTypeMandatoryFields(ipap_templ_type_t templType);
+		
+		/** 
+		 * 	\short get the set of template types associated with an object type
+		 *  \arg   objectType - Object type 
+		*/
+		static set<ipap_templ_type_t> getObjectTemplateTypes(ipap_object_type_t objectType);
+		
+		
+		/** 
+		 * 	\short Get the object type to which is associated the template type
+		 *  \arg   templType - Template type 
+		*/
+		static ipap_object_type_t getObjectType(ipap_templ_type_t templType);
+				
+		/** 
+		 * 	\short Get templates associated with a specific template subtype.
+		 *  \arg   subtype - Template subtype. 
+		*/
+		static set<ipap_templ_type_t> getTemplates(ipap_templ_subtype_t subtype);
+		
+		
+		/** 
+		 * 	\short Get the template type for an object type an  template subtype.
+		 * 	\arg   objectType  - object type
+		 *  \arg   subtype 	   - template subtype. 
+		*/
+		static ipap_templ_type_t getTemplateType(ipap_object_type_t objectType, 
+												 ipap_templ_subtype_t subtype);
 };
 
 
