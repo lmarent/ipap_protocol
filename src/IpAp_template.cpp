@@ -243,6 +243,7 @@ ipap_template::getTemplateTypeMandatoryFields(ipap_templ_type_t templType)
 		d_auc_fields.insert(ipap_field_key(0,IPAP_FT_STARTSECONDS));
 		d_auc_fields.insert(ipap_field_key(0,IPAP_FT_ENDSECONDS));
 		d_auc_fields.insert(ipap_field_key(0,IPAP_FT_INTERVALSECONDS));
+		d_auc_fields.insert(ipap_field_key(0,IPAP_FT_TEMPLATES));
 			
 		// Fill option auctions fields
 		set<ipap_field_key> o_auc_fields;

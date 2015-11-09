@@ -39,7 +39,7 @@
 #define IPAP_CODING_DOUBLE 8
 
 #define REV_PEN 29305
-#define TOT_FIELD_COUNT    51
+#define TOT_FIELD_COUNT    52
 
 typedef int (*ipap_encode_func) (void *, void*, size_t);
 typedef int (*ipap_decode_func) (void *, void*, size_t);
@@ -116,6 +116,7 @@ typedef struct
 #define IPAP_FT_DESTINATIONAUCTIONPORT          48
 #define IPAP_FT_IPVERSION                    	49
 #define IPAP_FT_AUCTIONINGOBJECTSTATUS			50
+#define IPAP_FT_TEMPLATES						51
 
 
 
@@ -172,6 +173,7 @@ typedef struct
 #define IPAP_CN_DESTINATIONAUCTIONPORT          "ie0_48"
 #define IPAP_CN_IPVERSION                    	"ie0_49"
 #define IPAP_CN_AUCTIONINGOBJECTSTATUS			"ie0_50"
+#define IPAP_FT_IDTEMPLATES						"ie0_51"
  
   
 #endif // IPAP_DEF_H

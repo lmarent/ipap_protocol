@@ -173,6 +173,8 @@ void ipap_field_container::initialize_forward(void)
      "ipVersion", "ipVersion", "" );
    AddFieldType( 0, IPAP_FT_AUCTIONINGOBJECTSTATUS, 2, IPAP_CODING_UINT, 
      "auctioningObjectStatus", "auctioningObjectStatus", "" );
+   AddFieldType( 0, IPAP_FT_TEMPLATES, 65535, IPAP_CODING_STRING, 
+     "commaSeparatedlistOfTemplates", "commaSeparatedlistOfTemplates", "" );
      
 
    AddFieldType( 0, 0, -1, 0, "", "", "" );
@@ -282,6 +284,8 @@ void ipap_field_container::initialize_reverse(void)
      "reverseIpVersion", "reverseIpVersion", "" );
    AddFieldType( REV_PEN, IPAP_FT_AUCTIONINGOBJECTSTATUS, 2, IPAP_CODING_UINT, 
      "revauctioningObjectStatus", "revauctioningObjectStatus", "" );
+   AddFieldType( REV_PEN, IPAP_FT_TEMPLATES, 65535, IPAP_CODING_STRING, 
+     "reverseCommaSeparatedlistOfTemplates", "commaSeparatedlistOfTemplates", "" );
 
 
    AddFieldType( REV_PEN, 0, -1, 0, "", "", "");
