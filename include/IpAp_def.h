@@ -173,7 +173,7 @@ typedef struct
 #define IPAP_CN_DESTINATIONAUCTIONPORT          "ie0_48"
 #define IPAP_CN_IPVERSION                    	"ie0_49"
 #define IPAP_CN_AUCTIONINGOBJECTSTATUS			"ie0_50"
-#define IPAP_FT_IDTEMPLATES						"ie0_51"
+#define IPAP_CN_IDTEMPLATES						"ie0_51"
  
   
 #endif // IPAP_DEF_H
