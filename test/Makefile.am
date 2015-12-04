@@ -28,10 +28,10 @@ test_runner_SOURCES = @top_srcdir@/src/Error.cpp \
 # what flags you want to pass to the C compiler & linker
 if ENABLE_DEBUG
   AM_CXXFLAGS = -g -I@top_srcdir@/include $(CPPUNIT_CFLAGS) \
-				-fno-inline -D_GLIBCXX_DEBUG -DDEBUG -DPROFILING -DINTEL -ggdb
+				-fno-inline -DDEBUG -DPROFILING -DINTEL -ggdb
   
   AM_CPPFLAGS = -g -I@top_srcdir@/include $(CPPUNIT_CFLAGS)\
-			    -fno-inline -D_GLIBCXX_DEBUG -DDEBUG -DPROFILING -DINTEL -ggdb
+			    -fno-inline -DDEBUG -DPROFILING -DINTEL -ggdb
 else
   AM_CXXFLAGS = -g -I@top_srcdir@/include $(CPPUNIT_CFLAGS)
 

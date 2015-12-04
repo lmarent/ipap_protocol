@@ -23,7 +23,7 @@ pkginclude_HEADERS = $(top_srcdir)/include/ConstantsIpAp.h \
 
 if ENABLE_DEBUG
   AM_CXXFLAGS = -I$(top_srcdir)/include \
-				-g  -fno-inline -DDEBUG -D_GLIBCXX_DEBUG -ggdb
+				-g  -fno-inline -DDEBUG -ggdb
 else
   AM_CXXFLAGS = -I$(top_srcdir)/include \
 				-O2 

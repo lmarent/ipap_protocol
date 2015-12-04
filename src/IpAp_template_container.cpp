@@ -74,7 +74,7 @@ ipap_template_container::get_template(uint16_t templid)
 			return it->second;
 		}		
 	}
-	throw ipap_bad_argument("Template not found in the container");
+	throw ipap_bad_argument("Template:%d not found in the container", templid);
 
 }
 

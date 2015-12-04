@@ -175,6 +175,28 @@ void ipap_field_container::initialize_forward(void)
      "auctioningObjectStatus", "auctioningObjectStatus", "" );
    AddFieldType( 0, IPAP_FT_TEMPLATES, 65535, IPAP_CODING_STRING, 
      "commaSeparatedlistOfTemplates", "commaSeparatedlistOfTemplates", "" );
+   AddFieldType( 0, IPAP_FT_REFIDBIDDINGOBJECT, 65535, IPAP_CODING_STRING, 
+     "ReferenceBiddingObject", "ReferenceBiddingObject", "" );
+   AddFieldType( 0, IPAP_FT_RESERVEPRICE01, 8, IPAP_CODING_DOUBLE, 
+     "reservePrice01", "ReservePrice01", "" ),
+   AddFieldType( 0, IPAP_FT_RESERVEPRICE02, 8, IPAP_CODING_DOUBLE, 
+     "reservePrice02", "ReservePrice02", "" ),
+   AddFieldType( 0, IPAP_FT_RESERVEPRICE03, 8, IPAP_CODING_DOUBLE, 
+     "reservePrice03", "ReservePrice03", "" ),
+   AddFieldType( 0, IPAP_FT_RESERVEPRICE04, 8, IPAP_CODING_DOUBLE, 
+     "reservePrice04", "ReservePrice04", "" ),
+   AddFieldType( 0, IPAP_FT_RESERVEPRICE05, 8, IPAP_CODING_DOUBLE, 
+     "reservePrice05", "ReservePrice05", "" ),
+   AddFieldType( 0, IPAP_FT_MAXUNITVALUATION01, 8, IPAP_CODING_DOUBLE, 
+     "auctionMaxUnitValuation01", "MaxUnitValuation01", "" );
+   AddFieldType( 0, IPAP_FT_MAXUNITVALUATION02, 8, IPAP_CODING_DOUBLE, 
+     "auctionMaxUnitValuation02", "MaxUnitValuation02", "" );
+   AddFieldType( 0, IPAP_FT_MAXUNITVALUATION03, 8, IPAP_CODING_DOUBLE, 
+     "auctionMaxUnitValuation03", "MaxUnitValuation03", "" );
+   AddFieldType( 0, IPAP_FT_MAXUNITVALUATION04, 8, IPAP_CODING_DOUBLE, 
+     "auctionMaxUnitValuation04", "MaxUnitValuation04", "" );
+   AddFieldType( 0, IPAP_FT_MAXUNITVALUATION05, 8, IPAP_CODING_DOUBLE, 
+     "auctionMaxUnitValuation05", "MaxUnitValuation05", "" );
      
 
    AddFieldType( 0, 0, -1, 0, "", "", "" );
@@ -286,7 +308,28 @@ void ipap_field_container::initialize_reverse(void)
      "revauctioningObjectStatus", "revauctioningObjectStatus", "" );
    AddFieldType( REV_PEN, IPAP_FT_TEMPLATES, 65535, IPAP_CODING_STRING, 
      "reverseCommaSeparatedlistOfTemplates", "commaSeparatedlistOfTemplates", "" );
-
+   AddFieldType( REV_PEN, IPAP_FT_REFIDBIDDINGOBJECT, 65535, IPAP_CODING_STRING, 
+     "RevReferenceBiddingObject", "ReferenceBiddingObject", "" );
+   AddFieldType( REV_PEN, IPAP_FT_RESERVEPRICE01, 8, IPAP_CODING_DOUBLE, 
+     "RevreservePrice01", "ReservePrice01", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_RESERVEPRICE02, 8, IPAP_CODING_DOUBLE, 
+     "RevreservePrice02", "ReservePrice02", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_RESERVEPRICE03, 8, IPAP_CODING_DOUBLE, 
+     "RevreservePrice03", "ReservePrice03", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_RESERVEPRICE04, 8, IPAP_CODING_DOUBLE, 
+     "RevreservePrice04", "ReservePrice04", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_RESERVEPRICE05, 8, IPAP_CODING_DOUBLE, 
+     "RevreservePrice05", "ReservePrice05", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_MAXUNITVALUATION01, 8, IPAP_CODING_DOUBLE, 
+     "RevauctionMaxUnitValuation01", "MaxUnitValuation01", "" );
+   AddFieldType( REV_PEN, IPAP_FT_MAXUNITVALUATION02, 8, IPAP_CODING_DOUBLE, 
+     "RevauctionMaxUnitValuation02", "MaxUnitValuation02", "" );
+   AddFieldType( REV_PEN, IPAP_FT_MAXUNITVALUATION03, 8, IPAP_CODING_DOUBLE, 
+     "RevauctionMaxUnitValuation03", "MaxUnitValuation03", "" );
+   AddFieldType( REV_PEN, IPAP_FT_MAXUNITVALUATION04, 8, IPAP_CODING_DOUBLE, 
+     "RevauctionMaxUnitValuation04", "MaxUnitValuation04", "" );
+   AddFieldType( REV_PEN, IPAP_FT_MAXUNITVALUATION05, 8, IPAP_CODING_DOUBLE, 
+     "RevauctionMaxUnitValuation05", "MaxUnitValuation05", "" );
 
    AddFieldType( REV_PEN, 0, -1, 0, "", "", "");
 

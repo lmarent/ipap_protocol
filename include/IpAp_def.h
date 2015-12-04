@@ -39,7 +39,7 @@
 #define IPAP_CODING_DOUBLE 8
 
 #define REV_PEN 29305
-#define TOT_FIELD_COUNT    52
+#define TOT_FIELD_COUNT    63
 
 typedef int (*ipap_encode_func) (void *, void*, size_t);
 typedef int (*ipap_decode_func) (void *, void*, size_t);
@@ -117,6 +117,17 @@ typedef struct
 #define IPAP_FT_IPVERSION                    	49
 #define IPAP_FT_AUCTIONINGOBJECTSTATUS			50
 #define IPAP_FT_TEMPLATES						51
+#define IPAP_FT_REFIDBIDDINGOBJECT    			52
+#define IPAP_FT_RESERVEPRICE01   	 			53
+#define IPAP_FT_RESERVEPRICE02   	 			54
+#define IPAP_FT_RESERVEPRICE03   	 			55
+#define IPAP_FT_RESERVEPRICE04   	 			56
+#define IPAP_FT_RESERVEPRICE05   	 			57
+#define IPAP_FT_MAXUNITVALUATION01       		58
+#define IPAP_FT_MAXUNITVALUATION02       		59
+#define IPAP_FT_MAXUNITVALUATION03       		60
+#define IPAP_FT_MAXUNITVALUATION04       		61
+#define IPAP_FT_MAXUNITVALUATION05       		62
 
 
 
@@ -174,6 +185,17 @@ typedef struct
 #define IPAP_CN_IPVERSION                    	"ie0_49"
 #define IPAP_CN_AUCTIONINGOBJECTSTATUS			"ie0_50"
 #define IPAP_CN_IDTEMPLATES						"ie0_51"
+#define IPAP_CN_REFIDBIDDINGOBJECT    			"ie0_52"
+#define IPAP_CN_RESERVEPRICE01   	 			"ie0_53"
+#define IPAP_CN_RESERVEPRICE02   	 			"ie0_54"
+#define IPAP_CN_RESERVEPRICE03   	 			"ie0_55"
+#define IPAP_CN_RESERVEPRICE04   	 			"ie0_56"
+#define IPAP_CN_RESERVEPRICE05   	 			"ie0_57"
+#define IPAP_CN_MAXUNITVALUATION01       		"ie0_58"
+#define IPAP_CN_MAXUNITVALUATION02       		"ie0_59"
+#define IPAP_CN_MAXUNITVALUATION03       		"ie0_60"
+#define IPAP_CN_MAXUNITVALUATION04       		"ie0_61"
+#define IPAP_CN_MAXUNITVALUATION05       		"ie0_62"
  
   
 #endif // IPAP_DEF_H

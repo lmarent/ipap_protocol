@@ -1070,7 +1070,7 @@ ipap_message::include_data( uint16_t templid,
        
     if ( ( templ->get_numfields() != data.get_num_fields())  ){
         throw ipap_bad_argument("The number of field values:%d is different from template's fields:%d", 
-				templ->get_numfields(), data.get_num_fields());
+				data.get_num_fields(), templ->get_numfields());
 	}
 	
 	// Verifies that fields correspond to template fields.
