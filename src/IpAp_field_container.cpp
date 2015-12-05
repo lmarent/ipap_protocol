@@ -197,6 +197,16 @@ void ipap_field_container::initialize_forward(void)
      "auctionMaxUnitValuation04", "MaxUnitValuation04", "" );
    AddFieldType( 0, IPAP_FT_MAXUNITVALUATION05, 8, IPAP_CODING_DOUBLE, 
      "auctionMaxUnitValuation05", "MaxUnitValuation05", "" );
+   AddFieldType( 0, IPAP_FT_POSTOCTETTOTALCOUNT01, 4, IPAP_CODING_FLOAT, 
+     "postOctetTotalCount01", "PostOctetTotalCount01", "" ),
+   AddFieldType( 0, IPAP_FT_POSTOCTETTOTALCOUNT02, 4, IPAP_CODING_FLOAT, 
+     "postOctetTotalCount02", "PostOctetTotalCount02", "" ),
+   AddFieldType( 0, IPAP_FT_POSTOCTETTOTALCOUNT03, 4, IPAP_CODING_FLOAT, 
+     "postOctetTotalCount03", "PostOctetTotalCount03", "" ),
+   AddFieldType( 0, IPAP_FT_POSTOCTETTOTALCOUNT04, 4, IPAP_CODING_FLOAT, 
+     "postOctetTotalCount04", "PostOctetTotalCount04", "" ),
+   AddFieldType( 0, IPAP_FT_POSTOCTETTOTALCOUNT05, 4, IPAP_CODING_FLOAT, 
+     "postOctetTotalCount05", "PostOctetTotalCount05", "" ),
      
 
    AddFieldType( 0, 0, -1, 0, "", "", "" );
@@ -330,6 +340,17 @@ void ipap_field_container::initialize_reverse(void)
      "RevauctionMaxUnitValuation04", "MaxUnitValuation04", "" );
    AddFieldType( REV_PEN, IPAP_FT_MAXUNITVALUATION05, 8, IPAP_CODING_DOUBLE, 
      "RevauctionMaxUnitValuation05", "MaxUnitValuation05", "" );
+   AddFieldType( REV_PEN, IPAP_FT_POSTOCTETTOTALCOUNT01, 4, IPAP_CODING_FLOAT, 
+     "RevpostOctetTotalCount01", "PostOctetTotalCount01", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_POSTOCTETTOTALCOUNT02, 4, IPAP_CODING_FLOAT, 
+     "RevpostOctetTotalCount02", "PostOctetTotalCount02", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_POSTOCTETTOTALCOUNT03, 4, IPAP_CODING_FLOAT, 
+     "RevpostOctetTotalCount03", "PostOctetTotalCount03", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_POSTOCTETTOTALCOUNT04, 4, IPAP_CODING_FLOAT, 
+     "RevpostOctetTotalCount04", "PostOctetTotalCount04", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_POSTOCTETTOTALCOUNT05, 4, IPAP_CODING_FLOAT, 
+     "RevpostOctetTotalCount05", "PostOctetTotalCount05", "" ),
+
 
    AddFieldType( REV_PEN, 0, -1, 0, "", "", "");
 

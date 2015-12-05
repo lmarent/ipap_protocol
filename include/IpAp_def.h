@@ -39,7 +39,7 @@
 #define IPAP_CODING_DOUBLE 8
 
 #define REV_PEN 29305
-#define TOT_FIELD_COUNT    63
+#define TOT_FIELD_COUNT    68
 
 typedef int (*ipap_encode_func) (void *, void*, size_t);
 typedef int (*ipap_decode_func) (void *, void*, size_t);
@@ -128,6 +128,11 @@ typedef struct
 #define IPAP_FT_MAXUNITVALUATION03       		60
 #define IPAP_FT_MAXUNITVALUATION04       		61
 #define IPAP_FT_MAXUNITVALUATION05       		62
+#define IPAP_FT_POSTOCTETTOTALCOUNT01           63
+#define IPAP_FT_POSTOCTETTOTALCOUNT02           64
+#define IPAP_FT_POSTOCTETTOTALCOUNT03           65
+#define IPAP_FT_POSTOCTETTOTALCOUNT04           66
+#define IPAP_FT_POSTOCTETTOTALCOUNT05           67
 
 
 
@@ -196,6 +201,11 @@ typedef struct
 #define IPAP_CN_MAXUNITVALUATION03       		"ie0_60"
 #define IPAP_CN_MAXUNITVALUATION04       		"ie0_61"
 #define IPAP_CN_MAXUNITVALUATION05       		"ie0_62"
+#define IPAP_CN_POSTOCTETTOTALCOUNT01           "ie0_63"
+#define IPAP_CN_POSTOCTETTOTALCOUNT02           "ie0_64"
+#define IPAP_CN_POSTOCTETTOTALCOUNT03           "ie0_65"
+#define IPAP_CN_POSTOCTETTOTALCOUNT04           "ie0_66"
+#define IPAP_CN_POSTOCTETTOTALCOUNT05           "ie0_67"
  
   
 #endif // IPAP_DEF_H
