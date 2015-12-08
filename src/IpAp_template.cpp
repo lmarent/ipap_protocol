@@ -35,6 +35,9 @@ const char *ipap_template::TEMPLATE_XML_TAGS[] = { "AUCTION",
 											"AUCTION",
 											"TO_DEFINE" };
 
+const char *ipap_object_type_names[] = { "Auction", "Bid", "Ask", "Allocation" };
+
+
 templateKeyList_t ipap_template::templateKeys;
 templateKeyList_t ipap_template::templateMandatoryFields;
 objectTemplateList_t ipap_template::objectTemplates;

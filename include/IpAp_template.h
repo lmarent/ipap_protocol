@@ -42,6 +42,8 @@ typedef enum
     IPAP_MAX_OBJECT_TYPE
 } ipap_object_type_t;
 
+extern const char *ipap_object_type_names[IPAP_MAX_OBJECT_TYPE];
+
 
 typedef enum 
 {

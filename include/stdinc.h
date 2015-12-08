@@ -40,6 +40,8 @@
 #include <sys/types.h>
 #include <limits.h>
 
+#define __STDC_LIMIT_MACROS
+#include <stdint.h>
 #include <string.h>
 #include <math.h>
 #include <strings.h>
