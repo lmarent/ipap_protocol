@@ -345,7 +345,7 @@ ipap_message::add_field(  uint16_t templid,
 {
 
 #ifdef DEBUG
-    log->dlog(ch, "Starting method add_field");
+    log->dlog(ch, "Starting method add_field %d.%d", eno, type);
 #endif    	
     
     ipap_template *templ;     
