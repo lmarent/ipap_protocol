@@ -371,7 +371,7 @@ void Logger::_write( int lvl, int ch, int nl, const char *fmt, va_list argp )
     } 
 
     try {
-#ifdef ENABLE_THREADS					
+#ifdef ENABLE_THREADS				
         AUTOLOCK(threaded, &maccess);
 #endif
 
@@ -381,9 +381,15 @@ void Logger::_write( int lvl, int ch, int nl, const char *fmt, va_list argp )
         }
 
         struct tm tm;
-        now = time(NULL);
+        struct timeval tnow;
+        gettimeofday(&tnow, NULL);
+        now = tnow.tv_sec;
+        
         strftime(buf, sizeof(buf), "%b %d %H:%M:%S.000", localtime_r(&now,&tm));
-        if (fprintf(file, "%s  %s  ", buf, LogLevel[lvl]) < 0) {
+        
+        long milliseconds = tnow.tv_usec / 1000; 
+        
+        if (fprintf(file, "%s.%03ld  %s  ", buf, milliseconds, LogLevel[lvl]) < 0) {
             throw Error("Writing log mesage (Logger::_write#strftime)");
         }
 
