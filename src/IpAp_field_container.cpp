@@ -207,6 +207,18 @@ void ipap_field_container::initialize_forward(void)
      "postOctetTotalCount04", "PostOctetTotalCount04", "" ),
    AddFieldType( 0, IPAP_FT_POSTOCTETTOTALCOUNT05, 4, IPAP_CODING_FLOAT, 
      "postOctetTotalCount05", "PostOctetTotalCount05", "" ),
+   AddFieldType( 0, IPAP_FT_SUBSIDY, 4, IPAP_CODING_FLOAT, 
+     "subsidyValue", "subsidyValue", "" ),
+   AddFieldType( 0, IPAP_FT_SUBSIDY01, 4, IPAP_CODING_FLOAT, 
+     "subsidyValue01", "subsidyValue01", "" ),
+   AddFieldType( 0, IPAP_FT_SUBSIDY02, 4, IPAP_CODING_FLOAT, 
+     "subsidyValue02", "subsidyValue02", "" ),
+   AddFieldType( 0, IPAP_FT_SUBSIDY03, 4, IPAP_CODING_FLOAT, 
+     "subsidyValue03", "subsidyValue03", "" ),
+   AddFieldType( 0, IPAP_FT_SUBSIDY04, 4, IPAP_CODING_FLOAT, 
+     "subsidyValue04", "subsidyValue04", "" ),
+   AddFieldType( 0, IPAP_FT_SUBSIDY05, 4, IPAP_CODING_FLOAT, 
+     "subsidyValue05", "subsidyValue05", "" ),
      
 
    AddFieldType( 0, 0, -1, 0, "", "", "" );
@@ -350,6 +362,18 @@ void ipap_field_container::initialize_reverse(void)
      "RevpostOctetTotalCount04", "PostOctetTotalCount04", "" ),
    AddFieldType( REV_PEN, IPAP_FT_POSTOCTETTOTALCOUNT05, 4, IPAP_CODING_FLOAT, 
      "RevpostOctetTotalCount05", "PostOctetTotalCount05", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_SUBSIDY, 4, IPAP_CODING_FLOAT, 
+     "RevsubsidyValue", "subsidyValue", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_SUBSIDY01, 4, IPAP_CODING_FLOAT, 
+     "RevsubsidyValue01", "subsidyValue01", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_SUBSIDY02, 4, IPAP_CODING_FLOAT, 
+     "RevsubsidyValue02", "subsidyValue02", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_SUBSIDY03, 4, IPAP_CODING_FLOAT, 
+     "RevsubsidyValue03", "subsidyValue03", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_SUBSIDY04, 4, IPAP_CODING_FLOAT, 
+     "RevsubsidyValue04", "subsidyValue04", "" ),
+   AddFieldType( REV_PEN, IPAP_FT_SUBSIDY05, 4, IPAP_CODING_FLOAT, 
+     "RevsubsidyValue05", "subsidyValue05", "" ),
 
 
    AddFieldType( REV_PEN, 0, -1, 0, "", "", "");
