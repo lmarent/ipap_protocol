@@ -855,7 +855,7 @@ ipap_field::writeValue(ipap_value_field &in)
 	string val_return(buffer);
 	
 	
-	delete buffer;
+	free(buffer);
 	
 	return val_return;
 }

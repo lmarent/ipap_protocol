@@ -80,7 +80,8 @@ cs_header(NULL), length(0), exporttime(0)
 */
 ipap_t::~ipap_t()
 {
-	saveDelete(buffer);
+	if (buffer != NULL)
+		delete[] buffer;
 }
 
 ipap_t &
@@ -156,7 +157,7 @@ ipap_t::copy_raw_message(unsigned char * msg, size_t _offset)
 {
 	if (offset<= buffer_lenght){
 		// release the memory assigned to the buffer
-		delete buffer;
+		delete[] buffer;
 		buffer = new unsigned char[buffer_lenght];
 		memcpy(buffer,msg,_offset);
 		offset = _offset;
@@ -169,7 +170,7 @@ void
 ipap_t::reinitiate_buffer(void)
 {
    if (buffer != NULL) {
-	   delete buffer;
+	   delete[] buffer;
    }
    
    buffer = new unsigned char[IPAP_DEFAULT_BUFLEN];
