@@ -4,6 +4,7 @@ lib_LTLIBRARIES = libipap.la
 
 pkginclude_HEADERS = $(top_srcdir)/include/ConstantsIpAp.h \
 				     $(top_srcdir)/include/Error.h \
+				     $(top_srcdir)/include/Threads.h \
 				     $(top_srcdir)/include/Logger.h \
 				     $(top_srcdir)/include/stdinc.h \
 				     $(top_srcdir)/include/stdincpp.h \

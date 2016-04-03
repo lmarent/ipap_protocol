@@ -136,9 +136,7 @@ int Logger::createChannel( const string prefix, const string filename, int newlo
     string fname;
 
     try {
-#ifdef ENABLE_THREADS			
         AUTOLOCK(threaded, &maccess);
-#endif
 
         // if necessary enlarge storage arrays,
         // before (possibly) inserting a new entry
@@ -206,9 +204,8 @@ int Logger::moveChannels(string ofname, string nfname, int newlog)
 
     try {
 		
-#ifdef ENABLE_THREADS	
         AUTOLOCK(threaded, &maccess);
-#endif
+
         // close and rename file
         for (fi = 0; fi < numLogfiles; fi++) {
             if (logfiles[fi].fname == ofname) {
@@ -371,9 +368,7 @@ void Logger::_write( int lvl, int ch, int nl, const char *fmt, va_list argp )
     } 
 
     try {
-#ifdef ENABLE_THREADS				
         AUTOLOCK(threaded, &maccess);
-#endif
 
         FILE *file = logfiles[channels[ch].file_id].file;
         if (file == NULL) {

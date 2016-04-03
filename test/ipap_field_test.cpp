@@ -424,14 +424,6 @@ void IpAp_Field_Test::testFieldValues()
 	for (int i=0; i < 14; i++)
 		if (valuebyte8b[i] != valuebyte2[i]) equal = false;
 	CPPUNIT_ASSERT( true == equal );
-
-	// Test write to and read from string
-	tmpFieldStr = tmpField.writeValue(fvalue8bResult);
-	ipap_value_field fvalue8cResult = tmpField.parse(tmpFieldStr);
-	valuebyte8b = fvalue8cResult.get_value_byte();
-	for (int i=0; i < 14; i++)
-		if (valuebyte8b[i] != valuebyte2[i]) equal = false;
-	CPPUNIT_ASSERT( true == equal );
 	
 	// Double 8
 	tmpField = field_container.get_field( 0, IPAP_FT_UNITBUDGET );

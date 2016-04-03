@@ -53,9 +53,43 @@ if test $debug = true ; then
   AC_DEFINE(ENABLE_DEBUG, 1, [enable debug build])
 fi
 
+AC_ARG_ENABLE(threads,
+  [  --enable-threads            enable threads ],
+  [case "${enableval}" in
+    yes) threads=true ;;
+    no)  threads=false ;;
+    *) AC_MSG_ERROR(bad value ${enableval} for --enable-threads) ;;
+  esac],[threads=false])
+AM_CONDITIONAL(ENABLE_THREADS, test x$threads = xtrue)
+if test $threads = true ; then
+  AC_DEFINE(ENABLE_THREADS, 1, [enable multi threading])
+fi
+
+
 # check for headers
 
 AC_CHECK_HEADERS([float.h types.h limits.h stdlib.h string.h sys/time.h unistd.h float.h])
+
+if test $threads = true ; then
+  AC_CHECK_HEADERS([pthread.h])
+  if test $OS = FREEBSD ; then
+    OCCFLAGS=$CXXFLAGS
+    OCFLAGS=$CFLAGS
+    CXXFLAGS="$CXXFLAGS -D_THREAD_SAFE -I/usr/local/include/pthread/linuxthreads"
+    CFLAGS="$CFLAGS -D_THREAD_SAFE -I/usr/local/include/pthread/linuxthreads"
+    have_linux_threads="yes"
+    AC_CHECK_LIB(lthread, pthread_create,
+    [PTHREADLIB="-llthread -llgcc_r"],[ have_linux_threads="no" ] )
+    #if no linuxthreads try libc_r 
+    CXXFLAGS="$OCXXFLAGS -pthread"
+    CFLAGS="$OCFLAGS -pthread"
+    AC_CHECK_LIB(c_r, pthread_create, [PTHREADLIB="-lc_r"])
+    # actually newer FREEBSD version should have pthread... 
+  else
+    AC_CHECK_LIB(pthread, pthread_create,
+      [PTHREADLIB="-lpthread"])
+  fi
+fi
 
 
 # Additional arguments (and substitutions)
