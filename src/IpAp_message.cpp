@@ -176,19 +176,24 @@ void ipap_message::allocate_additional_memory(size_t additional)
 {
 
 #ifdef DEBUG
-    log->dlog(ch, "starting allocate_additional_memory");
+    log->dlog(ch, "starting allocate_additional_memory - #bytes: %zu", additional );
 #endif
+	
+	size_t new_len = 0;
 	
 	if (message)
 	{
-		if ((message->offset + additional) > message->buffer_lenght)
-		{
-			message->buffer=(unsigned char *)realloc(message->buffer, message->offset + additional + 1);
-			if (message->buffer == NULL)
-				message->buffer_lenght = message->offset + additional + 1;
-			else
-				throw ipap_bad_argument("Could not increse the memory of the final char pointer");
-		}
+		new_len = message->buffer_lenght + additional;
+
+#ifdef DEBUG
+		log->dlog(ch, "new length: %zu", new_len);
+#endif
+			
+		message->buffer=(unsigned char *)realloc(message->buffer, new_len);
+		if (message->buffer != NULL)
+			message->buffer_lenght = new_len;
+		else
+			throw ipap_bad_argument("Could not increse the memory of the final char pointer");
 	}
 	else
 	{
@@ -624,9 +629,14 @@ void ipap_message::_write_hdr( void )
      */
     char *buf; 
     hsize = IPAP_HDR_BYTES;
+
         
-    if ( hsize + message->offset > message->buffer_lenght ) 
-		allocate_additional_memory(hsize + message->offset - message->buffer_lenght );
+    if ( hsize + message->offset > message->buffer_lenght ){
+		
+		int addBytes = (hsize + message->offset) - message->buffer_lenght; 
+		allocate_additional_memory(addBytes);
+	}
+	
 
     /* write header before any other data */
 	if ( message->offset > 0 )
@@ -740,8 +750,9 @@ ipap_message::_write_template( ipap_template  *templ )
 
     /* check space */
     if ( tsize + message->offset > message->buffer_lenght ) 
-    {
-         allocate_additional_memory(tsize + message->offset - message->buffer_lenght );
+    {         
+   		int addBytes = (tsize + message->offset) - message->buffer_lenght;
+        allocate_additional_memory( addBytes );
     }
 
     /* write template prior to data */
@@ -818,6 +829,7 @@ ipap_message::output(void)
 #ifdef DEBUG
     log->dlog(ch, "starting output");
 #endif    
+
 	
 	if (message == NULL){
 		throw ipap_bad_argument("Error: The message is not initialized");
@@ -846,6 +858,7 @@ ipap_message::output(void)
 			require_output = false;
 		}
 	}
+
 #ifdef DEBUG
     log->dlog(ch, "ending output");
 #endif 
@@ -970,8 +983,12 @@ ipap_message::output_set( uint16_t templid )
 							datasetlen);
 #endif 
 
-			if ( (message->offset + datasetlen) > message->buffer_lenght )
-				allocate_additional_memory(datasetlen + message->offset - message->buffer_lenght );
+			if ( (message->offset + datasetlen) > message->buffer_lenght ){
+
+				int addBytes = (datasetlen + message->offset) - message->buffer_lenght;			
+				allocate_additional_memory( addBytes );
+			
+			}
 			
 			// fill buffer 
 			buf    = (uint8_t*)(message->buffer) + message->offset;
@@ -1026,8 +1043,9 @@ ipap_message::output_set( uint16_t templid )
 												   templ->get_field(i).relay_f );
 
 				buflen += g_data.get_length(field_key);
+				
 			}
-
+						
 #ifdef DEBUG
 			log->dlog(ch, "Output set - finish writing dataset fields");
 #endif			
@@ -1038,6 +1056,25 @@ ipap_message::output_set( uint16_t templid )
 		    if ( message->version == IPAP_VERSION )
 				message->seqno ++;
 		}
+
+
+		/** reset the data set len.
+		*/ 
+		if ( templ->get_template_id() == message->cs_tid ) 
+		{
+			newset_f = 0;
+			datasetlen = 0;
+		}
+		else 
+		{
+			if ( message->cs_tid > 0 ) {
+				finish_cs( );
+			}
+			newset_f = 1;
+			datasetlen = 4;
+		}
+		
+		
 	}
 	 
     _output_flush( );
@@ -1146,6 +1183,8 @@ ipap_message::ipap_message(unsigned char * param, size_t message_length, bool _e
 #endif	
 	
 	int nrecords;
+	
+	// import calls init.
 	nrecords = ipap_import(param, message_length );
 
 #ifdef DEBUG
@@ -1762,6 +1801,11 @@ ipap_message::ipap_import( unsigned char  *buffer, size_t message_length )
         goto errend;
 
 end:
+#ifdef DEBUG
+	log->dlog(ch, "copy raw message nread:%d message_len:%zu", nread, message_length);
+#endif
+
+
     message->copy_raw_message(buffer, nread);
     
     // Establishes correct values for the current data set.

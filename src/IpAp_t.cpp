@@ -26,6 +26,8 @@
 
 
 #include "IpAp_t.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 
 ipap_t::ipap_t():
@@ -34,7 +36,7 @@ buffer_lenght(0), seqno(0), ackseqno(0), cs_tid(0), cs_bytes(0), cs_offset(0),
 cs_header(NULL), length(0), exporttime(0)
 {
 
-   buffer = new unsigned char[IPAP_DEFAULT_BUFLEN];
+   buffer = ( unsigned char * )calloc( IPAP_DEFAULT_BUFLEN , sizeof( unsigned char ) );
    buffer_lenght = IPAP_DEFAULT_BUFLEN;
 
 }
@@ -55,7 +57,7 @@ cs_header(NULL), length(0), exporttime(0)
 	ackseqno = rhs.ackseqno;
 	buffer_lenght = rhs.buffer_lenght;
 	if (buffer_lenght > 0){
-		buffer = new unsigned char[buffer_lenght];
+		buffer = ( unsigned char * )calloc( buffer_lenght , sizeof( unsigned char ) );
 		memcpy(buffer,rhs.buffer,rhs.offset);
 	}
 	
@@ -81,13 +83,16 @@ cs_header(NULL), length(0), exporttime(0)
 ipap_t::~ipap_t()
 {
 	if (buffer != NULL)
-		delete[] buffer;
+		free(buffer);
 }
 
 ipap_t &
 ipap_t::operator=(const ipap_t & rhs)
 {
 
+	if (buffer != NULL)
+		free(buffer);
+	
 	domain_id = rhs.domain_id;
 	version = rhs.version;
 	templates = rhs.templates;
@@ -97,7 +102,7 @@ ipap_t::operator=(const ipap_t & rhs)
 	ackseqno = rhs.ackseqno;
 	buffer_lenght = rhs.buffer_lenght;	
 	if (buffer_lenght > 0){
-		buffer = new unsigned char[buffer_lenght];
+		buffer = ( unsigned char * )calloc( buffer_lenght, sizeof( unsigned char ) ); 
 		memcpy(buffer,rhs.buffer,rhs.offset);
 	}
 	
@@ -121,18 +126,33 @@ ipap_t::operator=(const ipap_t & rhs)
 bool 
 ipap_t::operator== (const ipap_t& rhs)
 {	
+	
+	cout << "arives 2";
+	
 	if ( (domain_id != rhs.domain_id) ||
 	   (version != rhs.version) ||
-	   (templates != rhs.templates) ||
 	   (nrecords != rhs.nrecords) ||
-	   (offset != rhs.offset) ||
-	   (buffer_lenght != rhs.buffer_lenght) ||
 	   (seqno != rhs.seqno)  || 
 	   (ackseqno != rhs.ackseqno)
 	   ){
 		
 		return false;
 	}
+
+	cout << "arives 5" << "bufl_left:" << buffer_lenght << " bufl_rig:" << rhs.buffer_lenght << endl;
+
+	if 	((offset != rhs.offset) ||
+	   (buffer_lenght != rhs.buffer_lenght))
+		return false;
+
+	cout << "arives 4";
+
+	
+	if 	(templates != rhs.templates) 
+		return false;
+
+	
+	cout << "arives 1";
 					
 	if (version == IPAP_VERSION){
 		if ( (rhs.length != length) ||
@@ -140,6 +160,8 @@ ipap_t::operator== (const ipap_t& rhs)
 			return false;
 		}
 	}
+	
+	cout << "arives 3";
 		
 	return true;
 	    
@@ -155,25 +177,25 @@ ipap_t::operator!= (const ipap_t& rhs)
 void
 ipap_t::copy_raw_message(unsigned char * msg, size_t _offset)
 {
-	if (offset<= buffer_lenght){
-		// release the memory assigned to the buffer
-		delete[] buffer;
-		buffer = new unsigned char[buffer_lenght];
-		memcpy(buffer,msg,_offset);
-		offset = _offset;
-	}
-	else
-		throw ipap_bad_argument("buffer length not enough for the raw copy");
+	// release the memory assigned to the buffer
+	free(buffer);
+	buffer = ( unsigned char * )calloc( _offset + 1, sizeof( unsigned char ) );
+	memcpy(buffer,msg,_offset);
+	buffer_lenght = _offset;
+	offset = _offset;
+	
+	cout << "buffer len final:" << buffer_lenght << endl;
+
 }
 
 void 
 ipap_t::reinitiate_buffer(void)
 {
    if (buffer != NULL) {
-	   delete[] buffer;
+	   free(buffer);
    }
    
-   buffer = new unsigned char[IPAP_DEFAULT_BUFLEN];
+   buffer = ( unsigned char * )calloc( IPAP_DEFAULT_BUFLEN,  sizeof( unsigned char ) ); 
    buffer_lenght = IPAP_DEFAULT_BUFLEN;
    offset = 0;
 

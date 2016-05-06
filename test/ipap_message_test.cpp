@@ -27,6 +27,7 @@ class ipap_message_test : public ipap_message {
     ipap_message_test( unsigned char * param, size_t message_length, bool _encode_network)
 		: ipap_message(param, message_length, _encode_network) { }
 
+	ipap_message_test( ipap_message_test &rhs): ipap_message(rhs) { }
 
 	friend class IpAp_Message_Test;
 };
@@ -326,6 +327,7 @@ void IpAp_Message_Test::testExportImport()
 	int offset;
 	try
 	{
+		
 		mes->delete_all_templates();
 
 		templatedataid = mes->new_data_template( nfields, IPAP_SETID_AUCTION_TEMPLATE );
@@ -348,7 +350,6 @@ void IpAp_Message_Test::testExportImport()
 		ipap_value_field fvalue4 = field4.get_ipap_value_field( buf2, 3 );
 		ipap_value_field fvalue4a = field4.get_ipap_value_field( buf2a, 4 );
 		
-
 		ipap_data_record data(templatedataid);
 		data.insert_field(0, IPAP_FT_IDAUCTION, fvalue1);
 		data.insert_field(0, IPAP_FT_STARTSECONDS, fvalue2);
@@ -364,18 +365,32 @@ void IpAp_Message_Test::testExportImport()
 		mes->include_data(templatedataid, data2);
 		mes->set_seqno(seqNbr);
 		mes->set_ackseqno(ackSeqNbr);
+
+		cout << "offset:" << mes->get_offset() << "buffer lenght:" << mes->get_buff_len() << endl;
+
 		mes->output();
 		
 		message = mes->get_message();
 		offset = mes->get_offset();
+		
+		cout << "offset:" << mes->get_offset() << "buffer lenght:" << mes->get_buff_len() << endl;
 				
 		ipap_message_test msgb (message, offset, false);
+
+		cout << "Here we are 0" << msgb.get_buff_len() << endl;
+		
 		num_templates = msgb.get_num_templates();
 		CPPUNIT_ASSERT( num_templates == 1 );
+		
+		cout << "Here we are 2 " << endl;
 				
 		CPPUNIT_ASSERT(msgb.get_ackseqno() == ackSeqNbr);
 		
 		CPPUNIT_ASSERT( msgb.operator==( *mes) );
+
+		cout << "Here we are 3 " << endl;
+		
+
 	}
 	catch(ipap_bad_argument &e)
 	{

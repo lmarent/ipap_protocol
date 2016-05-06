@@ -515,6 +515,8 @@ class ipap_message
 	    * @return 
 	    */	
 	   uint32_t get_exporttime() const; 
+	   
+	   int get_buff_len() { return message->buffer_lenght; }
 };
 
 

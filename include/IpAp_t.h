@@ -34,7 +34,7 @@
 
 
 
-#define IPAP_DEFAULT_BUFLEN 		1400
+#define IPAP_DEFAULT_BUFLEN 		512
 #define IPAP_VERSION               	0x01
 
 	

@@ -45,7 +45,7 @@ typedef int (*ipap_encode_func) (void *, void*, size_t);
 typedef int (*ipap_decode_func) (void *, void*, size_t);
 typedef int (*ipap_snprint_func) (char *, size_t, void*, size_t);
 
-typedef struct
+struct ipap_field_type_t
 {
     int         eno;                /* enterprise number or 0 */
     int         ftype;              /* field type */
@@ -55,7 +55,22 @@ typedef struct
     string 		xml_name;			// name to be used in when posting to xml.
     string	    documentation;
 
-} ipap_field_type_t;
+
+    ipap_field_type_t& operator =(const ipap_field_type_t& o)
+    {
+        
+        eno = o.eno;
+        ftype = o.ftype;
+        length = o.length;
+        coding = o.coding;
+        name = o.name;
+        xml_name = o.xml_name;
+        documentation = o.documentation;
+        
+        return *this;
+    } 
+    
+};
 
 typedef struct
 {
