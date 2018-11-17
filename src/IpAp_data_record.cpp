@@ -37,15 +37,15 @@ template_id(_template_id)
 ipap_data_record::ipap_data_record(const ipap_data_record &param)
 {
 
-	template_id = param.template_id;
+    template_id = param.template_id;
 
-	fieldDataListConstIter_t iter;
-	for (iter = param.fields.begin(); iter != param.fields.end(); ++iter) {
-		ipap_field_key key = iter->first;
-		ipap_value_field value = iter->second;
-		fields[key] = value;
-	}	
-	
+    fieldDataListConstIter_t iter;
+    for (iter = param.fields.begin(); iter != param.fields.end(); ++iter) {
+        ipap_field_key key = iter->first;
+        ipap_value_field value = iter->second;
+        fields[key] = value;
+    }	
+    
 }
 
 ipap_data_record::~ipap_data_record()
@@ -55,103 +55,126 @@ ipap_data_record::~ipap_data_record()
 
 void 
 ipap_data_record::insert_field(int eno, int ftype, 
-							   ipap_value_field &value)
+                               ipap_value_field &value)
 {
-	ipap_field_key key = ipap_field_key(eno, ftype);	
-	insert_field(key, value);
+    ipap_field_key key = ipap_field_key(eno, ftype);	
+    insert_field(key, value);
 
 }
 
+void 
+ipap_data_record::insert_field(int eno, int ftype, 
+                               ipap_value_field *value)
+{
+    ipap_field_key key = ipap_field_key(eno, ftype);	
+    insert_field(key, *value);
+
+}
 
 void 
 ipap_data_record::insert_field(ipap_field_key &param, 
-							   ipap_value_field &value)
+                               ipap_value_field &value)
 {
-	fields.insert( std::pair<ipap_field_key, ipap_value_field>(param,value) );
+    fields.insert( std::pair<ipap_field_key, ipap_value_field>(param,value) );
 }
 
 
 int 
 ipap_data_record::get_num_fields()
 {
-	return fields.size();
+    return fields.size();
 }
 
 
 ipap_value_field 
 ipap_data_record::get_field(ipap_field_key &param)
 {
-	
-	fieldDataListIter_t it;
-	it = fields.find(param);
-	if (it == fields.end()){
-		throw ipap_bad_argument("Parameter field was not found");
-	}
-	else{
-		return it->second;
-	}
+    
+    fieldDataListIter_t it;
+    it = fields.find(param);
+    if (it == fields.end()){
+        throw ipap_bad_argument("Parameter field was not found");
+    }
+    else{
+        return it->second;
+    }
 }
 
 ipap_value_field 
 ipap_data_record::get_field(const ipap_field_key &param) const
 {
-	
-	fieldDataListConstIter_t it;
-	it = fields.find(param);
-	if (it == fields.end()){
-		throw ipap_bad_argument("Parameter field was not found");
-	}
-	else{
-		return it->second;
-	}
+    
+    fieldDataListConstIter_t it;
+    it = fields.find(param);
+    if (it == fields.end()){
+        throw ipap_bad_argument("Parameter field was not found");
+    }
+    else{
+        return it->second;
+    }
 }
 
 ipap_value_field 
 ipap_data_record::get_field(int eno, int ftype)
 {
-	ipap_field_key key = ipap_field_key(eno, ftype);
-	return get_field(key);
+    ipap_field_key key = ipap_field_key(eno, ftype);
+    return get_field(key);
 }
+
 
 ipap_value_field 
 ipap_data_record::get_field(int eno, int ftype) const
 {
-	const ipap_field_key key = ipap_field_key(eno, ftype);
-	return get_field(key);
+    const ipap_field_key key = ipap_field_key(eno, ftype);
+    return get_field(key);
+}
+
+ipap_value_field*
+ipap_data_record::get_field_pointer(int eno, int ftype)
+{
+    ipap_field_key key = ipap_field_key(eno, ftype);
+    fieldDataListIter_t it;
+    it = fields.find(key);
+    if (it == fields.end()){
+        throw ipap_bad_argument("Parameter field was not found");
+    }
+    else{
+        return &(it->second);
+    }
 }
 
 
 uint16_t 
 ipap_data_record::get_length(ipap_field_key &param)
 {
-	ipap_value_field fieldvalue = get_field(param);
-	uint16_t len = (uint16_t) fieldvalue.get_length();
-	
-	return fieldvalue.get_length();
+    ipap_value_field fieldvalue = get_field(param);
+    uint16_t len = (uint16_t) fieldvalue.get_length();
+    
+    return fieldvalue.get_length();
 }
 
 uint16_t 
 ipap_data_record::get_length(int eno, int ftype)
 {
-	ipap_field_key key = ipap_field_key(eno, ftype);
-	return get_length(key);
+    ipap_field_key key = ipap_field_key(eno, ftype);
+    return get_length(key);
 }
 
 void 
 ipap_data_record::clear()
 {
-	// free the memory assigned to data values.	
-	fields.clear();
+    // free the memory assigned to data values.	
+    fields.clear();
 }
 
 std::string 
 ipap_data_record::to_string()
 {
-	std::map<ipap_field_key, ipap_value_field>::iterator iter;
-	std::string strToReturn;
-	
-	for (iter = fields.begin(); iter != fields.end(); ++iter) 
-	{
+    std::map<ipap_field_key, ipap_value_field>::iterator iter;
+    std::string strToReturn;
+    
+    for (iter = fields.begin(); iter != fields.end(); ++iter) 
+    {
          ipap_field_key temp = iter->first;
          strToReturn.append(temp.to_string()); 
          strToReturn.append("=");
@@ -164,34 +187,34 @@ bool
 ipap_data_record::operator== (const ipap_data_record& rhs) const
 {
 
-	fieldDataListConstIter_t iter;
-	for (iter = fields.begin(); iter != fields.end(); ++iter) {
-		ipap_field_key key = iter->first;
-		const ipap_value_field tmp = rhs.get_field(key);
-		const ipap_value_field tmp2 = iter->second;
-		if (tmp != tmp2){
-			return false;
-		}
-	}
-	return true;
+    fieldDataListConstIter_t iter;
+    for (iter = fields.begin(); iter != fields.end(); ++iter) {
+        ipap_field_key key = iter->first;
+        const ipap_value_field tmp = rhs.get_field(key);
+        const ipap_value_field tmp2 = iter->second;
+        if (tmp != tmp2){
+            return false;
+        }
+    }
+    return true;
 }
 
 
 ipap_data_record& 
 ipap_data_record::operator= (const ipap_data_record& rhs)
 {
-	// Delete all field values in the container.
-	fields.clear();
-	
-	template_id = rhs.template_id;
+    // Delete all field values in the container.
+    fields.clear();
+    
+    template_id = rhs.template_id;
 
-	fieldDataListConstIter_t iter;
-	for (iter = rhs.fields.begin(); iter != rhs.fields.end(); ++iter) {
-		ipap_field_key key = iter->first;
-		ipap_value_field value = iter->second;
-		fields[key] = value;
-	}	
-	return *this;
+    fieldDataListConstIter_t iter;
+    for (iter = rhs.fields.begin(); iter != rhs.fields.end(); ++iter) {
+        ipap_field_key key = iter->first;
+        ipap_value_field value = iter->second;
+        fields[key] = value;
+    }	
+    return *this;
 
 }
 
@@ -199,26 +222,26 @@ bool
 ipap_data_record::operator!= (const ipap_data_record& rhs) const
 {
 
-	fieldDataListConstIter_t iter;
-	for (iter = fields.begin(); iter != fields.end(); ++iter) {
-		ipap_field_key key = iter->first;
-		ipap_value_field tmp = rhs.get_field(key);
-		ipap_value_field tmp2 = iter->second;
-		if (tmp != tmp2){
-			return true;
-		}
-	}
-	return false;
+    fieldDataListConstIter_t iter;
+    for (iter = fields.begin(); iter != fields.end(); ++iter) {
+        ipap_field_key key = iter->first;
+        ipap_value_field tmp = rhs.get_field(key);
+        ipap_value_field tmp2 = iter->second;
+        if (tmp != tmp2){
+            return true;
+        }
+    }
+    return false;
 }
 
 fieldDataListIter_t 
 ipap_data_record::begin(void) 
 {
-	return fields.begin();
+    return fields.begin();
 }
 
 fieldDataListIter_t 
 ipap_data_record::end(void) 
 {
-	return fields.end();
+    return fields.end();
 }

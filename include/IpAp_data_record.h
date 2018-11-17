@@ -70,7 +70,12 @@ public:
      *  Insert a field value based on components of the field key (eno,ftype).
      */
     void insert_field(int eno, int ftype, ipap_value_field &value);
-            
+    
+    /**
+     *  Insert a field value based on components of the field key (eno,ftype).
+     */
+    void insert_field(int eno, int ftype, ipap_value_field *value);
+    
     /** 
      * Insert a field value based on the field key (param).
      */
@@ -86,6 +91,10 @@ public:
      */
     ipap_value_field get_field(int eno, int ftype);
 
+    /** 
+     * Return the field value based on components of the field key
+     */
+    ipap_value_field * get_field_pointer(int eno, int ftype);
 
     /** 
      * Return the field value based on components of the field key

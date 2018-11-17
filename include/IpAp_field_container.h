@@ -56,8 +56,8 @@ class ipap_field_container
 {
 private:
 
-	vector<ipap_field> fieldList;	///< The field list 				  
-	
+    fieldList_t fieldList;	///< The field list 				  
+    
 public:
     /**
      * Contructor method.
@@ -85,6 +85,14 @@ public:
      */ 
     ipap_field get_field( int eno, int type );
         
+
+    /**
+     * Get the pointer of a field by its keys
+     * @throw ipap_bad_argument - Field not found in the container
+     */ 
+    ipap_field* get_field_pointer( int eno, int type );
+    
+    
     /**
      * Add a field into the listby given the field type
      * @throw ipap_bad_argument - Field already exists in the container
@@ -96,10 +104,10 @@ public:
      * @throw ipap_bad_argument - Field already exists in the container
      */ 
     void AddFieldType(int _eno, int _ftype, ssize_t _length, 
-					  int _coding, 
-					  const std::string _name, 
-					  const std::string _xml_name, 
-					  const std::string _documentation );
+                      int _coding, 
+                      const std::string _name, 
+                      const std::string _xml_name, 
+                      const std::string _documentation );
 
     /**
      * Return the number of fields in the container
@@ -115,7 +123,7 @@ public:
 
 inline int ipap_field_container::get_num_fields(void)
 {
-	return fieldList.size();
+    return fieldList.size();
 }
 
 #endif // IPAP_FIELD_CONTAINER_H

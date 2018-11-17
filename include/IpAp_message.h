@@ -42,7 +42,7 @@
 #endif
 
 
-	
+    
 /*------ structs ---------------------------------------------------------*/
 
 /** ipap header format
@@ -117,406 +117,415 @@ typedef vector<ipap_data_record>::const_iterator dateRecordListConstIter_t;
  */
 class ipap_message
 {
-	
+    
    private:
    
-	   Logger *log; //!< link to global logger object
-	   int ch;      //!< logging channel number used by objects of this class
+       Logger *log; //!< link to global logger object
+       int ch;      //!< logging channel number used by objects of this class
 
-	   ipap_t * 							message;			///< Header Information, templates and end buffer for the message
-	   ipap_field_container 				g_ipap_fields;		///< Collection of fields that can be exchanged
-	   time_t             					g_tstart;			///< datetime when the message starts for processing
-	   uint16_t           					g_lasttid;          ///< last sequence id given
-	   vector<ipap_data_record> 			data_list; 			///< List of data record asociated with the message
-	   bool                             	encode_network;		///< Convert to network encoding 
-	   bool 								require_output;		///< Control in the messsage has changed since the last output execution.
-														
-	
+       ipap_t *                             message;            ///< Header Information, templates and end buffer for the message
+       ipap_field_container                 g_ipap_fields;      ///< Collection of fields that can be exchanged
+       time_t                               g_tstart;           ///< datetime when the message starts for processing
+       uint16_t                             g_lasttid;          ///< last sequence id given
+       vector<ipap_data_record>             data_list;          ///< List of data record asociated with the message
+       bool                                 encode_network;	    ///< Convert to network encoding 
+       bool                                 require_output;	    ///< Control in the messsage has changed since the last output execution.
+                                                        
+    
    protected:
-	
-	   /**
-	    * Alloc memory for buffers and pointers used to construct the message
-	    */
-	   void init( int domain_id, int ipap_version );
-	   	   
-	   /**
-	    * Adds a field of vendor type to the collection of fields
-	    */
-	   void add_vendor_information_elements( ipap_field_type_t *fields );
-	   
-	   /**
-	    * creates and add a new template for the messsage
-	    * @param  nfields	- The number of fields to include in the template
-	    * @return 			- Template id.
-	    */
-	   uint16_t new_template( int nfields );
+    
+       /**
+        * Alloc memory for buffers and pointers used to construct the message
+        */
+       void init( int domain_id, int ipap_version );
+           
+       /**
+        * Adds a field of vendor type to the collection of fields
+        */
+       void add_vendor_information_elements( ipap_field_type_t *fields );
+       
+       /**
+        * creates and add a new template for the messsage
+        * @param  nfields   -The number of fields to include in the template
+        * @return           - Template id.
+        */
+       uint16_t new_template( int nfields );
 
 
-	   /**
-	    * Find a return a reference to a template with id: templid
-	    * @param templid - Id of the template
-	    * @return reference to the template, if not found, it returns NULL.
-	    */
-	   ipap_template * get_template(uint16_t templid);
-	   
-	   /**
-	    * Finish the current record set assigning the lenght and te template id.
-	    */
-	   void finish_cs( void );
-	   
-	   /**
-	    * Write the message header. When the data associated with the message is empty 
-	    * it does not do anything.
-	    */
-	   void _write_hdr( void );
-	   	   
-	   /**
-	    * This method is used for completing the message once it is ready. 
-	    */
-	   void _output_flush( void );
-	   
-	   /**
-	    * This method reallocates memory for the output buffer.
-	    * @param additional - the number of additional bytes to allocate.
-	    */
-	   void allocate_additional_memory( size_t additional );
-	   
-	   /**
-	    * This method write into the buffer the template definition.
-	    * @param templ - pointer to the template object to write.
-	    */
-	   void _write_template( ipap_template  *templ );
-	   			   
-	   /**
-	    * This method parse the header of a IPAP message that is on mes character string
-	    * @param mes - Character string containing the message
-	    * 		 offset - Lenght of character string
-	    */
-	   void ipap_parse_hdr( unsigned char *mes, int offset );
-	   
-	   /**
-	    * parse and construct a template reading characters in buf.
-	    * @param setid - template id
-	    * 		 buf   - character string to read
-	    * 		 len   - Number of characters to read as part of template
-	    * 		 nread - Number of characters read ( output).
-	    */
-	   void ipap_decode_trecord( int setid,
-								const unsigned char     *buf,
-								size_t         len,
-								int            *nread );
-	   
-	   /**
-	    * parse and read a field value from characters in buf.
-	    * @param templ 	- template pointer associated to the record data which the field belongs to
-	    * 		 buf2  	- character string to read
-	    * 		 buflen - Number of characters to read
-	    * 		 nread 	- Number of read characters ( output).
-	    */
-	   void read_field(ipap_template *templ, 
-					   const uint8_t  *buf2, 
-					   size_t   buflen, 
-					   size_t   *nread);
+       /**
+        * Finds and returns a reference to a template with id: templid
+        * @param templid - Id of the template
+        * @return reference to the template, if not found, it returns NULL.
+        */
+       ipap_template * get_template(uint16_t templid);
+       
+       /**
+        * Finishes the current record set assigning the lenght and te template id.
+        */
+       void finish_cs( void );
+       
+       /**
+        * Writes the message header. When the data associated with the message is empty 
+        * it does not do anything.
+        */
+       void _write_hdr( void );
+           
+       /**
+        * This method is used for completing the message once it is ready. 
+        */
+       void _output_flush( void );
+       
+       /**
+        * This method reallocates memory for the output buffer.
+        * @param additional - the number of additional bytes to allocate.
+        */
+       void allocate_additional_memory( size_t additional );
+       
+       /**
+        * This method writes into the buffer the template definition.
+        * @param templ - pointer to the template object to write.
+        */
+       void _write_template( ipap_template  *templ );
+                   
+       /**
+        * This method parses the header of a IPAP message that is on mes character string
+        * @param mes - Character string containing the message
+        * 		 offset - Lenght of character string
+        */
+       void ipap_parse_hdr( unsigned char *mes, int offset );
+       
+       /**
+        * parses and constructs a template reading characters in buf.
+        * @param setid - template id
+        *        buf   - character string to read
+        *        len   - Number of characters to read as part of template
+        *        nread - Number of characters read ( output).
+        */
+       void ipap_decode_trecord( int setid,
+                                const unsigned char     *buf,
+                                size_t         len,
+                                int            *nread );
+       
+       /**
+        * parse and read a field value from characters in buf.
+        * @param templ 	- template pointer associated to the record data which the field belongs to
+        *        buf2  	- character string to read
+        *        buflen - Number of characters to read
+        *        nread 	- Number of read characters ( output).
+        */
+       void read_field(ipap_template *templ, 
+                       const uint8_t  *buf2, 
+                       size_t   buflen, 
+                       size_t   *nread);
 
-	   /**
-	    * parse and read a record set  from characters in buf.
-	    * @param templ 	- template pointer associated to the record data
-	    * 		 buf2  	- character string to read
-	    * 		 buflen - Number of characters to read
-	    * 		 nread 	- Number of read characters ( output).
-	    */
-	   void ipap_decode_datarecord( ipap_template *templ,
-								    unsigned char      *buf, 
-								    int                buflen,
-								    int                *nread );
-	   	   	   
-	   /**
-	    * Return the number of templates included
-	    */
-	    int get_num_templates(void);
-	    
-	    /**
-	    * Export the message to the internal buffer. Only export the data associated 
-	    * with the template given as parameter
-	    *  @param templid 		- Template Id.
-	    */
-	   void output_set( uint16_t templid );
-	   
+       /**
+        * parses and reads a record set  from characters in buf.
+        * @param templ 	- template pointer associated to the record data
+        *        buf2  	- character string to read
+        *        buflen - Number of characters to read
+        *        nread 	- Number of read characters ( output).
+        */
+       void ipap_decode_datarecord( ipap_template *templ,
+                                    unsigned char      *buf, 
+                                    int                buflen,
+                                    int                *nread );
+               
+       /**
+        * Return the number of templates included
+        */
+        int get_num_templates(void);
+        
+        /**
+        * Exports the message to the internal buffer. Only export the data associated 
+        * with the template given as parameter
+        *  @param templid 		- Template Id.
+        */
+       void output_set( uint16_t templid );
+       
    public:	
 
-	   /**
-	    * Create a new class ipap_message
-	    * @param By default it sets the version to IPAP_VERSION,
-	    * 	     encode in true, and the domain id is set to 0.
-	    */
-	   ipap_message();
+       /**
+        * Creates a new class ipap_message
+        * @param By default it sets the version to IPAP_VERSION,
+        * 	     encode in true, and the domain id is set to 0.
+        */
+       ipap_message();
 
-	   /**
-	    * Create a new class ipap_message
-	    * @param _encode_network - establish whether the message is going to be network encoded or not. 
-	    */
-	   ipap_message(bool _encode_network);
+       /**
+        * Creates a new class ipap_message
+        * @param _encode_network - establish whether the message is going to be network encoded or not. 
+        */
+       ipap_message(bool _encode_network);
 
-	   /**
-	    * Create a new class ipap_message
-	    * @param  domain_id      - domain auction id
-	    * 		  ipap_version 	 - message version. 
-	    *  		 _encode_network - establish whether the message is going to be network encoded or not. 
-	    */
-	   ipap_message( int domain_id, int ipap_version, bool _encode_network);
-	   
-	   /**
-	    * Create a new class ipap_message
-	    * @param param  		 - buffer containing the message.
-	    * 		 message_length	 - length of the message.
-	    *  		 _decode_network - establish whether the message is going to be network decoded or not. 
-	    */
-	   ipap_message(unsigned char * param, size_t message_length, bool _decode_network);
-	   
-	   ipap_message(const ipap_message &rhs);
-	   
-	   /**
-	    * Destructor.
-	    */
-	   ~ipap_message(void);
+       /**
+        * Creates a new class ipap_message
+        * @param  domain_id      - domain auction id
+        * 		  ipap_version 	 - message version. 
+        *  		 _encode_network - establish whether the message is going to be network encoded or not. 
+        */
+       ipap_message( int domain_id, int ipap_version, bool _encode_network);
+       
+       /**
+        * Creates a new class ipap_message
+        * @param param           - buffer containing the message.
+        *        message_length	 - length of the message.
+        *        _decode_network - establish whether the message is going to be network decoded or not. 
+        */
+       ipap_message(unsigned char * param, size_t message_length, bool _decode_network);
+       
+       ipap_message(const ipap_message &rhs);
+       
+       /**
+        * Destructor.
+        */
+       ~ipap_message(void);
 
-	   /**
-	    * Release memory for buffers and pointers used to construct the message
-	    */
-	   void close( void );
-	      
-	   /**
-	    * creates and add a new data template for the messsage
-	    * @param  nfields	- The number of fields to include in the template
-	    * 		  type 		- Type of template to create.
-	    * @return template id  
-	    */
-	   uint16_t new_data_template( int nfields, ipap_templ_type_t type );
+       /**
+        * Releases memory for buffers and pointers used to construct the message
+        */
+       void close( void );
+          
+       /**
+        * creates and adds a new data template for the messsage
+        * @param  nfields   - The number of fields to include in the template
+        *         type 	    - Type of template to create.
+        * @return template id  
+        */
+       uint16_t new_data_template( int nfields, ipap_templ_type_t type );
                               
-	   /**
-	    * Find a return a reference to a template with id: templid 
-	    * It makes an object copy.
-	    * @param templid - Id of the template
-	    * @return reference to the template, if not found, it returns NULL.
-	    */
-	   ipap_template * get_template_object(uint16_t templid);
+       /**
+        * Finds and returns a reference to a template with id: templid 
+        * It makes an object copy.
+        * @param templid - Id of the template
+        * @return reference to the template, if not found, it returns NULL.
+        */
+       ipap_template * get_template_object(uint16_t templid);
 
-	   /**
-	    * Find a return a reference to a template with id: templid 
-	    * It makes an object copy.
-	    * @param templid - Id of the template
-	    * @return reference to the template, if not found, it returns NULL.
-	    */
-	   ipap_template * get_template_object(uint16_t templid) const ;
+       /**
+        * Finds and returns a reference to a template with id: templid 
+        * It makes an object copy.
+        * @param templid - Id of the template
+        * @return reference to the template, if not found, it returns NULL.
+        */
+       ipap_template * get_template_object(uint16_t templid) const ;
                    
-	   /**
-	    * Get a field definition from the container field
-	    * @param eno 		- Enterprise field number id
-	    * 		 type		- field type.
-	    */
-	   ipap_field get_field_definition( int eno, int type );
+       /**
+        * Get a field definition from the container field
+        * @param eno        - Enterprise field number id
+        *        type       - field type.
+        */
+       ipap_field get_field_definition( int eno, int type );
                                 
-	   /**
-	    * add a data field to the message within a template
-	    * @param templid 	- Pointer to the template
-	    * 		 eno		- Enterprise field number id
-	    *        type		- Field type.
-	    */
-	   void  add_field( uint16_t templid,
+       /**
+        * adds a data field to the message within a template
+        * @param templid    - Pointer to the template
+        *        eno        - Enterprise field number id
+        *        type       - Field type.
+        */
+       void  add_field( uint16_t templid,
                        uint32_t eno,
                        uint16_t type );
                                                   
-	   /**
-	    * delete a template associated to the message.
-	    * @param templid 		- template id to delete
-	    */
-	   void delete_template( uint16_t templid );
-	   
-	   /**
-	    * delete all template associated to the message.
-	    */
-	   void delete_all_templates();
-	   
-	   /**
-	    * Take a list of field types and create a template containing all those fields.
-	    * @param fields 	- list of field types to include
-	    * 		 nfields 	- number of fields to include
-	    * 		 type		- type of template to create.
-	    * @return template id  
-	    */
-	   uint16_t make_template( ipap_fields_t *fields, 
-							   int nfields,
-							   ipap_templ_type_t type,
-							   uint16_t templid );
-	   
-	   void make_template(ipap_template *paramTempl);
-	   
-	   /**
-	    * This method establish the template export time, this prevents from
-	    * sending again messages that include templates already transmitted.
-	    * @param templid 	- number of the template to set the export time.
-	    * 		 time	 	- transmission time.
-	    */	   
-	   void set_template_timesend(uint16_t templid, time_t time);
-	   
-	   /**
-	    * This method returns template's export time. When greater than zero 
-	    * this field prevents from sending templates in messages.
-	    * @param templid 	- number of the template to set the export time.
-	    */	   	   
-	   time_t get_template_timesend(uint16_t templid);
-	   
-	   /**
-	    * Export the message to the internal buffer. This function must be
-	    * executed before associating the message as an spec object.
-	    */
-	   void output(void);	
-	   
-	   /**
-	    * Include set data record to the message 
-	    * @param templ 	- Pointer to the template associated to the record data set
-	    * 		 data 	- record data set to be included. It must have the same amount
-	    * 				  of fields as the template.
-	    */
-	   void include_data( uint16_t templid, 
-						  ipap_data_record &data );
-	   
-					
-	   /**
-	    * Get the internal buffer that was exported
-	    */
-	   unsigned char * get_message(void) const;
+       /**
+        * deletes a template associated to the message.
+        * @param templid    - template id to delete
+        */
+       void delete_template( uint16_t templid );
+       
+       /**
+        * deletes all template associated to the message.
+        */
+       void delete_all_templates();
+       
+       /**
+        * Takes a list of field types and creates a template containing all those fields.
+        * @param fields     - list of field types to include
+        *        nfields    - number of fields to include
+        *        type       - type of template to create.
+        * @return template id  
+        */
+       uint16_t make_template( ipap_fields_t *fields, 
+                               int nfields,
+                               ipap_templ_type_t type,
+                               uint16_t templid );
+       
+       void make_template(ipap_template *paramTempl);
+       
+       /**
+        * This method establishes the template export time, this prevents from
+        * sending again messages that include templates already transmitted.
+        * 
+        * @param templid    - number of the template to set the export time.
+        *        time       - transmission time.
+        */	   
+       void set_template_timesend(uint16_t templid, time_t time);
+       
+       /**
+        * This method returns template's export time. When greater than zero 
+        * this field prevents from sending templates in messages.
+        * @param templid    - number of the template to set the export time.
+        */	   	   
+       time_t get_template_timesend(uint16_t templid);
+       
+       /**
+        * Exports the message to the internal buffer. This function must be
+        * executed before associating the message as an spec object.
+        */
+       void output(void);
+       
+       /**
+        * Includes set data record to the message 
+        * @param templ 	- Pointer to the template associated to the record data set
+        *        data   - record data set to be included. It must have the same amount
+        *                 of fields as the template.
+        */
+       void include_data( uint16_t templid, 
+                          ipap_data_record &data );
+       
+       /**
+        * Includes set data record to the message 
+        * @param templ 	- Pointer to the template associated to the record data set
+        *        data   - record data set to be included. It must have the same amount
+        *                 of fields as the template.
+        */
+       void include_data(uint16_t templid, 
+                           ipap_data_record *data );
+                    
+       /**
+        * Gets the internal buffer that was exported
+        */
+       unsigned char * get_message(void) const;
 
-	   /**
-	    * Get the length of the internal buffer that was exported
-	    */
-	   int get_offset(void) const;
-	   
-	   /**
-	   *  Equals to operator. 
-	   *  It is equal when it has the same amount of templates and 
-	   *  data records, and the information inside is equal. The order in
-	   * the data records must be same too.
-	   */
-	   bool operator== (const ipap_message& rhs) const;
+       /**
+        * Gets the length of the internal buffer that was exported
+        */
+       int get_offset(void) const;
+       
+       /**
+       *  Equals to operator. 
+       *  It is equal when it has the same amount of templates and 
+       *  data records, and the information inside is equal. The order in
+       * the data records must be same too.
+       */
+       bool operator== (const ipap_message& rhs) const;
 
-	   /**
-	    * Assignment operator. 
-	    */
-	   ipap_message &operator=(const ipap_message &other);
+       /**
+        * Assignment operator. 
+        */
+       ipap_message &operator=(const ipap_message &other);
 
 
-	   /**
-	    * parse a message from characters in buf.
-	    * @param buffer			- character string to read
-	    * 		 message_length - Message length in characters
-	    * 		 nread 	- Number of read characters ( output).
-	    * @return number of read characters 
-	    */
-	   int ipap_import(unsigned char *buffer, size_t message_length );
-	   
-	   /**
-	    * Return a list with all templates IDs included
-	    */
-	   std::list<int> get_template_list(void) const;
-	   
-	   bool get_require_output(void) const;	   
-	   
-	   dateRecordListConstIter_t begin(void) const;
-	   
-	   dateRecordListConstIter_t end(void) const;
-	   
-	   /**
-	    * Get the domain that this message belongs to
-	    * @return domain id
-	    */	   
-	   int get_domain(); 
-	   
-	   /**
-	    * Get the domain that this message belongs to
-	    * @return domain id
-	    */	   
-	   int get_domain() const;
-	   
-	   /**
-	    * Get the last template id created as part of this message
-	    * @return last template id.
-	    */	
-	   uint16_t get_last_template_id();
-	   
-	   /**
-	    * Get the last template id created as part of this message
-	    * @return last template id.
-	    */
-	   uint16_t get_last_template_id() const;
-	   
-	   /**
-	    * Get message version
-	    * @return version.
-	    */	
-	   int get_version();
-	   
-	   /**
-	    * Get message version
-	    * @return version.
-	    */	
-	   int get_version() const;
-	   
-	   /**
-	    * Set the message sequence number
-	    * @return 
-	    */	
-	   void set_seqno(uint32_t _seqno);
-	   
-	   /**
-	    * Get the message sequence number
-	    * @return 
-	    */	
-	   uint32_t get_seqno();
-	   
-	   /**
-	    * Get the message sequence number
-	    * @return 
-	    */	
-	   uint32_t get_seqno() const;
-	   
-	   /**
-	    * Set the acknowledge message sequence number
-	    * @return 
-	    */	
-	   void set_ackseqno(uint32_t _ackseqno);
-	   
-	   /**
-	    * Get the acknowledge message sequence number
-	    * @return 
-	    */	
-	   uint32_t get_ackseqno();
+       /**
+        * parses a message from characters in buf.
+        * @param buffer	        - character string to read
+        *        message_length - Message length in characters
+        *        nread 	        - Number of read characters ( output).
+        * @return number of read characters 
+        */
+       int ipap_import(unsigned char *buffer, size_t message_length );
+       
+       /**
+        * Return a list with all templates IDs included
+        */
+       std::list<int> get_template_list(void) const;
+       
+       bool get_require_output(void) const;	   
+       
+       dateRecordListConstIter_t begin(void) const;
+       
+       dateRecordListConstIter_t end(void) const;
+       
+       /**
+        * Gets the domain that this message belongs to
+        * @return domain id
+        */	   
+       int get_domain(); 
+       
+       /**
+        * Gets the domain that this message belongs to
+        * @return domain id
+        */	   
+       int get_domain() const;
+       
+       /**
+        * Gets the last template id created as part of this message
+        * @return last template id.
+        */	
+       uint16_t get_last_template_id();
+       
+       /**
+        * Gets the last template id created as part of this message
+        * @return last template id.
+        */
+       uint16_t get_last_template_id() const;
+       
+       /**
+        * Gets message version
+        * @return version.
+        */	
+       int get_version();
+       
+       /**
+        * Gets message version
+        * @return version.
+        */	
+       int get_version() const;
+       
+       /**
+        * Sets the message sequence number
+        * @return 
+        */	
+       void set_seqno(uint32_t _seqno);
+       
+       /**
+        * Gets the message sequence number
+        * @return 
+        */	
+       uint32_t get_seqno();
+       
+       /**
+        * Get the message sequence number
+        * @return 
+        */	
+       uint32_t get_seqno() const;
+       
+       /**
+        * Sets the acknowledge message sequence number
+        * @return 
+        */	
+       void set_ackseqno(uint32_t _ackseqno);
+       
+       /**
+        * Gets the acknowledge message sequence number
+        * @return 
+        */	
+       uint32_t get_ackseqno();
 
-	   /**
-	    * Get the acknowledge message sequence number
-	    * @return 
-	    */	
-	   uint32_t get_ackseqno() const;
-	   
-	   /**
-	    * Set the export time
-	    * @return 
-	    */	
-	   void set_exporttime(uint32_t _exporttime);
-	   
-	   /**
-	    * Get the export time
-	    * @return 
-	    */	
-	   uint32_t get_exporttime();
-	   
-	   /**
-	    * Get the export time
-	    * @return 
-	    */	
-	   uint32_t get_exporttime() const; 
-	   
-	   int get_buff_len() { return message->buffer_lenght; }
+       /**
+        * Gets the acknowledge message sequence number
+        * @return 
+        */	
+       uint32_t get_ackseqno() const;
+       
+       /**
+        * Sets the export time
+        * @return 
+        */	
+       void set_exporttime(uint32_t _exporttime);
+       
+       /**
+        * Gets the export time
+        * @return 
+        */	
+       uint32_t get_exporttime();
+       
+       /**
+        * Gets the export time
+        * @return 
+        */	
+       uint32_t get_exporttime() const; 
+       
+       int get_buff_len() { return message->buffer_lenght; }
 };
 
 

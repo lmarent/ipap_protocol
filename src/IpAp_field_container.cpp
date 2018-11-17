@@ -26,7 +26,7 @@
 
 #include "IpAp_field_container.h"
 
-ipap_field_container::ipap_field_container()
+ipap_field_container::ipap_field_container(): fieldList(0)
 {
 
 }
@@ -35,37 +35,37 @@ ipap_field_container::~ipap_field_container()
 {
 
 }
-	
+    
 
 void ipap_field_container::AddFieldType(int _eno, int _ftype, ssize_t _length, 
-										int _coding, const std::string _name, 
-										const std::string _xml_name,
-										const std::string _documentation)
+                                        int _coding, const std::string _name, 
+                                        const std::string _xml_name,
+                                        const std::string _documentation)
 {
-	ipap_field_type_t newType;
-	newType.eno = _eno;
-	newType.ftype = _ftype;
-	newType.length = _length;
-	newType.coding = _coding;
-	newType.name = _name;
-	newType.xml_name = _xml_name;
-	newType.documentation = _documentation;
-	AddFieldType(newType);
+    ipap_field_type_t newType;
+    newType.eno = _eno;
+    newType.ftype = _ftype;
+    newType.length = _length;
+    newType.coding = _coding;
+    newType.name = _name;
+    newType.xml_name = _xml_name;
+    newType.documentation = _documentation;
+    AddFieldType(newType);
 
 };
 
 
 void ipap_field_container::AddFieldType(ipap_field_type_t &param)
 {
-	ipap_field a = ipap_field(param);
+    ipap_field a = ipap_field(param);
 
-	fieldListIter_t it;
-	for (it = fieldList.begin() ; it != fieldList.end(); ++it)
-	{
+    fieldListIter_t it;
+    for (it = fieldList.begin() ; it != fieldList.end(); ++it)
+    {
         if( *it== a )
-			throw ipap_bad_argument("Field already exists in the container");
-	}	
-	fieldList.push_back(a);
+            throw ipap_bad_argument("Field already exists in the container");
+    }	
+    fieldList.push_back(a);
 
 }
 
@@ -388,11 +388,32 @@ void ipap_field_container::initialize_reverse(void)
 ipap_field ipap_field_container::get_field( int eno, int type )
 {
  
-	fieldListIter_t it;
-	for ( it = fieldList.begin(); it != fieldList.end(); ++it)
-	{
+    fieldListIter_t it;
+    for ( it = fieldList.begin(); it != fieldList.end(); ++it)
+    {
         if( ((it->get_field_type()).ftype == type) && ((it->get_field_type()).eno==eno) )
-			return *it;
-	}
+            return *it;
+    }
+    throw ipap_bad_argument("Field not found in the container");
+}
+
+/* name:       get_field_pointer()
+ * parameters: eno, ftype
+ * return:     field from the container list or NULL
+ */
+ipap_field* ipap_field_container::get_field_pointer( int eno, int type )
+{
+     
+    fieldListIter_t it;
+    for ( it = fieldList.begin(); it != fieldList.end(); ++it)
+    {
+        if( ((it->get_field_type()).ftype == type) && ((it->get_field_type()).eno==eno) ){
+            ipap_field* field = new ipap_field(*it);
+            return field;
+        
+        }
+    }
+    
+    std::cout << " field not found" << std::endl;
     throw ipap_bad_argument("Field not found in the container");
 }

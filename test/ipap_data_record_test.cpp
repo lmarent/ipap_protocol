@@ -23,25 +23,25 @@ class ipap_data_record_test : public ipap_data_record
 {
   public:
 
-	ipap_data_record_test(uint16_t _template_id)
-		: ipap_data_record(_template_id) { }
+    ipap_data_record_test(uint16_t _template_id)
+        : ipap_data_record(_template_id) { }
 
-	friend class IpAp_Data_Record_Test;
+    friend class IpAp_Data_Record_Test;
 };
 
 
 class IpAp_Data_Record_Test : public CppUnit::TestFixture {
 
-	CPPUNIT_TEST_SUITE( IpAp_Data_Record_Test );
+    CPPUNIT_TEST_SUITE( IpAp_Data_Record_Test );
 
-	CPPUNIT_TEST( testAssign );
+    CPPUNIT_TEST( testAssign );
 
-	CPPUNIT_TEST_SUITE_END();
+    CPPUNIT_TEST_SUITE_END();
 
   public:
-	void setUp();
-	void tearDown();
-	void testAssign();
+    void setUp();
+    void tearDown();
+    void testAssign();
 
   private:
     
@@ -59,45 +59,77 @@ CPPUNIT_TEST_SUITE_REGISTRATION( IpAp_Data_Record_Test );
 
 void IpAp_Data_Record_Test::setUp() 
 {
-		
-	data = new ipap_data_record(256);
-	field_container.initialize_forward();
-	
+        
+    data = new ipap_data_record(256);
+    field_container.initialize_forward();
+    
 }
 
 void IpAp_Data_Record_Test::tearDown() 
 {
-	
+    
 }
 
 void IpAp_Data_Record_Test::testAssign()
 {
 
-	uint8_t value8 = 1;
-	uint32_t value32 = 3;	
-	uint8_t valuebyte0[5] = "1234";
-	int num_fields = 0;
-	int num_field_length = 0;
+    uint8_t value8 = 1;
+    uint32_t value32 = 3;	
+    uint8_t valuebyte0[5] = "1234";
+    int num_fields = 0;
+    int num_field_length = 0;
 
-	// Int 1
-	field1 = field_container.get_field( 0, IPAP_FT_SOURCEIPV4PREFIXLENGTH );
-	ipap_value_field fvalue1 = field1.get_ipap_value_field(value8);
-	data->insert_field(0, IPAP_FT_SOURCEIPV4PREFIXLENGTH, fvalue1);
-	
-	// Int 4
-	field2 = field_container.get_field( 0, IPAP_FT_AUCTIONINGTIMESECONDS );
-	ipap_value_field fvalue2 = field2.get_ipap_value_field(value32);
-	data->insert_field(0, IPAP_FT_AUCTIONINGTIMESECONDS, fvalue2);
+    // Int 1
+    field1 = field_container.get_field( 0, IPAP_FT_SOURCEIPV4PREFIXLENGTH );
+    ipap_value_field fvalue1 = field1.get_ipap_value_field(value8);
+    data->insert_field(0, IPAP_FT_SOURCEIPV4PREFIXLENGTH, fvalue1);
+    
+    // Int 4
+    field2 = field_container.get_field( 0, IPAP_FT_AUCTIONINGTIMESECONDS );
+    ipap_value_field fvalue2 = field2.get_ipap_value_field(value32);
+    data->insert_field(0, IPAP_FT_AUCTIONINGTIMESECONDS, fvalue2);
 
     //Address 4
-	field3 = field_container.get_field( 0, IPAP_FT_SOURCEIPV4ADDRESS );
-	ipap_value_field fvalue3 = field3.get_ipap_value_field((uint8_t *) valuebyte0, 4);
-	data->insert_field(0, IPAP_FT_SOURCEIPV4ADDRESS, fvalue3);
+    field3 = field_container.get_field( 0, IPAP_FT_SOURCEIPV4ADDRESS );
+    ipap_value_field fvalue3 = field3.get_ipap_value_field((uint8_t *) valuebyte0, 4);
+    data->insert_field(0, IPAP_FT_SOURCEIPV4ADDRESS, fvalue3);
 
-	num_fields = data->get_num_fields();
-	CPPUNIT_ASSERT( num_fields == 3 );
-	
-	ipap_value_field fieltmp = data->get_field(0, IPAP_FT_AUCTIONINGTIMESECONDS);
-	CPPUNIT_ASSERT( fieltmp.get_value_int32() == value32 );
-	
+    num_fields = data->get_num_fields();
+    CPPUNIT_ASSERT( num_fields == 3 );
+    
+    ipap_value_field fieltmp = data->get_field(0, IPAP_FT_AUCTIONINGTIMESECONDS);
+    CPPUNIT_ASSERT( fieltmp.get_value_int32() == value32 );
+    
+}
+
+void IpAp_Data_Record_Test::testAssign()
+{
+
+    uint8_t value8 = 1;
+    uint32_t value32 = 3;	
+    uint8_t valuebyte0[5] = "1234";
+    int num_fields = 0;
+    int num_field_length = 0;
+
+    // Int 1
+    field1 = field_container.get_field( 0, IPAP_FT_SOURCEIPV4PREFIXLENGTH );
+    ipap_value_field fvalue1 = field1.get_ipap_value_field(value8);
+    data->insert_field(0, IPAP_FT_SOURCEIPV4PREFIXLENGTH, &fvalue1);
+    
+    // Int 4
+    field2 = field_container.get_field( 0, IPAP_FT_AUCTIONINGTIMESECONDS );
+    ipap_value_field fvalue2 = field2.get_ipap_value_field(value32);
+    data->insert_field(0, IPAP_FT_AUCTIONINGTIMESECONDS, &fvalue2);
+
+    //Address 4
+    field3 = field_container.get_field( 0, IPAP_FT_SOURCEIPV4ADDRESS );
+    ipap_value_field fvalue3 = field3.get_ipap_value_field((uint8_t *) valuebyte0, 4);
+    data->insert_field(0, IPAP_FT_SOURCEIPV4ADDRESS, &fvalue3);
+
+    num_fields = data->get_num_fields();
+    CPPUNIT_ASSERT( num_fields == 3 );
+    
+    ipap_value_field fieltmp = data->get_field(0, IPAP_FT_AUCTIONINGTIMESECONDS);
+    CPPUNIT_ASSERT( fieltmp.get_value_int32() == value32 );
+    
 }

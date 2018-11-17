@@ -58,7 +58,10 @@ private:
 
 public:
 	
-	
+	/// Default constructor for the field key class.
+    inline ipap_field_key():eno(0), ftype(0){}
+    
+    
 	/// Constructor of the field key
 	inline ipap_field_key(int _eno, int _ftype): 
 			eno(_eno), ftype(_ftype){}
@@ -66,7 +69,12 @@ public:
 	/// Destructor of the field key
 	inline ~ipap_field_key(){}
 	
+    /// Sets the enterprise number
+    inline void  set_eno(int _eno){eno = _eno;}
 	
+    /// Sets the field type
+    inline void set_ftype(int _ftype){ftype = _ftype;}
+    
 	/// Get the enterprise number
 	inline int get_eno(){ return eno; }
 	

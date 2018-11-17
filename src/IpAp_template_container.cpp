@@ -33,23 +33,22 @@ ipap_template_container::ipap_template_container(void)
 
 ipap_template_container::ipap_template_container(const ipap_template_container &rhs)
 {
-	templateListConstIter_t it;
-	for( it = rhs.templateList.begin(); it != rhs.templateList.end(); ++it){
-		templateList[it->first] = (it->second)->copy();
-	}
-	
+    templateListConstIter_t it;
+    for( it = rhs.templateList.begin(); it != rhs.templateList.end(); ++it){
+        templateList[it->first] = (it->second)->copy();
+    }
 }
 
 
 void ipap_template_container::delete_template(uint16_t templid)
 {
-	templateListIter_t it;
-	for( it = templateList.begin(); it != templateList.end(); ++it) {
-		if ( (it->first == templid) )
-			break;
-	}
-	delete(it->second);
-	templateList.erase(it);
+    templateListIter_t it;
+    for( it = templateList.begin(); it != templateList.end(); ++it) {
+        if ( (it->first == templid) )
+            break;
+    }
+    delete(it->second);
+    templateList.erase(it);
 }
 
 bool ipap_template_container::exists_template(uint16_t templid)
