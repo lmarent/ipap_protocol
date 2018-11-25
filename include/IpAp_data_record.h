@@ -46,9 +46,9 @@ private:
     ///! template id which is associated with this data record.
     uint16_t template_id;
  
-	///! Data value map for every field 
-	fieldDataList_t fields;  														
-        	
+    ///! Data value map for every field 
+    fieldDataList_t fields;  														
+            
 
 public:
         
@@ -58,9 +58,9 @@ public:
     ipap_data_record(uint16_t _template_id);
     
     /** 
-	 * Contructor of the class, it copies from another data record.
-	 */
-	ipap_data_record(const ipap_data_record &param);
+     * Contructor of the class, it copies from another data record.
+     */
+    ipap_data_record(const ipap_data_record &param);
     
     ~ipap_data_record();
     
@@ -132,25 +132,25 @@ public:
      */
     std::string to_string();
     
-	/**
-	 *  Equals to operator. 
-	 *  It is equal when it has the same amount of field values and every value is equal.
-	 */
-	bool operator== (const ipap_data_record& rhs) const;
-	
-	/** 
-	 * Assignment operator. 
-	*/ 
-	ipap_data_record& operator= (const ipap_data_record&);
-	
-	/** 
-	* Not equal to operator. 
-	*/ 
-	bool operator != (const ipap_data_record &rhs) const;
+    /**
+     *  Equals to operator. 
+     *  It is equal when it has the same amount of field values and every value is equal.
+     */
+    bool operator== (const ipap_data_record& rhs) const;
     
-	fieldDataListIter_t begin();
-	
-	fieldDataListIter_t end();
+    /** 
+     * Assignment operator. 
+    */ 
+    ipap_data_record& operator= (const ipap_data_record&);
+    
+    /** 
+    * Not equal to operator. 
+    */ 
+    bool operator != (const ipap_data_record &rhs) const;
+    
+    fieldDataListIter_t begin();
+    
+    fieldDataListIter_t end();
     
 };
 

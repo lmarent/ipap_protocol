@@ -379,7 +379,7 @@ ipap_template::getObjectTemplateTypesAtPos(ipap_object_type_t objectType, int in
 
     if (index >= templ_types.size())
     {
-        return IPAP_INVALID;
+        return IPAP_TEMPLATE_TYPE_INVALID;
     } 
     else {
         std::vector<ipap_templ_type_t> output(templ_types.begin(), templ_types.end()); 

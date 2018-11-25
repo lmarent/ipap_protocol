@@ -429,11 +429,33 @@ class ipap_message
         */
        std::list<int> get_template_list(void) const;
        
+       /**
+        * Return the size of the registered template list
+        */       
+       int get_template_list_size();
+       
+       /**
+        * Return the id of the template at position pos in the list
+        */              
+       int get_template_at_pos(int pos);
+
        bool get_require_output(void) const;	   
        
        dateRecordListConstIter_t begin(void) const;
        
        dateRecordListConstIter_t end(void) const;
+       
+       /**
+        * Returns the size of the registered data record vector
+        */              
+       int get_data_record_size();
+       
+       
+       /**
+        * Returns the data record at position pos.
+        * @param pos - position to get the record.
+        */              
+       ipap_data_record * get_data_record_at_pos(int pos);
        
        /**
         * Gets the domain that this message belongs to

@@ -2005,6 +2005,28 @@ std::list<int> ipap_message::get_template_list(void) const
     }
 }
 
+int ipap_message::get_template_list_size(void)
+{
+    if (message != NULL)
+        return message->templates.get_num_templates();
+    else{
+        return 0;
+    }
+}
+
+int ipap_message::get_template_at_pos(int pos)
+{
+    if (message != NULL)
+    {
+        return message->templates.get_template_at_pos(pos);
+    }
+    else
+    {
+        // Returns an invalid value.
+        return -1;
+    }    
+}
+
 /*
  * name:        ipap_message()
  * parameters:
@@ -2053,6 +2075,23 @@ dateRecordListConstIter_t ipap_message::begin(void) const
 dateRecordListConstIter_t ipap_message::end(void) const
 {
     return data_list.end();
+}
+
+int 
+ipap_message::get_data_record_size()
+{
+    return data_list.size();
+}
+
+ipap_data_record * 
+ipap_message::get_data_record_at_pos(int pos)
+{
+    if (pos >= data_list.size())
+        return NULL;
+    else
+    {
+        return new ipap_data_record(data_list[pos]);
+    }
 }
 
 /*

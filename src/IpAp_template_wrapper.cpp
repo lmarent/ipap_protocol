@@ -48,7 +48,7 @@ extern "C"
     
     int ipap_template_get_object_template_types_size(ipap_template *template_obj, uint8_t objectType)
     {
-        return template_obj->getObjectTemplateTypesSize(objectType);
+        return template_obj->getObjectTemplateTypesSize((ipap_object_type_t) objectType);
     }
     
     int ipap_template_get_object_template_types_at_pos(ipap_template *template_obj, uint8_t objectType, int index)

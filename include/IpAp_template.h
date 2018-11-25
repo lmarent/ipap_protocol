@@ -47,6 +47,7 @@ extern const char *ipap_object_type_names[IPAP_MAX_OBJECT_TYPE];
 
 typedef enum 
 {
+    IPAP_TEMPLATE_TYPE_INVALID = -1,
     IPAP_SETID_AUCTION_TEMPLATE = 0, 
     IPAP_OPTNS_AUCTION_TEMPLATE,
     IPAP_SETID_BID_OBJECT_TEMPLATE,

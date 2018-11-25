@@ -26,17 +26,17 @@ extern "C"
         data_record->get_num_fields();
     }
     
-    ipap_value_field* get_field(ipap_data_record *data_record, int eno, int ftype)
+    ipap_value_field* ipap_data_record_get_field(ipap_data_record *data_record, int eno, int ftype)
     {
         data_record->get_field_pointer(eno, ftype);
     }
     
-    uint16_t get_length(ipap_data_record *data_record, int eno, int ftype)
+    uint16_t ipap_data_record_get_length(ipap_data_record *data_record, int eno, int ftype)
     {
         data_record->get_length(eno,ftype);
     }
     
-    void clear(ipap_data_record *data_record)
+    void ipap_data_record_clear(ipap_data_record *data_record)
     {
         data_record->clear();
     }

@@ -54,94 +54,99 @@ typedef map<uint16_t, ipap_template *>::const_iterator  templateListConstIter_t;
  
 class ipap_template_container
 {
-	private:
-		
-		templateList_t templateList; ///< Map of templates
-	
-	protected:
-		
-		/**
-		 * Get the template with id equal to templid
-		 * @param templid	- id of the template to look for
-		 */
-		const ipap_template * get_const_template(const uint16_t templid) const;
-
-	
-	public:
+    private:
+        
+        templateList_t templateList; ///< Map of templates
     
-		/**
-		 * Constructor for the ipap_template_container class
-		 */
-		ipap_template_container(void);
+    protected:
+        
+        /**
+         * Get the template with id equal to templid
+         * @param templid	- id of the template to look for
+         */
+        const ipap_template * get_const_template(const uint16_t templid) const;
 
-		/** 
-		 * Constructor from the data of another template container
-		 */
-		ipap_template_container(const ipap_template_container &rhs);
-		
-		/**
-		 * Destructor for the ipap_template_container class
-		 */
-		~ipap_template_container(void);
     
-		/**
-		 * Add a new template to the container
-		 */
-		void add_template(ipap_template *param );
-				
-		/**
-		 * delete all templates from the container
-		 */
-		void delete_all_templates(void);
-		
-		/**
-		 * delete the template with id equal to templid
-		 * @param templid	- id of the template to delete
-		 */
-		void delete_template(uint16_t templid);
-		
-		/**
-		 * verify whether a template with id equal to templid exists or not
-		 * @param templid	- id of the template to look for
-		 */
-		bool exists_template(uint16_t templid);
-		
-		/**
-		 * Get the template with id equal to templid
-		 * @param templid	- id of the template to look for
-		 */
-		ipap_template * get_template(uint16_t templid);
-				
-		/**
-	    * Return the number of templates included
-	    */
-	    inline int get_num_templates(void){  return templateList.size(); }
-	    
-	    /**
-	     * Return a list with all templates IDs included
-	     */
-	    std::list<int> get_template_list(void) const;
-	    
-	    /**
-		*  Equals to operator. 
-		*  It is equal when it has the same amount of templates and every 
-		*    template is equal.
-		*/
-		bool operator== (const ipap_template_container& rhs);
-		
-		/**
-		*  Not equal to operator. 
-		*  It is not equal when it does not have the same amount of templates and at least 
-		*    one field is not a template.
-		*/
-		bool operator!= (const ipap_template_container& rhs);
-		
-		/** Assignment operator. It sets the values for the template container 
-		 * 						 from another template container.
-		*  @param  the template container to copy from.
-		*/
-		ipap_template_container& operator= (const ipap_template_container&);				
-				
+    public:
+    
+        /**
+         * Constructor for the ipap_template_container class
+         */
+        ipap_template_container(void);
+
+        /** 
+         * Constructor from the data of another template container
+         */
+        ipap_template_container(const ipap_template_container &rhs);
+        
+        /**
+         * Destructor for the ipap_template_container class
+         */
+        ~ipap_template_container(void);
+    
+        /**
+         * Add a new template to the container
+         */
+        void add_template(ipap_template *param );
+                
+        /**
+         * delete all templates from the container
+         */
+        void delete_all_templates(void);
+        
+        /**
+         * delete the template with id equal to templid
+         * @param templid	- id of the template to delete
+         */
+        void delete_template(uint16_t templid);
+        
+        /**
+         * verify whether a template with id equal to templid exists or not
+         * @param templid	- id of the template to look for
+         */
+        bool exists_template(uint16_t templid);
+        
+        /**
+         * Get the template with id equal to templid
+         * @param templid	- id of the template to look for
+         */
+        ipap_template * get_template(uint16_t templid);
+                
+        /**
+        * Return the number of templates included
+        */
+        inline int get_num_templates(void){  return templateList.size(); }
+        
+        /**
+         * Return a list with all templates IDs included
+         */
+        std::list<int> get_template_list(void) const;
+        
+        /**
+         * Return the template in position pos of the list.
+         */
+        int get_template_at_pos(int pos);
+        
+        /**
+        *  Equals to operator. 
+        *  It is equal when it has the same amount of templates and every 
+        *    template is equal.
+        */
+        bool operator== (const ipap_template_container& rhs);
+        
+        /**
+        *  Not equal to operator. 
+        *  It is not equal when it does not have the same amount of templates and at least 
+        *    one field is not a template.
+        */
+        bool operator!= (const ipap_template_container& rhs);
+        
+        /** Assignment operator. It sets the values for the template container 
+         * 						 from another template container.
+        *  @param  the template container to copy from.
+        */
+        ipap_template_container& operator= (const ipap_template_container&);				
+                
 };
 
 #endif // IPAP_TEMPLATE_CONTAINER_H

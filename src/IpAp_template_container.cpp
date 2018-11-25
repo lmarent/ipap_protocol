@@ -53,13 +53,13 @@ void ipap_template_container::delete_template(uint16_t templid)
 
 bool ipap_template_container::exists_template(uint16_t templid)
 {
-	
-	templateListIter_t it;
-	for( it = templateList.begin(); it != templateList.end(); ++it) {
-		if ( (it->first ==  templid ) )
-			return true;		
-	}
-	return false;
+    
+    templateListIter_t it;
+    for( it = templateList.begin(); it != templateList.end(); ++it) {
+        if ( (it->first ==  templid ) )
+            return true;
+    }
+    return false;
 
 }
 
@@ -67,13 +67,13 @@ ipap_template *
 ipap_template_container::get_template(uint16_t templid)
 {
 
-	templateListIter_t it;
-	for( it=templateList.begin(); it != templateList.end(); ++it) {
-		if ( it->first == templid  ){			
-			return it->second;
-		}		
-	}
-	throw ipap_bad_argument("Template:%d not found in the container", templid);
+    templateListIter_t it;
+    for( it=templateList.begin(); it != templateList.end(); ++it) {
+        if ( it->first == templid  ){
+            return it->second;
+        }
+    }
+    throw ipap_bad_argument("Template:%d not found in the container", templid);
 
 }
 
@@ -82,13 +82,13 @@ const ipap_template *
 ipap_template_container::get_const_template(const uint16_t templid) const
 {
 
-	templateListConstIter_t it;
-	for( it=templateList.begin(); it != templateList.end(); ++it) {
-		if ( it->first ==  templid  ){			
-			return it->second;
-		}		
-	}
-	throw ipap_bad_argument("Template not found in the container");
+    templateListConstIter_t it;
+    for( it=templateList.begin(); it != templateList.end(); ++it) {
+        if ( it->first ==  templid  ){			
+            return it->second;
+        }		
+    }
+    throw ipap_bad_argument("Template not found in the container");
 
 }
 
@@ -96,77 +96,94 @@ ipap_template_container::get_const_template(const uint16_t templid) const
 void 
 ipap_template_container::delete_all_templates(void)
 {
-	templateListIter_t it;
-	for( it=templateList.begin(); it != templateList.end(); ++it) {
-		delete(it->second);
-	}			
-	templateList.clear();
+    templateListIter_t it;
+    for( it=templateList.begin(); it != templateList.end(); ++it) {
+        delete(it->second);
+    }			
+    templateList.clear();
 
 }
 
  
 ipap_template_container::~ipap_template_container(void)
 {
-	delete_all_templates();
+    delete_all_templates();
 }
 
 bool 
 ipap_template_container::operator== (const ipap_template_container& rhs)
 {
-	if (rhs.templateList.size() != templateList.size())
-		return false;
-	
-	try
-	{
-		templateListIter_t it;
-		for( it=templateList.begin(); it != templateList.end(); ++it) {
-			const ipap_template *temp = rhs.get_const_template(it->first);
-			if ( *(it->second) != *temp )
-				return false;
-		}
-	}
-	catch (ipap_bad_argument bad) 
-	{
-		// One of the templates was not found, so we have to return false.
-		return false;
-	}
-	return true;
+    if (rhs.templateList.size() != templateList.size())
+        return false;
+    
+    try
+    {
+        templateListIter_t it;
+        for( it=templateList.begin(); it != templateList.end(); ++it) {
+            const ipap_template *temp = rhs.get_const_template(it->first);
+            if ( *(it->second) != *temp )
+                return false;
+        }
+    }
+    catch (ipap_bad_argument bad) 
+    {
+        // One of the templates was not found, so we have to return false.
+        return false;
+    }
+    return true;
 }
 
 
 void 
 ipap_template_container::add_template(ipap_template *param )
 {
-	if (param != NULL)
-		templateList[param->get_template_id()] = param;
+    if (param != NULL)
+        templateList[param->get_template_id()] = param;
 }
 
 
 bool
 ipap_template_container::operator!= (const ipap_template_container& rhs)
 {
-	return !(operator==(rhs));
+    return !(operator==(rhs));
 }
 
 ipap_template_container&
 ipap_template_container::operator=(const ipap_template_container &rhs)
 {
-	delete_all_templates();
-	
-	templateListConstIter_t it;
-	for( it = rhs.templateList.begin(); it != rhs.templateList.end(); ++it)
-		templateList[it->first] = (it->second)->copy();
-	
-	return *this;
-	
+    delete_all_templates();
+    
+    templateListConstIter_t it;
+    for( it = rhs.templateList.begin(); it != rhs.templateList.end(); ++it)
+        templateList[it->first] = (it->second)->copy();
+    
+    return *this;
+    
 }
 
 std::list<int>
 ipap_template_container::get_template_list(void) const
 {
-	std::list<int> val_return;
-	templateListConstIter_t it;
-	for( it = templateList.begin(); it != templateList.end(); ++it)
-		val_return.push_back(it->first);
-	return val_return;
+    std::list<int> val_return;
+    templateListConstIter_t it;
+    for( it = templateList.begin(); it != templateList.end(); ++it)
+        val_return.push_back(it->first);
+    return val_return;
+}
+
+int 
+ipap_template_container::get_template_at_pos(int pos)
+{
+    int i = 0;
+    templateListConstIter_t it;
+    
+    for( it = templateList.begin(); it != templateList.end(); ++it){
+        if (i == pos){
+            return it->first;
+        }
+        i= i + 1;
+    }
+    // Returns an invalid value.
+    return -1;
+    
 }

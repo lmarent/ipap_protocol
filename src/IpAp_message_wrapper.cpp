@@ -40,6 +40,21 @@ extern "C"
         message->delete_all_templates();
     }
     
+    ipap_template * ipap_message_get_template_object(ipap_message* message, uint16_t templid)
+    {
+        return message->get_template_object(templid);
+    }
+    
+    int ipap_message_get_template_list_size(ipap_message* message)
+    {
+        return message->get_template_list_size();
+    }
+    
+    int ipap_message_get_template_at_pos(ipap_message* message, int pos)
+    {
+        return message->get_template_at_pos(pos);
+    }
+    
     void ipap_message_output(ipap_message* message)
     {
         message->output();
@@ -110,6 +125,16 @@ extern "C"
     uint32_t ipap_message_get_exporttime(ipap_message* message)
     {
         message->get_exporttime();
+    }
+    
+    int ipap_message_get_data_record_size(ipap_message* message)
+    {
+        message->get_data_record_size();
+    }
+    
+    ipap_data_record * ipap_message_get_data_record_at_pos(ipap_message* message, int pos)
+    {
+        message->get_data_record_at_pos(pos);
     }
 }
 
