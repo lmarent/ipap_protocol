@@ -19,7 +19,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     Description:
-    template container class of ipap protocol
+    template container class of ipap protocol. 
+    This container does not free the memory assigned to templates.
 
     $Id: IpAp_template_container.h 748 2015-08-27 14:18:00Z amarentes $
 */

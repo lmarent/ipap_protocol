@@ -28,7 +28,12 @@ extern "C"
     
     ipap_value_field* ipap_data_record_get_field(ipap_data_record *data_record, int eno, int ftype)
     {
-        data_record->get_field_pointer(eno, ftype);
+        try{
+            data_record->get_field_pointer(eno, ftype);
+        
+        } catch(ipap_bad_argument e){
+            return NULL; /* field not found */
+        }
     }
     
     uint16_t ipap_data_record_get_length(ipap_data_record *data_record, int eno, int ftype)
@@ -39,6 +44,11 @@ extern "C"
     void ipap_data_record_clear(ipap_data_record *data_record)
     {
         data_record->clear();
+    }
+    
+    void ipap_data_record_destroy(ipap_data_record *data_record)
+    {
+        data_record->~ipap_data_record();
     }
     
 }

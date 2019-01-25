@@ -35,12 +35,18 @@ class Ipap_T_Test : public CppUnit::TestFixture {
 
 	CPPUNIT_TEST( testAssign );
 
+	CPPUNIT_TEST( testSetFlags );
+
+	CPPUNIT_TEST( testGetFlags );
+
 	CPPUNIT_TEST_SUITE_END();
 
   public:
 	void setUp();
 	void tearDown();
 	void testAssign();
+	void testSetFlags();
+	void testGetFlags();
 
   private:
     
@@ -135,3 +141,110 @@ void Ipap_T_Test::testAssign()
 	
 }
 // EOF
+
+void Ipap_T_Test::testSetFlags()
+{
+    uint8_t none = 0;
+    uint8_t syn = 1;
+    uint8_t ack = 2;
+    uint8_t syn_ack = 3;
+    uint8_t fin = 4;
+    uint8_t fin_syn = 5;
+    uint8_t fin_ack = 6;
+    uint8_t fin_ack_syn = 7;
+
+    ptrIpap_t1->set_flags(none);
+    CPPUNIT_ASSERT( ptrIpap_t1->syn  == false );
+    CPPUNIT_ASSERT( ptrIpap_t1->ack  == false );
+    CPPUNIT_ASSERT( ptrIpap_t1->fin  == false );
+
+    ptrIpap_t1->set_flags(syn);
+    CPPUNIT_ASSERT( ptrIpap_t1->syn  == true );
+    CPPUNIT_ASSERT( ptrIpap_t1->ack  == false );
+    CPPUNIT_ASSERT( ptrIpap_t1->fin  == false );
+
+    ptrIpap_t1->set_flags(ack);
+    CPPUNIT_ASSERT( ptrIpap_t1->syn  == false );
+    CPPUNIT_ASSERT( ptrIpap_t1->ack  == true );
+    CPPUNIT_ASSERT( ptrIpap_t1->fin  == false );
+
+    ptrIpap_t1->set_flags(fin);
+    CPPUNIT_ASSERT( ptrIpap_t1->syn  == false );
+    CPPUNIT_ASSERT( ptrIpap_t1->ack  == false );
+    CPPUNIT_ASSERT( ptrIpap_t1->fin  == true );
+
+    ptrIpap_t1->set_flags(syn_ack);
+    CPPUNIT_ASSERT( ptrIpap_t1->syn  == true );
+    CPPUNIT_ASSERT( ptrIpap_t1->ack  == true );
+    CPPUNIT_ASSERT( ptrIpap_t1->fin  == false );
+
+    ptrIpap_t1->set_flags(fin_syn);
+    CPPUNIT_ASSERT( ptrIpap_t1->syn  == true );
+    CPPUNIT_ASSERT( ptrIpap_t1->ack  == false );
+    CPPUNIT_ASSERT( ptrIpap_t1->fin  == true );
+
+    ptrIpap_t1->set_flags(fin_ack);
+    CPPUNIT_ASSERT( ptrIpap_t1->syn  == false );
+    CPPUNIT_ASSERT( ptrIpap_t1->ack  == true );
+    CPPUNIT_ASSERT( ptrIpap_t1->fin  == true );
+
+    ptrIpap_t1->set_flags(fin_ack_syn);
+    CPPUNIT_ASSERT( ptrIpap_t1->syn  == true );
+    CPPUNIT_ASSERT( ptrIpap_t1->ack  == true );
+    CPPUNIT_ASSERT( ptrIpap_t1->fin  == true );
+
+}
+
+
+void Ipap_T_Test::testGetFlags()
+{
+    uint8_t none = 0;
+    uint8_t syn = 1;
+    uint8_t ack = 2;
+    uint8_t syn_ack = 3;
+    uint8_t fin = 4;
+    uint8_t fin_syn = 5;
+    uint8_t fin_ack = 6;
+    uint8_t fin_ack_syn = 7;
+
+    ptrIpap_t1->syn = false;
+    ptrIpap_t1->ack = false;
+    ptrIpap_t1->fin = false;
+    CPPUNIT_ASSERT(  ptrIpap_t1->get_flags() == none);
+
+    ptrIpap_t1->syn = true;
+    ptrIpap_t1->ack = false;
+    ptrIpap_t1->fin = false;
+    CPPUNIT_ASSERT( ptrIpap_t1->get_flags() == syn);
+
+    ptrIpap_t1->syn = false;
+    ptrIpap_t1->ack = true;
+    ptrIpap_t1->fin = false;
+    CPPUNIT_ASSERT( ptrIpap_t1->get_flags() == ack);
+
+    ptrIpap_t1->syn = false;
+    ptrIpap_t1->ack = false;
+    ptrIpap_t1->fin = true;
+    CPPUNIT_ASSERT( ptrIpap_t1->get_flags() == fin);
+
+    ptrIpap_t1->syn = true;
+    ptrIpap_t1->ack = true;
+    ptrIpap_t1->fin = false;
+    CPPUNIT_ASSERT( ptrIpap_t1->get_flags() == syn_ack);
+
+    ptrIpap_t1->syn = true;
+    ptrIpap_t1->ack = false;
+    ptrIpap_t1->fin = true;
+    CPPUNIT_ASSERT( ptrIpap_t1->get_flags() == fin_syn);
+
+    ptrIpap_t1->syn = false;
+    ptrIpap_t1->ack = true;
+    ptrIpap_t1->fin = true;
+    CPPUNIT_ASSERT( ptrIpap_t1->get_flags() == fin_ack);
+
+    ptrIpap_t1->syn = true;
+    ptrIpap_t1->ack = true;
+    ptrIpap_t1->fin = true;
+    CPPUNIT_ASSERT( ptrIpap_t1->get_flags() == fin_ack_syn);
+
+}

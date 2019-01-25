@@ -45,6 +45,7 @@ void ipap_template_container::delete_template(uint16_t templid)
     templateListIter_t it;
     for( it = templateList.begin(); it != templateList.end(); ++it) {
         if ( (it->first == templid) )
+            
             break;
     }
     delete(it->second);
@@ -97,11 +98,11 @@ void
 ipap_template_container::delete_all_templates(void)
 {
     templateListIter_t it;
-    for( it=templateList.begin(); it != templateList.end(); ++it) {
-        delete(it->second);
-    }			
+	for( it=templateList.begin(); it != templateList.end(); ++it) {
+		delete(it->second);
+	}
+    
     templateList.clear();
-
 }
 
  
@@ -137,8 +138,12 @@ ipap_template_container::operator== (const ipap_template_container& rhs)
 void 
 ipap_template_container::add_template(ipap_template *param )
 {
-    if (param != NULL)
-        templateList[param->get_template_id()] = param;
+    
+    if (param != NULL){
+        // Creates a deep copy of the template
+        ipap_template *new_template = new ipap_template(*param);
+        templateList[param->get_template_id()] = new_template;
+    }
 }
 
 

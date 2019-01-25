@@ -38,11 +38,17 @@
 
 #define NODEBUG
 
+#define INSERTU8(b,l,val) \
+        { memcpy((b),&val,1); (l)+=1; }
 
 #define INSERTU16(b,l,val) \
         { uint16_t _t=htons((val)); memcpy((b),&_t,2); (l)+=2; }
+
 #define INSERTU32(b,l,val) \
         { uint32_t _t=htonl((val)); memcpy((b),&_t,4); (l)+=4; }
+
+#define INSERT_U8_NOENCODE(b,l,val) \
+        { memcpy((b),&val,1); (l)+=1; }
 
 #define INSERT_U16_NOENCODE(b,l,val) \
         { uint16_t _t = val; memcpy((b),&_t,2); (l)+=2; }
@@ -50,12 +56,17 @@
 #define INSERT_U32_NOENCODE(b,l,val) \
         { uint32_t _t=val; memcpy((b),&_t,4); (l)+=4; }
 
+#define READ8_NOENCODE(val,b) \
+        { memcpy((&val),b,1); }
+
 #define READ16_NOENCODE(val,b) \
         { memcpy((&val),b,2); }
 
 #define READ32_NOENCODE(val,b) \
         { memcpy((&val),b,4); } 
 
+#define READ8(val,b) \
+        { memcpy((&val),b,1); }
 
 #define READ16(val,b) \
         { uint16_t _t; memcpy((&_t),b,2); val= ntohs(_t); }
@@ -130,8 +141,6 @@ ipap_message::ipap_message( int domain_id, int ipap_version, bool _encode_networ
         require_output(true)
 {
 
-    std::cout << "Estamos en la funcion" << IPAP_DEFAULT_LOG_FILE << std::endl;
-
     try
     {
         log = Logger::getInstance(IPAP_DEFAULT_LOG_FILE);
@@ -173,6 +182,8 @@ ipap_message::~ipap_message( void )
 
     close( );
     g_tstart = 0;
+    
+    std::cout << "destroy ipap_message" << std::endl;
     
 }
 
@@ -269,7 +280,6 @@ void ipap_message::init( int domain_id, int ipap_version )
     i->version   = ipap_version;
     message = i;
 
-
     g_tstart = time(NULL);
     signal( SIGPIPE, SIG_IGN );
     g_lasttid = 255;
@@ -351,9 +361,7 @@ uint16_t
 ipap_message::new_data_template( int nfields, ipap_templ_type_t type )
 {
 
-#ifdef DEBUG
     log->dlog(ch, "Starting method new_data_template");
-#endif    	
 
     uint16_t templid;
     ipap_template *templ;
@@ -365,6 +373,9 @@ ipap_message::new_data_template( int nfields, ipap_templ_type_t type )
     * The message change, so it requires a new output 
     */
     require_output = true;    
+
+    log->dlog(ch, "Ending method new_data_template: %d", templid);
+
     return templid;
     
 }
@@ -374,6 +385,22 @@ ipap_field
 ipap_message::get_field_definition( int eno, int type )
 {
     return g_ipap_fields.get_field(eno, type);
+}
+
+ipap_field *
+ipap_message::get_field_definition_ptr( int eno, int type )
+{
+    try
+    {
+
+        ipap_field *field = new ipap_field(g_ipap_fields.get_field(eno, type));
+        return field;
+
+    } catch(ipap_bad_argument &e){
+
+        cout << "field not found" << endl;
+        return NULL;
+    }
 }
 
 
@@ -388,15 +415,15 @@ ipap_message::add_field(  uint16_t templid,
                uint16_t         type )
 {
 
-#ifdef DEBUG
-    log->dlog(ch, "Starting method add_field %d.%d", eno, type);
-#endif    	
-    
-    ipap_template *templ;     
+    log->dlog(ch, "Starting method add_field template: %d - field %d.%d", templid, eno, type);
+
+    ipap_template *templ;
     templ = message->templates.get_template(templid);
     
-    if (templ== NULL)
+    if (templ== NULL){
+        log->elog(ch, "template not included in the message");
         throw ipap_bad_argument("template not included in the message");
+    }
     
     if ( ( templ->get_numfields() < templ->get_maxfields() )
          && (type < IPAP_EFT_VENDOR_BIT) ) {
@@ -411,13 +438,16 @@ ipap_message::add_field(  uint16_t templid,
         }else{
             templ->add_field(length,KNOWN,0,field);
         }
-        
+
+        log->dlog(ch, "number of fields already included %d",templ->get_numfields());
+
         /**
         * The message change, so it requires a new output 
         */
         require_output = true;
     }
     else{ 
+        log->elog(ch, "Maximum number of field reach");
         throw ipap_bad_argument("Maximum number of field reach");
     }
 }
@@ -675,14 +705,16 @@ void ipap_message::_write_hdr( void )
         int addBytes = (hsize + message->offset) - message->buffer_lenght; 
         allocate_additional_memory(addBytes);
     }
-    
+
+    uint8_t flags = message->get_flags();
 
     /* write header before any other data */
     if ( message->offset > 0 )
         memmove( message->buffer + hsize, message->buffer, message->offset );
         
     if (encode_network == true){
-        INSERTU16( message->buffer+buflen, buflen, message->version );
+        INSERTU8( message->buffer+buflen, buflen, message->version );
+        INSERTU8(message->buffer+buflen, buflen, flags);
         INSERTU16( message->buffer+buflen, buflen, message->offset + IPAP_HDR_BYTES );
         INSERTU32( message->buffer+buflen, buflen, now );
         INSERTU32( message->buffer+buflen, buflen, message->seqno);
@@ -690,7 +722,8 @@ void ipap_message::_write_hdr( void )
         INSERTU32( message->buffer+buflen, buflen, message->domain_id );
     }
     else{
-        INSERT_U16_NOENCODE( message->buffer+buflen, buflen, message->version );
+        INSERT_U8_NOENCODE( message->buffer+buflen, buflen, message->version );
+        INSERT_U8_NOENCODE( message->buffer+buflen, buflen, flags );
         INSERT_U16_NOENCODE( message->buffer+buflen, buflen, message->offset + IPAP_HDR_BYTES );
         INSERT_U32_NOENCODE( message->buffer+buflen, buflen, now );
         INSERT_U32_NOENCODE( message->buffer+buflen, buflen, message->seqno);
@@ -1118,33 +1151,34 @@ ipap_message::output_set( uint16_t templid )
      
     _output_flush( );
 
-#ifdef DEBUG
     log->dlog(ch, "Ending output_set");
-#endif 
-                
+
 }
 
 
 void 
-ipap_message::include_data( uint16_t templid, 
-                                   ipap_data_record &data )
+ipap_message::include_data( uint16_t templid, ipap_data_record &data )
 {
     
-#ifdef DEBUG
-    log->dlog(ch, "Starting method include_data");
-#endif	
+    log->dlog(ch, "Starting method include_data - template: %d", templid);
 
     
     int i;
     ipap_template *templ;
     
     templ = message->templates.get_template(templid);
+
+    log->dlog(ch, "maxfields: %d", templ->get_numfields());
     
     if ( !templ ) {
+        log->elog(ch,"Parameter templateId:%d not defined", templid);
         throw ipap_bad_argument("Parameter templateId:%d not defined", templid);
     }
        
     if ( ( templ->get_numfields() != data.get_num_fields())  ){
+        log->elog(ch,"The number of field values:%d is different from template's fields:%d",
+                    data.get_num_fields(), templ->get_numfields());
+
         throw ipap_bad_argument("The number of field values:%d is different from template's fields:%d", 
                 data.get_num_fields(), templ->get_numfields());
     }
@@ -1211,9 +1245,8 @@ unsigned char *
 ipap_message::get_message(void) const
 {
 
-#ifdef DEBUG
     log->dlog(ch, "starting get_message");
-#endif
+
     if (message != NULL)
         return message->buffer;
     else
@@ -1230,10 +1263,8 @@ int
 ipap_message::get_offset(void) const
 {
 
-#ifdef DEBUG
     log->dlog(ch, "starting get_offset");
-#endif
-    
+
     int offset = 0;
     
     if (message != NULL){
@@ -1246,9 +1277,8 @@ ipap_message::get_offset(void) const
         offset = -2;
     }
 
-#ifdef DEBUG
     log->dlog(ch, "ending get_offset: %d", offset);
-#endif	
+
     return offset;
 }
 
@@ -1259,18 +1289,14 @@ ipap_message::ipap_message(unsigned char * param, size_t message_length, bool _e
     log = Logger::getInstance();
     ch = log->createChannel("IPAP_MESSAGE");
 
-#ifdef DEBUG
     log->dlog(ch, "Starting method ipap_message");
-#endif	
-    
+
     int nrecords;
     
     // import calls init.
     nrecords = ipap_import(param, message_length );
 
-#ifdef DEBUG
     log->dlog(ch, "Ending method ipap_message - bytes read:%d", nrecords);
-#endif		
 
 }
 
@@ -1283,18 +1309,19 @@ void
 ipap_message::ipap_parse_hdr( unsigned char *mes, int offset )
 {
     
-#ifdef DEBUG
     log->dlog(ch, "Starting method ipap_parse_hdr");
-#endif
-    
+
+    uint8_t _flags;
     uint16_t _count, _length, _version;
     uint32_t _sysuptime, _unixtime, _exporttime, _seqno, _ackseqno, _domainid; 
         
     if (encode_network == true){
-        READ16(_version, mes);
+        READ8(_version, mes);
+        READ8(_flags, mes);
     }
     else{
-        READ16_NOENCODE(_version,mes);
+        READ8_NOENCODE(_version,mes);
+        READ8_NOENCODE(_flags, mes);
     }
     
     switch ( _version ) {
@@ -1736,18 +1763,20 @@ ipap_message::get_template_object(uint16_t templid)
         return NULL;
 }
 
-ipap_template * 
+ipap_template *
 ipap_message::get_template_object(uint16_t templid) const
 {
 
 #ifdef DEBUG
-    log->dlog(ch, "Starting method get_template");
+    log->dlog(ch, "Starting method get_template object");
 #endif
 
     if (message != NULL){
         try{
+            
             ipap_template *templ = (message->templates).get_template(templid);
-            templ->copy();
+            return new ipap_template(*templ);
+            
         } catch(ipap_bad_argument &e){
             return NULL;
         }
@@ -2139,6 +2168,85 @@ uint16_t ipap_message::get_last_template_id() const
 }
 
 /*
+ * name:        get_syn()
+ * parameters:
+ */
+bool ipap_message::get_syn()
+{
+    if (message != NULL){
+        return message->syn;
+    } else{
+        return false;
+    }
+}
+
+/*
+ * name:        set_syn()
+ * parameters:
+ */
+void ipap_message::set_syn(bool syn)
+{
+    if (message != NULL){
+        message->syn = syn;
+    } else{
+        throw  ipap_bad_argument("IpAp_message: set exporttime, message not initiazed");
+    }
+}
+
+/*
+ * name:        get_ack()
+ * parameters:
+ */
+bool ipap_message::get_ack()
+{
+    if (message != NULL){
+        return message->ack;
+    } else{
+        return false;
+    }
+}
+
+
+/*
+ * name:        set_ack()
+ * parameters:
+ */
+void ipap_message::set_ack(bool ack)
+{
+    if (message != NULL){
+        message->ack = ack;
+    } else{
+        throw  ipap_bad_argument("IpAp_message: set exporttime, message not initiazed");
+    }
+}
+
+/*
+ * name:        get_fin()
+ * parameters:
+ */
+bool ipap_message::get_fin()
+{
+    if (message != NULL){
+        return message->fin;
+    } else{
+        return false;
+    }
+}
+
+/*
+ * name:        set_fin()
+ * parameters:
+ */
+void ipap_message::set_fin(bool fin)
+{
+    if (message != NULL){
+        message->fin = fin;
+    } else{
+        throw  ipap_bad_argument("IpAp_message: set exporttime, message not initiazed");
+    }
+}
+
+/*
  * name:        get_version()
  * parameters:
  */
@@ -2150,6 +2258,7 @@ int ipap_message::get_version()
         return IPAP_VERSION;
     }
 }
+
 
 /*
  * name:        get_version()

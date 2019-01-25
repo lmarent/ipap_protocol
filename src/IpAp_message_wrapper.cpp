@@ -14,20 +14,20 @@ extern "C"
     {
         return new ipap_message(param, message_length, _decode_network);
     }
-    
-    void ipap_message_close(ipap_message* message)
-    { 
-        message->close();
-    }
-    
+        
     uint16_t ipap_message_new_data_template(ipap_message* message, int nfields, int template_type_id)
     {
         return message->new_data_template(nfields, (ipap_templ_type_t) template_type_id);
     }
     
-    void ipap_message_add_field(ipap_message* message, uint16_t templid, uint32_t eno, uint16_t type)
+    int ipap_message_add_field(ipap_message* message, uint16_t templid, uint32_t eno, uint16_t type)
     {
-        message->add_field(templid, eno, type);
+        try{
+            message->add_field(templid, eno, type);
+            
+        } catch(ipap_bad_argument e){
+            return -1;
+        }
     }
     
     void ipap_message_delete_template(ipap_message* message, uint16_t templid)
@@ -60,10 +60,10 @@ extern "C"
         message->output();
     }
     
-    void include_data(ipap_message* message, uint16_t templid, 
+    void ipap_message_include_data(ipap_message* message, uint16_t templid, 
                            ipap_data_record *data )
     {
-        message->include_data(templid, data);
+        message->include_data(templid, *data);
     }
  
     unsigned char * ipap_message_get_message(ipap_message* message)
@@ -85,12 +85,22 @@ extern "C"
     {
         return message->get_domain();
     }
-    
+
+    ipap_field * ipap_message_get_field_definition(ipap_message* message, int eno, int type)
+    {
+        return message->get_field_definition_ptr(eno, type);
+    }
+
     uint16_t ipap_message_get_last_template_id(ipap_message* message)
     {
         return message->get_last_template_id();
     }
-    
+
+    int ipap_message_get_message_length(ipap_message* message)
+    {
+        return message->get_buff_len();
+    }
+
     int ipap_message_get_version(ipap_message* message)
     {
         return message->get_version();
@@ -120,8 +130,7 @@ extern "C"
     {
         message->set_exporttime(_exporttime);
     }
-    
-    
+
     uint32_t ipap_message_get_exporttime(ipap_message* message)
     {
         message->get_exporttime();
@@ -135,6 +144,11 @@ extern "C"
     ipap_data_record * ipap_message_get_data_record_at_pos(ipap_message* message, int pos)
     {
         message->get_data_record_at_pos(pos);
+    }
+
+    void ipap_message_destroy(ipap_message* message)
+    {
+        message->~ipap_message();
     }
 }
 

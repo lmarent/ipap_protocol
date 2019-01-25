@@ -298,12 +298,27 @@ class ipap_field
         */
         ipap_value_field get_ipap_value_field(uint8_t &_value8);
 
+
+        /** Get the field value pointer from a field of type int of one character
+        *  verifies that the field is of type int and one character long.
+        *  @param  _value8 - Value that is going to be assigned
+        */
+        ipap_value_field * get_ipap_value_field_ptr(uint8_t _value8);
+
+
         /** Get the field value from a field of type int of two characters
         *  verifies that the field is of type int and two characters long.
         *  @param  _value16 - Value that is going to be assigned
         *  @throw   ipap_exception The length of field is not one byte
         */
         ipap_value_field get_ipap_value_field(uint16_t &_value16);
+
+        /** Get the field value pointer from a field of type int of two characters
+        *  verifies that the field is of type int and two characters long.
+        *  @param  _value16 - Value that is going to be assigned
+        *  @throw   ipap_exception The length of field is not one byte
+        */
+        ipap_value_field * get_ipap_value_field_ptr(uint16_t _value16);
 
         /** Get the field value from a field of type int of four characters
         *  verifies that the field is of type int and four characters long.
@@ -312,6 +327,13 @@ class ipap_field
         */
         ipap_value_field get_ipap_value_field(uint32_t &_value32);
 
+        /** Get the field value pointer from a field of type int of four characters
+        *  verifies that the field is of type int and four characters long.
+        *  @param  _value32 - Value that is going to be assigned
+        *  @throw   ipap_exception The length of field is not two bytes
+        */
+        ipap_value_field * get_ipap_value_field_ptr(uint32_t _value32);
+
         /** Get the field value from a field of type int of eight characters
         *  verifies that the field is of type int and eight characters long.
         *  @param  _value64 - Value that is going to be assigned
@@ -319,17 +341,36 @@ class ipap_field
         */
         ipap_value_field get_ipap_value_field(uint64_t &_value64);
 
+        /** Get the field value pointer from a field of type int of eight characters
+        *  verifies that the field is of type int and eight characters long.
+        *  @param  _value64 - Value that is going to be assigned
+        *  @throw   ipap_exception The length of field is not four bytes
+        */
+        ipap_value_field * get_ipap_value_field_ptr(uint64_t _value64);
+
         /** Get the field value from a field of type int of eight characters
         *  verifies that the field is of type int and eight characters long.
         *  @param  _value64 - Value that is going to be assigned
         */
         ipap_value_field get_ipap_value_field(float &_value64);
 
+        /** Get the field value pointer from a field of type int of eight characters
+        *  verifies that the field is of type int and eight characters long.
+        *  @param  _value64 - Value that is going to be assigned
+        */
+        ipap_value_field * get_ipap_value_field_ptr(float _value64);
+
         /** Get the field value from a field of type int of eight characters
         *  verifies that the field is of type int and eight characters long.
         *  @param  _value64 - Value that is going to be assigned
         */
         ipap_value_field get_ipap_value_field(double dvalue);
+
+        /** Get the field value pointer from a field of type int of eight characters
+        *  verifies that the field is of type int and eight characters long.
+        *  @param  _value64 - Value that is going to be assigned
+        */
+        ipap_value_field * get_ipap_value_field_ptr(double dvalue);
 
         /** Get the field value from a field of type char
         *  verifies that the field is of type char
@@ -339,6 +380,14 @@ class ipap_field
         */
         ipap_value_field get_ipap_value_field(char * _valuechar, int _length);
 
+        /** Get the field value pointer from a field of type char
+        *  verifies that the field is of type char
+        *  @param  _valuechar - Value that is going to be assigned
+        * 		   _length	  - number of characters to copy from the _valuechar pointer
+        *  @throw   ipap_exception The length of field is not eight bytes
+        */
+        ipap_value_field * get_ipap_value_field_ptr(char *_valuechar, int _length);
+
         /** Get the field value from a field of type unit8_t
         *  verifies that the field is of type char
         *  @param  _valuebyte - Value that is going to be assigned
@@ -346,7 +395,15 @@ class ipap_field
         *  @throw   ipap_exception The length requested is not as the field length
         */
         ipap_value_field get_ipap_value_field(uint8_t * _valuebyte, int _length);
-        
+
+        /** Get the field value pointer from a field of type unit8_t
+        *  verifies that the field is of type char
+        *  @param  _valuebyte - Value that is going to be assigned
+        * 		   _length	  - number of characters to copy from the _valuebyte pointer
+        *  @throw   ipap_exception The length requested is not as the field length
+        */
+        ipap_value_field * get_ipap_value_field_ptr(uint8_t *_valuebyte, int _length);
+
         /** Encode a field value. It takes the field type from the field 
         *   and encode based on the coding for that field type 
         *  @param  in - value to enconce

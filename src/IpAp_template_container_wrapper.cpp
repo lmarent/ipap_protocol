@@ -36,6 +36,16 @@ extern "C"
     {
         return container->get_num_templates();
     }
+
+    ipap_template * ipap_template_container_get_template(ipap_template_container* container, uint16_t templid)
+    {
+        return new ipap_template(*(container->get_template(templid)));
+    }
+    
+    void ipap_template_container_destroy(ipap_template_container* container)
+    {
+        container->~ipap_template_container();
+    }
     
 }
 

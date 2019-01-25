@@ -31,7 +31,47 @@ extern "C"
     {
         return field->get_length();
     }
-        
+
+    ipap_value_field * ipap_field_get_ipap_value_field_uint8(ipap_field* field, uint8_t _value8)
+    {
+        return field->get_ipap_value_field_ptr(_value8);
+    }
+
+    ipap_value_field * ipap_field_get_ipap_value_field_uint16(ipap_field* field, uint16_t _value16)
+    {
+        return field->get_ipap_value_field_ptr(_value16);
+    }
+
+    ipap_value_field * ipap_field_get_ipap_value_field_uint32(ipap_field* field, uint32_t _value32)
+    {
+        return field->get_ipap_value_field_ptr(_value32);
+    }
+
+    ipap_value_field * ipap_field_get_ipap_value_field_uint64(ipap_field* field, uint64_t _value64)
+    {
+        return field->get_ipap_value_field_ptr(_value64);
+    }
+
+    ipap_value_field * ipap_field_get_ipap_value_field_float(ipap_field* field, float _value64)
+    {
+        return field->get_ipap_value_field_ptr(_value64);
+    }
+
+    ipap_value_field * ipap_field_get_ipap_value_field_double(ipap_field* field, double dvalue)
+    {
+        return field->get_ipap_value_field_ptr(dvalue);
+    }
+
+    ipap_value_field * ipap_field_get_ipap_value_field_string(ipap_field* field, char *_valuechar, int _length)
+    {
+        return field->get_ipap_value_field_ptr(_valuechar, _length);
+    }
+
+    ipap_value_field * ipap_field_get_ipap_value_field_ubytes(ipap_field* field, uint8_t *_valuebyte, int _length)
+    {
+        return field->get_ipap_value_field_ptr(_valuebyte, _length);
+    }
+
     const char* ipap_field_get_field_name(ipap_field* field)
     {
         return field->get_field_name();

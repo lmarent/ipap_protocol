@@ -51,7 +51,7 @@ ipap_template::ipap_template(const ipap_template &rhs)
     tsend = rhs.tsend;
     tid = rhs.tid;
     maxfields = rhs.maxfields;
-    
+
     templateFieldConstIterList_t it;
     for( it = rhs.datafields.begin(); it != rhs.datafields.end(); ++it)
     {
@@ -70,9 +70,22 @@ ipap_template_field_t ipap_template::get_field(int i)
         throw ipap_bad_argument("Invalid field number");
     }
     else
-    {				
+    {
         return datafields[i];
     }
+}
+
+ipap_field * 
+ipap_template::get_field_by_pos(int pos)
+{
+    if ( (pos >= get_numfields()) || (pos < 0) ){
+        throw ipap_bad_argument("Invalid field number");
+    }
+    else
+    {
+        return new ipap_field(datafields[pos].elem);
+    }
+    
 }
 
 void
@@ -85,7 +98,7 @@ ipap_template::remove_unknown_fields()
             iter = datafields.erase(iter);
         else
             ++iter;
-    }	
+    }
 }
 
 /** Add a  data Field
@@ -286,14 +299,35 @@ ipap_template::getTemplateTypeMandatoryFields(ipap_templ_type_t templType)
         o_bid_fields.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
         o_bid_fields.insert(ipap_field_key(0,IPAP_FT_STARTSECONDS));
         o_bid_fields.insert(ipap_field_key(0,IPAP_FT_ENDSECONDS));
-                
+
+        // Fill data ask  fields
+        set<ipap_field_key> d_ask_fields;
+        d_bid_fields.insert(ipap_field_key(0,IPAP_FT_IDAUCTION));
+        o_bid_fields.insert(ipap_field_key(0,IPAP_FT_IDBIDDINGOBJECT));
+        d_bid_fields.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
+        d_bid_fields.insert(ipap_field_key(0,IPAP_FT_AUCTIONINGOBJECTSTATUS));
+        d_bid_fields.insert(ipap_field_key(0,IPAP_FT_BIDDINGOBJECTTYPE));
+
+        // Fill option ask fields
+        set<ipap_field_key> o_ask_fields;
+        o_bid_fields.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
+        o_bid_fields.insert(ipap_field_key(0,IPAP_FT_STARTSECONDS));
+        o_bid_fields.insert(ipap_field_key(0,IPAP_FT_ENDSECONDS));
+        o_bid_fields.insert(ipap_field_key(0,IPAP_FT_INTERVALSECONDS));
+        o_bid_fields.insert(ipap_field_key(0,IPAP_FT_IDRESOURCE));
+        o_bid_fields.insert(ipap_field_key(0,IPAP_FT_IPVERSION));
+        o_bid_fields.insert(ipap_field_key(0,IPAP_FT_SOURCEIPV4ADDRESS));
+        o_bid_fields.insert(ipap_field_key(0,IPAP_FT_SOURCEIPV6ADDRESS));
+        o_bid_fields.insert(ipap_field_key(0,IPAP_FT_SOURCEAUCTIONPORT));
+
+
         ipap_template::templateMandatoryFields = ipap_create_map<ipap_templ_type_t, set<ipap_field_key> >
                 (IPAP_SETID_AUCTION_TEMPLATE,d_auc_fields)
                 (IPAP_OPTNS_AUCTION_TEMPLATE,o_auc_fields)
                 (IPAP_SETID_BID_OBJECT_TEMPLATE,d_bid_fields)
                 (IPAP_OPTNS_BID_OBJECT_TEMPLATE,o_bid_fields)
-                (IPAP_SETID_ASK_OBJECT_TEMPLATE,d_bid_fields)
-                (IPAP_OPTNS_ASK_OBJECT_TEMPLATE,o_bid_fields)
+                (IPAP_SETID_ASK_OBJECT_TEMPLATE,d_ask_fields)
+                (IPAP_OPTNS_ASK_OBJECT_TEMPLATE,o_ask_fields)
                 (IPAP_SETID_ALLOC_OBJECT_TEMPLATE,d_bid_fields)
                 (IPAP_OPTNS_ALLOC_OBJECT_TEMPLATE,o_bid_fields);
     }

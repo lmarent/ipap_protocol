@@ -50,7 +50,7 @@ ipap_data_record::ipap_data_record(const ipap_data_record &param)
 
 ipap_data_record::~ipap_data_record()
 {
-
+   std::cout << "destroying ipap_data_record" << std::endl;
 }
 
 void 

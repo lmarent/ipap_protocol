@@ -53,82 +53,82 @@ class ipap_field_key
 
 private:
 
-	int eno;  				///< enterprise number or 0 
-	int ftype;              ///< field type 
+    int eno;  				///< enterprise number or 0 
+    int ftype;              ///< field type 
 
 public:
-	
-	/// Default constructor for the field key class.
+    
+    /// Default constructor for the field key class.
     inline ipap_field_key():eno(0), ftype(0){}
     
     
-	/// Constructor of the field key
-	inline ipap_field_key(int _eno, int _ftype): 
-			eno(_eno), ftype(_ftype){}
-	
-	/// Destructor of the field key
-	inline ~ipap_field_key(){}
-	
+    /// Constructor of the field key
+    inline ipap_field_key(int _eno, int _ftype): 
+            eno(_eno), ftype(_ftype){}
+    
+    /// Destructor of the field key
+    inline ~ipap_field_key(){ }
+    
     /// Sets the enterprise number
     inline void  set_eno(int _eno){eno = _eno;}
-	
+    
     /// Sets the field type
     inline void set_ftype(int _ftype){ftype = _ftype;}
     
-	/// Get the enterprise number
-	inline int get_eno(){ return eno; }
-	
-	/// Get the field type
-	inline int get_ftype(){ return ftype; }
+    /// Get the enterprise number
+    inline int get_eno(){ return eno; }
+    
+    /// Get the field type
+    inline int get_ftype(){ return ftype; }
 
-	/// Get the enterprise number
-	inline int get_eno() const { return eno; }
-	
-	/// Get the field type
-	inline int get_ftype() const { return ftype; }
-		
-	/**
-	 *  Equals to operator. It is equal when it has the same enterprise number an type
-	 */
-	inline bool operator ==(const ipap_field_key &rhs) const
-	{ 
-		return ((eno == rhs.eno) && (ftype == rhs.ftype)); 
-	}
+    /// Get the enterprise number
+    inline int get_eno() const { return eno; }
+    
+    /// Get the field type
+    inline int get_ftype() const { return ftype; }
+        
+    /**
+     *  Equals to operator. It is equal when it has the same enterprise number an type
+     */
+    inline bool operator ==(const ipap_field_key &rhs) const
+    { 
+        return ((eno == rhs.eno) && (ftype == rhs.ftype)); 
+    }
 
-	/** less operator. a key field is less than other when the sum of its 
-	*    attributes is less that the same sum for the key field given as 
-	*    parameter.
-	*/ 
-	inline bool operator< (const ipap_field_key& rhs) const
-	{
-		return (eno + ftype) < (rhs.eno + rhs.ftype ); 
-	}
+    /** less operator. a key field is less than other when the sum of its 
+    *    attributes is less that the same sum for the key field given as 
+    *    parameter.
+    */ 
+    inline bool operator< (const ipap_field_key& rhs) const
+    {
+        return (eno + ftype) < (rhs.eno + rhs.ftype ); 
+    }
 
-	/** 
-	 * Assignment operator. 
-	*/ 
-	inline ipap_field_key& operator= (const ipap_field_key& param)
-	{
-		eno = param.eno;
-		ftype = param.ftype;
-		return *this;
-	}
-	
-	/** 
-	 * Not equal to operator. 
-	*/ 
-	inline bool operator != (const ipap_field_key &rhs) const
-	{
-		return ((eno != rhs.eno) || (ftype != rhs.ftype)); 
-	}
-	
-	/** Convert the key field in a string.
-	*/ 
-	std::string to_string();
+    /** 
+     * Assignment operator. 
+    */ 
+    inline ipap_field_key& operator= (const ipap_field_key& param)
+    {
+        eno = param.eno;
+        ftype = param.ftype;
+        return *this;
+    }
+    
+    /** 
+     * Not equal to operator. 
+    */ 
+    inline bool operator != (const ipap_field_key &rhs) const
+    {
+        return ((eno != rhs.eno) || (ftype != rhs.ftype)); 
+    }
+    
+    /** Convert the key field in a string.
+    */ 
+    std::string to_string();
 
-	/** Convert the key field in a string.
-	*/ 
-	std::string to_string() const;
+    /** Convert the key field in a string.
+    */ 
+    std::string to_string() const;
 
 };
 

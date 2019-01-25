@@ -165,7 +165,7 @@ class ipap_template
         /**
          * Destructor for the class ipap_template
          */
-        inline ~ipap_template(){}
+        inline ~ipap_template(){ }
         
         /**
          * Set the id of the template
@@ -253,6 +253,14 @@ class ipap_template
          * @param i - position of the field to get. 
          */
         ipap_template_field_t get_field(int i);
+        
+        /**
+         * Get a field located in the position pos
+         * The order is scope and then data fields 
+         * @param pos - position of the field to get. 
+         * @return a pointer to the field definition.
+         */
+        ipap_field * get_field_by_pos(int pos);
         
         /**
          * Remove all fields market with the unknown tag.

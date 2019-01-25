@@ -59,7 +59,6 @@ ipap_field::ipap_field(const ipap_field &rhs)
 
 ipap_field::~ipap_field()
 {
-    
 }
 
 ipap_field& ipap_field::operator= (const ipap_field &param)
@@ -75,7 +74,6 @@ void ipap_field::set_field_type(int eno, int ftype, ssize_t length,
 {
     ipap_field_type_t field_type_t;
     
-    std::cout << "antes de comenzar set field type" << std::endl;
     field_type_t.eno = eno;  
     field_type_t.ftype = ftype;
     field_type_t.length = length; 
@@ -83,7 +81,6 @@ void ipap_field::set_field_type(int eno, int ftype, ssize_t length,
     field_type_t.name = std::string(name);
     field_type_t.xml_name = std::string(xml_name);
     field_type_t.documentation = std::string(documentation);
-    std::cout << "despues de terminar set field type" << std::endl;
     
     field_type = field_type_t;
 }
@@ -91,8 +88,6 @@ void ipap_field::set_field_type(int eno, int ftype, ssize_t length,
 
 int ipap_field::get_eno()
 {
-
-    std::cout << "estamos en get_eno" <<  field_type.eno << std::endl;
 
     return field_type.eno;
 }
@@ -109,8 +104,6 @@ size_t ipap_field::get_length()
         
 const char* ipap_field::get_field_name()
 {
-    std::cout << "estamos en el nombre" <<  field_type.name << std::endl;
-
     return field_type.name.c_str();
 }
         
@@ -761,6 +754,19 @@ ipap_field::get_ipap_value_field(uint8_t &_value8)
     return field;
 }
 
+ipap_value_field *
+ipap_field::get_ipap_value_field_ptr(uint8_t _value8)
+{
+    try
+    {
+        ipap_value_field val = get_ipap_value_field(_value8);
+        return new ipap_value_field(val);
+    }
+    catch (ipap_bad_argument &e){
+        return NULL;
+    }
+}
+
 ipap_value_field
 ipap_field::get_ipap_value_field(uint16_t &_value16)
 { 
@@ -777,6 +783,19 @@ ipap_field::get_ipap_value_field(uint16_t &_value16)
     }
     return field;
         
+}
+
+ipap_value_field *
+ipap_field::get_ipap_value_field_ptr(uint16_t _value16)
+{
+    try
+    {
+        ipap_value_field val = get_ipap_value_field(_value16);
+        return new ipap_value_field(val);
+    }
+    catch (ipap_bad_argument &e){
+        return NULL;
+    }
 }
 
 ipap_value_field
@@ -796,6 +815,19 @@ ipap_field::get_ipap_value_field(uint32_t &_value32)
     return field;
 }
 
+ipap_value_field *
+ipap_field::get_ipap_value_field_ptr(uint32_t _value32)
+{
+    try
+    {
+        ipap_value_field val = get_ipap_value_field(_value32);
+        return new ipap_value_field(val);
+    }
+    catch (ipap_bad_argument &e){
+        return NULL;
+    }
+}
+
 ipap_value_field
 ipap_field::get_ipap_value_field(uint64_t &_value64)
 { 
@@ -811,6 +843,19 @@ ipap_field::get_ipap_value_field(uint64_t &_value64)
         throw ipap_bad_argument(s.str());
     }
     return field;		
+}
+
+ipap_value_field *
+ipap_field::get_ipap_value_field_ptr(uint64_t _value64)
+{
+    try
+    {
+        ipap_value_field val = get_ipap_value_field(_value64);
+        return new ipap_value_field(val);
+    }
+    catch (ipap_bad_argument &e){
+        return NULL;
+    }
 }
 
 ipap_value_field
@@ -829,6 +874,19 @@ ipap_field::get_ipap_value_field(float &_fvalue)
     }
 }
 
+ipap_value_field *
+ipap_field::get_ipap_value_field_ptr(float _fvalue)
+{
+    try
+    {
+        ipap_value_field val = get_ipap_value_field(_fvalue);
+        return new ipap_value_field(val);
+    }
+    catch (ipap_bad_argument &e){
+        return NULL;
+    }
+}
+
 ipap_value_field
 ipap_field::get_ipap_value_field(double dvalue)
 { 	
@@ -841,6 +899,19 @@ ipap_field::get_ipap_value_field(double dvalue)
         s << "Field eno:" << get_field_type().eno << " ftype:" << get_field_type().ftype;
         s << " value does not agree with Field Type expected double value";
         throw ipap_bad_argument(s.str());
+    }
+}
+
+ipap_value_field *
+ipap_field::get_ipap_value_field_ptr(double dvalue)
+{
+    try
+    {
+        ipap_value_field val = get_ipap_value_field(dvalue);
+        return new ipap_value_field(val);
+    }
+    catch (ipap_bad_argument &e){
+        return NULL;
     }
 }
 
@@ -885,6 +956,20 @@ ipap_field::get_ipap_value_field(uint8_t * _valuebyte, int _length)
     return field;
 }
 
+ipap_value_field *
+ipap_field::get_ipap_value_field_ptr(uint8_t * _valuebyte, int _length)
+{
+    try
+    {
+        ipap_value_field val = get_ipap_value_field(_valuebyte,_length);
+        return new ipap_value_field(val);
+    }
+    catch (ipap_bad_argument &e){
+        return NULL;
+    }
+}
+
+
 ipap_value_field
 ipap_field::get_ipap_value_field(char * _valuechar, int _length)
 {
@@ -899,6 +984,20 @@ ipap_field::get_ipap_value_field(char * _valuechar, int _length)
     }	
     
     return field;
+}
+
+
+ipap_value_field *
+ipap_field::get_ipap_value_field_ptr(char * _valuechar, int _length)
+{
+    try
+    {
+        ipap_value_field val = get_ipap_value_field(_valuechar,_length);
+        return new ipap_value_field(val);
+    }
+    catch (ipap_bad_argument &e){
+        return NULL;
+    }
 }
 
 string 

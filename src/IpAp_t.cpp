@@ -31,7 +31,7 @@
 
 
 ipap_t::ipap_t():
-domain_id(0), version(IPAP_VERSION), buffer(NULL), nrecords(0), offset(0), 
+domain_id(0), version(IPAP_VERSION), syn(false), ack(false), fin(false), buffer(NULL), nrecords(0), offset(0),
 buffer_lenght(0), seqno(0), ackseqno(0), cs_tid(0), cs_bytes(0), cs_offset(0), 
 cs_header(NULL), length(0), exporttime(0)
 {
@@ -43,13 +43,16 @@ cs_header(NULL), length(0), exporttime(0)
 
 
 ipap_t::ipap_t(const ipap_t& rhs):
-domain_id(0), version(IPAP_VERSION), buffer(NULL), nrecords(0), offset(0), 
-buffer_lenght(0), seqno(0), ackseqno(0), cs_tid(0), cs_bytes(0), cs_offset(0), 
-cs_header(NULL), length(0), exporttime(0)
+domain_id(0), version(IPAP_VERSION), syn(false), ack(false), fin(false),
+buffer(NULL), nrecords(0), offset(0), buffer_lenght(0), seqno(0), ackseqno(0),
+cs_tid(0), cs_bytes(0), cs_offset(0), cs_header(NULL), length(0), exporttime(0)
 {
 
 	domain_id = rhs.domain_id;
 	version = rhs.version;
+	syn = rhs.syn;
+	ack = rhs.ack;
+	fin = rhs.fin;
 	templates = rhs.templates;
 	nrecords = rhs.nrecords;
 	offset = rhs.offset;
@@ -94,6 +97,9 @@ ipap_t::operator=(const ipap_t & rhs)
 		free(buffer);
 	
 	domain_id = rhs.domain_id;
+	syn = rhs.syn;
+	ack = rhs.ack;
+	fin = rhs.fin;
 	version = rhs.version;
 	templates = rhs.templates;
 	nrecords = rhs.nrecords;
@@ -126,11 +132,12 @@ ipap_t::operator=(const ipap_t & rhs)
 bool 
 ipap_t::operator== (const ipap_t& rhs)
 {	
-	
-	cout << "arives 2";
-	
+
 	if ( (domain_id != rhs.domain_id) ||
 	   (version != rhs.version) ||
+	   (syn != rhs.syn) ||
+	   (ack != rhs.ack) ||
+	   (fin != rhs.fin) ||
 	   (nrecords != rhs.nrecords) ||
 	   (seqno != rhs.seqno)  || 
 	   (ackseqno != rhs.ackseqno)
@@ -139,30 +146,20 @@ ipap_t::operator== (const ipap_t& rhs)
 		return false;
 	}
 
-	cout << "arives 5" << "bufl_left:" << buffer_lenght << " bufl_rig:" << rhs.buffer_lenght << endl;
-
 	if 	((offset != rhs.offset) ||
 	   (buffer_lenght != rhs.buffer_lenght))
 		return false;
-
-	cout << "arives 4";
-
 	
 	if 	(templates != rhs.templates) 
 		return false;
 
-	
-	cout << "arives 1";
-					
 	if (version == IPAP_VERSION){
 		if ( (rhs.length != length) ||
 			 (rhs.exporttime != exporttime) ){
 			return false;
 		}
 	}
-	
-	cout << "arives 3";
-		
+
 	return true;
 	    
 }
@@ -183,8 +180,6 @@ ipap_t::copy_raw_message(unsigned char * msg, size_t _offset)
 	memcpy(buffer,msg,_offset);
 	buffer_lenght = _offset;
 	offset = _offset;
-	
-	cout << "buffer len final:" << buffer_lenght << endl;
 
 }
 
@@ -198,5 +193,35 @@ ipap_t::reinitiate_buffer(void)
    buffer = ( unsigned char * )calloc( IPAP_DEFAULT_BUFLEN,  sizeof( unsigned char ) ); 
    buffer_lenght = IPAP_DEFAULT_BUFLEN;
    offset = 0;
+
+}
+
+uint8_t
+ipap_t::get_flags(void)
+{
+    uint8_t res= 0;
+    if (syn)
+        res |= 1 << 0;
+
+    if (ack)
+        res |= 1 << 1;
+
+    if (fin)
+        res |= 1 << 2;
+
+    return res;
+}
+
+void
+ipap_t::set_flags(uint8_t flags)
+{
+
+    const uint8_t syn_comp = 0x1;
+    const uint8_t ack_comp = 0x2;
+    const uint8_t fin_comp = 0x4;
+
+    syn = flags & syn_comp;
+    ack = (flags & ack_comp) >> 1;
+    fin = (flags & ack_comp) >> 2;
 
 }

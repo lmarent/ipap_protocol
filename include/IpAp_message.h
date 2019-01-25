@@ -49,7 +49,7 @@
  **  0                   1                   2                   3
  **    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
  **   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- **   |       Version Number          |            Length             |
+ **   | Version Number| unused  |S|A|F|            Length             |
  **   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
  **   |                         Export Time                           |
  **   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -315,7 +315,14 @@ class ipap_message
         *        type       - field type.
         */
        ipap_field get_field_definition( int eno, int type );
-                                
+
+       /**
+        * Get a field definition pointer from the container field
+        * @param eno        - Enterprise field number id
+        *        type       - field type.
+        */
+        ipap_field * get_field_definition_ptr(int eno, int type);
+
        /**
         * adds a data field to the message within a template
         * @param templid    - Pointer to the template
@@ -480,13 +487,49 @@ class ipap_message
         * @return last template id.
         */
        uint16_t get_last_template_id() const;
-       
+
+       /**
+        * Sets message syn flag
+        * @return syn.
+        */
+       void set_syn(bool syn);
+
+       /**
+        * Gets message syn flag
+        * @return syn.
+        */
+       bool get_syn();
+
+       /**
+        * Sets message ack flag
+        * @return ack.
+        */
+       void set_ack(bool ack);
+
+       /**
+        * Gets message ack flag
+        * @return ack.
+        */
+       bool get_ack();
+
+       /**
+        * Sets message fin flag
+        * @return fin.
+        */
+       void set_fin(bool fin);
+
+       /**
+        * Gets message fin flag
+        * @return fin.
+        */
+       bool get_fin();
+
        /**
         * Gets message version
         * @return version.
         */	
        int get_version();
-       
+
        /**
         * Gets message version
         * @return version.
@@ -546,7 +589,11 @@ class ipap_message
         * @return 
         */	
        uint32_t get_exporttime() const; 
-       
+
+       /*
+       *
+       * Gets the buffer allocated length
+       */
        int get_buff_len() { return message->buffer_lenght; }
 };
 

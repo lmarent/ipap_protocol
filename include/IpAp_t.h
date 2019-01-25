@@ -40,7 +40,10 @@
 	
 class ipap_t
 {
-    public: 
+    public:
+        bool             syn;                     ///< session start
+        bool             ack;                     ///< Acknowledge
+        bool             fin;                     ///< Finish
 		int              domain_id;				  ///< Id of the auction domain.
 		int              version;     			  ///< ipap version to export.
 		ipap_template_container templates;   	  ///< list of templates. 
@@ -104,7 +107,17 @@ class ipap_t
 	/**
 	 * Release the buffer and reinitiate it
 	 */
-	void reinitiate_buffer(void);	
+	void reinitiate_buffer(void);
+
+	/**
+	*   Gets the flags converted to uint8_t
+	*/
+	uint8_t get_flags(void);
+
+	/**
+	*   Sets the flags from uint8_t
+	*/
+    void set_flags(uint8_t flags);
 
 };
 

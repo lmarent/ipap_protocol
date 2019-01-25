@@ -72,11 +72,13 @@ extern "C"
     
     float ipap_value_field_get_value_float(ipap_value_field* field_value)
     {
+        std::cout << "float" << field_value->get_value_float() << std::endl;
         return field_value->get_value_float();
     }
     
     double ipap_value_field_get_value_double(ipap_value_field* field_value)
     {
+        std::cout << "double" << field_value->get_value_double() << std::endl;
         return field_value->get_value_double();
     }
     
@@ -90,6 +92,10 @@ extern "C"
         return field_value->get_length();
     }
     
+    void ipap_value_field_destroy (ipap_value_field* field_value){
+        field_value->~ipap_value_field();
+    }
+
     
 }
 
