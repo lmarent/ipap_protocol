@@ -39,7 +39,7 @@
 #define NODEBUG
 
 #define INSERTU8(b,l,val) \
-        { memcpy((b),&val,1); (l)+=1; }
+        { uint8_t _t = val; memcpy((b),&_t,1); (l)+=1; }
 
 #define INSERTU16(b,l,val) \
         { uint16_t _t=htons((val)); memcpy((b),&_t,2); (l)+=2; }
@@ -48,7 +48,7 @@
         { uint32_t _t=htonl((val)); memcpy((b),&_t,4); (l)+=4; }
 
 #define INSERT_U8_NOENCODE(b,l,val) \
-        { memcpy((b),&val,1); (l)+=1; }
+        { uint8_t _t =val; memcpy((b),&_t,1); (l)+=1; }
 
 #define INSERT_U16_NOENCODE(b,l,val) \
         { uint16_t _t = val; memcpy((b),&_t,2); (l)+=2; }
@@ -735,11 +735,9 @@ void ipap_message::_write_hdr( void )
     message->exporttime = now;
     message->offset += hsize;
 
-#ifdef DEBUG
-    log->dlog(ch, "_write_hdr version:%d exporttime=%d offset:%d", 
-                        message->version, message->exporttime, message->offset);
-#endif
-        
+    log->dlog(ch, "_write_hdr version:%d exporttime=%d offset:%d flags:%d",
+                        message->version, message->exporttime, message->offset, flags);
+
 }
 
 
@@ -1297,17 +1295,17 @@ ipap_message::ipap_parse_hdr( unsigned char *mes, int offset )
     
     log->dlog(ch, "Starting method ipap_parse_hdr");
 
-    uint8_t _flags;
+    uint8_t _flags = 0;
     uint16_t _count, _length, _version;
     uint32_t _sysuptime, _unixtime, _exporttime, _seqno, _ackseqno, _domainid; 
         
     if (encode_network == true){
         READ8(_version, mes);
-        READ8(_flags, mes);
+        READ8(_flags, mes+1);
     }
     else{
         READ8_NOENCODE(_version,mes);
-        READ8_NOENCODE(_flags, mes);
+        READ8_NOENCODE(_flags, mes+1);
     }
 
     switch ( _version ) {
@@ -1337,6 +1335,7 @@ ipap_message::ipap_parse_hdr( unsigned char *mes, int offset )
           /* Initialize the message object */
           init(_domainid, _version); 
           message->version = _version;
+          message->set_flags(_flags);
           message->length = _length;
           message->exporttime = _exporttime;
           message->seqno = _seqno;

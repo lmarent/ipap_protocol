@@ -350,6 +350,8 @@ void IpAp_Message_Test::testExportImport()
 		mes->include_data(templatedataid, data2);
 		mes->set_seqno(seqNbr);
 		mes->set_ackseqno(ackSeqNbr);
+		mes->set_syn(true);
+		mes->set_ack(true);
 
 		cout << "offset:" << mes->get_offset() << "buffer lenght:" << mes->get_buff_len() << endl;
 
@@ -368,6 +370,9 @@ void IpAp_Message_Test::testExportImport()
 		CPPUNIT_ASSERT( num_templates == 1 );
 
 		CPPUNIT_ASSERT(msgb.get_ackseqno() == ackSeqNbr);
+		CPPUNIT_ASSERT(msgb.get_syn() == mes->get_syn());
+		CPPUNIT_ASSERT(msgb.get_ack() == mes->get_ack());
+
 		
 		CPPUNIT_ASSERT( msgb.operator==( *mes) );
 
