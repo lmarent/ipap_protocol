@@ -86,10 +86,11 @@ class ipap_template_container
         ~ipap_template_container(void);
     
         /**
-         * Add a new template to the container
+         * Add a new template to the container by copying it.
          */
         void add_template(ipap_template *param );
-                
+
+
         /**
          * delete all templates from the container
          */

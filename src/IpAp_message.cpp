@@ -519,6 +519,7 @@ ipap_message::make_template( ipap_fields_t *fields,
     ipap_template *t = NULL;
     int i;
 
+
     try
     {
 
@@ -919,6 +920,7 @@ ipap_message::output(void)
             for ( it = lst_templates.begin(); it != lst_templates.end(); ++it)
             {
                 ipap_template *templ = get_template(*it);
+
                 output_set( templ->get_template_id() );
             }
 
@@ -952,10 +954,8 @@ ipap_message::output_set( uint16_t templid )
     uint8_t           *p, *buf;
     ipap_template 	  *templ; 
 
-#ifdef DEBUG
     log->dlog(ch, "Starting output_set %d ", templid);
-#endif 
-    
+
     templ = message->templates.get_template(templid);
 
     /** parameter check
@@ -963,10 +963,8 @@ ipap_message::output_set( uint16_t templid )
     if (templ==NULL)
         throw ipap_bad_argument("template not included in the message");
   
-#ifdef DEBUG
-    log->dlog(ch, "template send at %d ", templ->get_tsend());
-#endif 
-  
+    log->dlog(ch, "template send at %d", templ->get_tsend());
+
         
     /** writes the templates if it was not done before
      */
@@ -995,19 +993,15 @@ ipap_message::output_set( uint16_t templid )
     for ( int data_index= 0; data_index < data_list.size(); data_index++)
     {
 
-#ifdef DEBUG
-            log->dlog(ch, "Output set - data set:%d template: %d", 
+        log->dlog(ch, "Output set - data set:%d template: %d",
                             data_index, data_list[data_index].get_template_id() );
-#endif
-        
+
         if (data_list[data_index].get_template_id() == templ->get_template_id())
         {
 
-#ifdef DEBUG
-            log->dlog(ch, "Output set - Data associated with template %d", 
+            log->dlog(ch, "Output set - Data associated with template %d",
                             templ->get_template_id());
-#endif 
-                
+
             ipap_data_record g_data = data_list[data_index];
             for ( i=0; i < templ->get_numfields(); i++ )
             {
@@ -1022,14 +1016,12 @@ ipap_message::output_set( uint16_t templid )
                      field_len = g_data.get_length(field_key);
                     
                 }catch (ipap_bad_argument){
-#ifdef DEBUG
                     log->dlog(ch, "Output set - Data associated with \
                                    template %d field:%d has not found - \
                                    fieldkey:%s - dataRecord:%s", 
                             templ->get_template_id(), i, 
                             field_key.to_string().c_str(), 
                             g_data.to_string().c_str());
-#endif 							
                     throw ipap_bad_argument("Field not included:" +
                                         field_key.to_string() );
                     
@@ -1050,10 +1042,8 @@ ipap_message::output_set( uint16_t templid )
                 datasetlen += field_len;
             }
 
-#ifdef DEBUG
-            log->dlog(ch, "Output set - finish calculating dataset %d", 
+            log->dlog(ch, "Output set - finish calculating dataset %d",
                             datasetlen);
-#endif 
 
             if ( (message->offset + datasetlen) > message->buffer_lenght ){
 
@@ -1085,9 +1075,7 @@ ipap_message::output_set( uint16_t templid )
                 }
             }
 
-#ifdef DEBUG
             log->dlog(ch, "Output set - finish writing dataset header");
-#endif
             for ( i=0; i < templ->get_numfields(); i++ ) {
                                 
                 ipap_field_key field_key = ipap_field_key((templ->get_field(i).elem).get_field_type().eno, 
@@ -1118,9 +1106,7 @@ ipap_message::output_set( uint16_t templid )
                 
             }
                         
-#ifdef DEBUG
             log->dlog(ch, "Output set - finish writing dataset fields");
-#endif			
             message->nrecords ++;
             message->offset += buflen;
             message->cs_bytes += buflen;
@@ -1323,7 +1309,7 @@ ipap_message::ipap_parse_hdr( unsigned char *mes, int offset )
         READ8_NOENCODE(_version,mes);
         READ8_NOENCODE(_flags, mes);
     }
-    
+
     switch ( _version ) {
 
       case IPAP_VERSION:
@@ -1345,9 +1331,8 @@ ipap_message::ipap_parse_hdr( unsigned char *mes, int offset )
               READ32_NOENCODE(_ackseqno, mes+12);
               READ32_NOENCODE(_domainid, mes+16);
           }
-#ifdef DEBUG
-          log->dlog(ch, "Header received - lengh:%d exporttime %d seqno:%d domainid:%d", _length, _exporttime, _seqno, _domainid );
-#endif
+
+          log->dlog(ch, "Header received - lengh:%d exporttime %d seqno:%d domainid:%d flags:%d", _length, _exporttime, _seqno, _domainid, _flags );
 
           /* Initialize the message object */
           init(_domainid, _version); 
@@ -1364,10 +1349,8 @@ ipap_message::ipap_parse_hdr( unsigned char *mes, int offset )
           throw ipap_bad_argument("Invalid Message Version");
     }
 
-#ifdef DEBUG
     log->dlog(ch, "Ending method ipap_parse_hdr");
-#endif
-    
+
 }
 
 
@@ -1391,9 +1374,7 @@ ipap_message::ipap_decode_trecord( int setid,
     errno = EIO;
     const uint8_t * buf = reinterpret_cast<const uint8_t*>(buf2);
 
-#ifdef DEBUG
     log->dlog(ch, "Starting method ipap_decode_trecord %d", setid);
-#endif	
 
     /** read template header
      */
@@ -1420,11 +1401,9 @@ ipap_message::ipap_decode_trecord( int setid,
               READ16_NOENCODE(nfields,buf+2);
           }
 
-#ifdef DEBUG
-          log->dlog(ch, "Method ipap_decode_trecord - templid:%d, nfields:%d", 
+          log->dlog(ch, "Method ipap_decode_trecord - templid:%d, nfields:%d",
                         templid, nfields);
-#endif	
-                    
+
           offset = 4;
           ndatafields  = nfields;
           break;
@@ -1459,10 +1438,8 @@ ipap_message::ipap_decode_trecord( int setid,
         // Continue.
     }	
 
-#ifdef DEBUG
     log->dlog(ch, "It is going to create the template");
-#endif
-    
+
     /** alloc mem
     */
     switch( setid ) {
@@ -1487,24 +1464,17 @@ ipap_message::ipap_decode_trecord( int setid,
             }
 
 
-            /** add template to template container
-            */
-            (message->templates).add_template(t);
-        
             /**
             * The message change, so it requires a new output 
             */
             require_output = true;
             t->set_type((ipap_templ_type_t) setid);
             
-#ifdef DEBUG
             log->dlog(ch, "create created with id: %d", templid );
-#endif			
 
-#ifdef DEBUG
-            log->dlog(ch, "Method ipap_decode_trecord - type of template::%d", 
+            log->dlog(ch, "Method ipap_decode_trecord - type of template::%d",
                         t->get_type());
-#endif	    
+
             /**
              *  read field definitions
             */
@@ -1516,11 +1486,16 @@ ipap_message::ipap_decode_trecord( int setid,
                         read_field(t, buf+offset, len-offset, &offset);
                 }
                 *nread = offset;		
+
             } catch (ipap_bad_argument bad) {
                 message->templates.get_template(templid);
                 throw ipap_bad_argument("Could not read the template information"); 
             }
-            
+
+            /** add template to template container
+            */
+            (message->templates).add_template(t);
+
             break;
       default:
             throw ipap_bad_argument("Invalid template type"); 
@@ -1611,11 +1586,9 @@ ipap_message::read_field(ipap_template *templ, const uint8_t  *buf,
         ipap_field field = g_ipap_fields.get_field(eno, (int) ftype);
         templ->add_field(length, KNOWN, relay_f, field);
         
-#ifdef DEBUG
-    log->dlog(ch, "Method read_field - fields found: %s", 
+    log->dlog(ch, "Method read_field - fields found: %s",
                     (field.get_field_type().name).c_str()  );
-#endif		
-        
+
     }
     catch(ipap_bad_argument e)
     {	
@@ -1624,17 +1597,13 @@ ipap_message::read_field(ipap_template *templ, const uint8_t  *buf,
         /* mark node, so we can drop it later */
         ipap_field field = g_ipap_fields.get_field(0, 0);
         templ->add_field(length, UNKNOWN, relay_f, field);
-#ifdef DEBUG
-        log->dlog(ch, "Method read_field - field unfound: %s", 
+        log->dlog(ch, "Method read_field - field unfound: %s",
                         (field.get_field_type().name).c_str()  );
-#endif	
     }
 
-#ifdef DEBUG
-    log->dlog(ch, "Method read_field - total fields: %d", 
+    log->dlog(ch, "Method read_field - total fields: %d",
                     templ->get_numfields()  );
-#endif	
-    
+
 }
 
 
@@ -1653,9 +1622,7 @@ void ipap_message::ipap_decode_datarecord( ipap_template *templ,
     int           i, len, bytesleft;
     ipap_data_record g_data(templ->get_template_id());
 
-#ifdef DEBUG
-    log->dlog(ch, "Starting method ipap_decode_datarecord");
-#endif
+    log->dlog(ch, "Starting method ipap_decode_datarecord buflen:%d", buflen);
 
     /** parse message
      */
@@ -1663,13 +1630,13 @@ void ipap_message::ipap_decode_datarecord( ipap_template *templ,
     *nread    = 0;
     p         = reinterpret_cast<uint8_t*>(buf);
         
+    log->dlog(ch, "template num fields:%d", templ->get_numfields());
     for ( i=0; i < templ->get_numfields(); i++ ) {
 
         len = templ->get_field(i).flength;
 
-#ifdef DEBUG
-    log->dlog(ch, "Starting to read field %d len:%d bytesleft:%d",i, len,bytesleft);
-#endif	
+        log->dlog(ch, "Starting to read field %d len:%d bytesleft:%d",i, len,bytesleft);
+
         if ( len == IPAP_FT_VARLEN ) {
             len =*p;
             p++;
@@ -1701,13 +1668,11 @@ void ipap_message::ipap_decode_datarecord( ipap_template *templ,
             value = (templ->get_field(i).elem).decode(p,len, 0);
         }
 
-#ifdef DEBUG
-        log->dlog(ch, "Reading field eno:%d ftype:%d value:%s", 
+        log->dlog(ch, "Reading field eno:%d ftype:%d value:%s",
                     (templ->get_field(i).elem).get_field_type().eno,
                     (templ->get_field(i).elem).get_field_type().ftype,
                     ((templ->get_field(i).elem).writeValue(value)).c_str());
-#endif
-                
+
         g_data.insert_field((templ->get_field(i).elem).get_field_type().eno, 
                             (templ->get_field(i).elem).get_field_type().ftype, value); 
                             
@@ -1717,9 +1682,7 @@ void ipap_message::ipap_decode_datarecord( ipap_template *templ,
     
     data_list.push_back(g_data);
 
-#ifdef DEBUG
     log->dlog(ch, "Ending method ipap_decode_datarecord");
-#endif
 
 }
 
@@ -1767,9 +1730,7 @@ ipap_template *
 ipap_message::get_template_object(uint16_t templid) const
 {
 
-#ifdef DEBUG
     log->dlog(ch, "Starting method get_template object");
-#endif
 
     if (message != NULL){
         try{
@@ -1794,9 +1755,7 @@ ipap_message::ipap_import( unsigned char  *buffer, size_t message_length )
     int                  bytes, bytesleft;
     int                  err_flag = 0;
 
-#ifdef DEBUG
     log->dlog(ch, "Starting method ipap_import: %d", message_length);
-#endif
 
     if (message_length < 2)
         throw ipap_bad_argument("Invalid Message");
@@ -1817,6 +1776,8 @@ ipap_message::ipap_import( unsigned char  *buffer, size_t message_length )
     for ( i=0; (nread+4) < message_length; i++ ) {
 
 
+        log->dlog(ch, "num bytes loaded: %d", nread);
+
         /** read ipap record header (set id, lenght). Verifies that the lenght 
          *  given is valid.
          */
@@ -1829,10 +1790,8 @@ ipap_message::ipap_import( unsigned char  *buffer, size_t message_length )
             READ16_NOENCODE(setlen, buf+nread+2);
         }
         
-#ifdef DEBUG
         log->dlog(ch, "Reading data set:%d setid:%d length:%d", i, setid, setlen);
-#endif
-        
+
         nread  += 4;
         if ( setlen <4 ) {
             continue;
@@ -1966,9 +1925,7 @@ ipap_message::operator== (const ipap_message& rhs) const
     if ((rhs.message != NULL) and (message != NULL)){
         
         if (*(rhs.message) != *message){
-#ifdef DEBUG
             log->dlog(ch, "Ending method operator== different message header");
-#endif				
             return false;
         }
                                     
@@ -1976,9 +1933,7 @@ ipap_message::operator== (const ipap_message& rhs) const
         {
             for (int i = 0; i < data_list.size(); i++){
                 if ( data_list[i] != rhs.data_list[i] ){
-#ifdef DEBUG
                     log->dlog(ch, "Ending method operator== different data");
-#endif				
                     return false;
                 }
             }

@@ -186,6 +186,7 @@ void IpAp_Message_Test::testExceptionAddTemplate()
 						  
 	nfields = 3;
 	templateAuctionid = mes->new_data_template( nfields, IPAP_SETID_AUCTION_TEMPLATE );
+
 	// Verifies that only the maximum number of data fields can be inserted.
 	mes->add_field(templateAuctionid, 0, IPAP_FT_STARTSECONDS);
 	mes->add_field(templateAuctionid, 0, IPAP_FT_ENDSECONDS);
@@ -196,23 +197,7 @@ void IpAp_Message_Test::testExceptionAddTemplate()
 
 	mes->delete_all_templates();
 
-	ipap_fields_t a[3]; 
-	a[0].eno = 0;
-	a[0].ienum = IPAP_FT_STARTSECONDS;
-	a[0].length = 8;
 
-	a[1].eno = 0;
-	a[1].ienum = IPAP_FT_ENDSECONDS;
-	a[1].length = 8;
-
-	a[2].eno = 0;
-	a[2].ienum = IPAP_FT_UNITBUDGET;
-	a[2].length = 8;
-
-	uint16_t templid = 256;
-	CPPUNIT_ASSERT_THROW( mes->make_template(a, 4, IPAP_SETID_BID_OBJECT_TEMPLATE, templid), 
-							ipap_bad_argument);
-	
 }
 
 
@@ -369,27 +354,24 @@ void IpAp_Message_Test::testExportImport()
 		cout << "offset:" << mes->get_offset() << "buffer lenght:" << mes->get_buff_len() << endl;
 
 		mes->output();
-		
+
 		message = mes->get_message();
 		offset = mes->get_offset();
 		
 		cout << "offset:" << mes->get_offset() << "buffer lenght:" << mes->get_buff_len() << endl;
-				
+
 		ipap_message_test msgb (message, offset, false);
 
-		cout << "Here we are 0" << msgb.get_buff_len() << endl;
-		
+		cout << "buffer lenght - new message:" << msgb.get_buff_len() << endl;
+
 		num_templates = msgb.get_num_templates();
 		CPPUNIT_ASSERT( num_templates == 1 );
-		
-		cout << "Here we are 2 " << endl;
-				
+
 		CPPUNIT_ASSERT(msgb.get_ackseqno() == ackSeqNbr);
 		
 		CPPUNIT_ASSERT( msgb.operator==( *mes) );
 
 		cout << "Here we are 3 " << endl;
-		
 
 	}
 	catch(ipap_bad_argument &e)

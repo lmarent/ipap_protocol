@@ -142,20 +142,24 @@ ipap_t::operator== (const ipap_t& rhs)
 	   (seqno != rhs.seqno)  || 
 	   (ackseqno != rhs.ackseqno)
 	   ){
-		
+		cout << "changes in the version or flags" << endl;
 		return false;
 	}
 
-	if 	((offset != rhs.offset) ||
-	   (buffer_lenght != rhs.buffer_lenght))
+	if 	(offset != rhs.offset){
+		cout << "different offset" << endl;
 		return false;
+	}
 	
-	if 	(templates != rhs.templates) 
+	if 	(templates != rhs.templates) {
+		cout << "different number of templates" << endl;
 		return false;
+	}
 
 	if (version == IPAP_VERSION){
 		if ( (rhs.length != length) ||
 			 (rhs.exporttime != exporttime) ){
+    		cout << "different header params" << endl;
 			return false;
 		}
 	}
@@ -222,6 +226,6 @@ ipap_t::set_flags(uint8_t flags)
 
     syn = flags & syn_comp;
     ack = (flags & ack_comp) >> 1;
-    fin = (flags & ack_comp) >> 2;
+    fin = (flags & fin_comp) >> 2;
 
 }
