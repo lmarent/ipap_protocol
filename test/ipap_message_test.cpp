@@ -39,6 +39,7 @@ class IpAp_Message_Test : public CppUnit::TestFixture {
 	CPPUNIT_TEST( testExceptionAddTemplate );
 	CPPUNIT_TEST( testDataRecords );
 	CPPUNIT_TEST( testExportImport );
+	CPPUNIT_TEST( testSynMessage );
 	CPPUNIT_TEST_SUITE_END();
 
   public:
@@ -48,6 +49,7 @@ class IpAp_Message_Test : public CppUnit::TestFixture {
 	void testExceptionAddTemplate();
 	void testDataRecords();
 	void testExportImport();
+	void testSynMessage();
 
   private:
     
@@ -66,6 +68,7 @@ void IpAp_Message_Test::setUp() {
 	{
 		int domain_id = 6;
 		mes = new ipap_message_test( domain_id, IPAP_VERSION, false);
+		mes2 = new ipap_message_test( domain_id, IPAP_VERSION, true);
 	}
 	catch(ipap_bad_argument &e)
 	{
@@ -389,8 +392,35 @@ void IpAp_Message_Test::testExportImport()
 }
 
 
+void IpAp_Message_Test::testSynMessage()
+{
+	uint16_t templatedataid = 0;
+	uint16_t templatescopeid = 0;
+
+	uint32_t seqNbr = 4;
+	unsigned char * message;
+
+    mes2->set_syn(true);
+    mes2->set_seqno(1212);
+    mes2->output();
+
+	message = mes2->get_message();
+
+    CPPUNIT_ASSERT(message != NULL );
+
+    int length = mes2->get_lenght();
+    cout << "message salida - message length" << length <<  endl;
+    for (int i = 0; i < length; i++){
+         cout << "i" << i << ":" << static_cast<unsigned>(*(message + i)) << endl;
+    }
+
+    cout << endl;
+
+}
+
 
 void IpAp_Message_Test::tearDown() 
 {
 	delete(mes);
+	delete(mes2);
 }

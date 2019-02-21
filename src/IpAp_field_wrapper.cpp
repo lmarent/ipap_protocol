@@ -62,7 +62,17 @@ extern "C"
         return field->get_ipap_value_field_ptr(dvalue);
     }
 
-    ipap_value_field * ipap_field_get_ipap_value_field_string(ipap_field* field, char *_valuechar, int _length)
+    ipap_value_field * ipap_field_get_ipap_value_field_ipv4(ipap_field* field, const char *ip_address4, int _length)
+    {
+        return field->get_ipap_value_field_ipv4_ptr(ip_address4, _length);
+    }
+
+    ipap_value_field * ipap_field_get_ipap_value_field_ipv6(ipap_field* field, const char *ip_address6, int _length)
+    {
+        return field->get_ipap_value_field_ipv6_ptr(ip_address6, _length);
+    }
+
+    ipap_value_field * ipap_field_get_ipap_value_field_string(ipap_field* field, const char *_valuechar, int _length)
     {
         return field->get_ipap_value_field_ptr(_valuechar, _length);
     }
@@ -72,11 +82,23 @@ extern "C"
         return field->get_ipap_value_field_ptr(_valuebyte, _length);
     }
 
+    ipap_value_field * ipap_field_parse(ipap_field* field, char *_valuechar)
+    {
+        string val(_valuechar);
+        return new ipap_value_field(field->parse(val));
+    }
+
+
     const char* ipap_field_get_field_name(ipap_field* field)
     {
         return field->get_field_name();
     }
-        
+
+    const char* ipap_field_write_value(ipap_field* field, ipap_value_field* value)
+    {
+        return field->writeValue(*value).c_str();
+    }
+
     const char* ipap_field_get_xml_name(ipap_field* field)
     {
         return field->get_xml_name();

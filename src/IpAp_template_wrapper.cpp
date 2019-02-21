@@ -14,9 +14,16 @@ extern "C"
         return new ipap_template();
     }
     
-    int ipap_template_get_template_type_mandatory_field_size(ipap_template *template_obj, ipap_templ_type_t templType)
+    int ipap_template_get_template_type_mandatory_field_size(ipap_template *template_obj, int templType)
     {
-        return template_obj->getTemplateTypeMandatoryFieldSize(templType);
+
+        try
+        {
+            return template_obj->getTemplateTypeMandatoryFieldSize((ipap_templ_type_t) templType);
+        } catch(ipap_bad_argument e){
+            return -1;
+        }
+
     }
     
     ipap_field_key* ipap_template_get_template_type_mandatory_field(ipap_template *template_obj, ipap_templ_type_t templType, int index)

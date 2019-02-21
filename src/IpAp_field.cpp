@@ -988,17 +988,48 @@ ipap_field::get_ipap_value_field(char * _valuechar, int _length)
 
 
 ipap_value_field *
-ipap_field::get_ipap_value_field_ptr(char * _valuechar, int _length)
+ipap_field::get_ipap_value_field_ptr(const char * _valuechar, int _length)
+{
+
+    ipap_value_field field;
+    if ( field_type.coding== IPAP_CODING_STRING ) {
+        field.set_value_vchar(_valuechar, _length);
+    }
+    else
+    {
+        return NULL;
+    }
+
+    return new ipap_value_field(field);
+
+}
+
+ipap_value_field *
+ipap_field::get_ipap_value_field_ipv4_ptr(const char * _valuechar, int _length)
 {
     try
     {
-        ipap_value_field val = get_ipap_value_field(_valuechar,_length);
+        ipap_value_field val = parseIP4ADDR(string(_valuechar, _length));
         return new ipap_value_field(val);
     }
     catch (ipap_bad_argument &e){
         return NULL;
     }
 }
+
+ipap_value_field *
+ipap_field::get_ipap_value_field_ipv6_ptr(const char * _valuechar, int _length)
+{
+    try
+    {
+        ipap_value_field val = parseIP6ADDR(string(_valuechar, _length));
+        return new ipap_value_field(val);
+    }
+    catch (ipap_bad_argument &e){
+        return NULL;
+    }
+}
+
 
 string 
 ipap_field::writeValue(ipap_value_field &in)
@@ -1300,3 +1331,4 @@ ipap_field::parse(string in )
             break;
     }
 }
+

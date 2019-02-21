@@ -12,12 +12,27 @@ extern "C"
 
     ipap_message* ipap_message_new_message(unsigned char * param, size_t message_length, bool _decode_network) 
     {
-        return new ipap_message(param, message_length, _decode_network);
+        try {
+
+            return new ipap_message(param, message_length, _decode_network);
+
+        }  catch(ipap_bad_argument e) {
+            // The message given is not a valid message.
+            cout << "the mssage given was invalid" << endl;
+            return NULL;
+        }
     }
         
     uint16_t ipap_message_new_data_template(ipap_message* message, int nfields, int template_type_id)
     {
-        return message->new_data_template(nfields, (ipap_templ_type_t) template_type_id);
+        try {
+
+            return message->new_data_template(nfields, (ipap_templ_type_t) template_type_id);
+
+        } catch(ipap_bad_argument e) {
+            cout << "An exception occurred. Exception Nr. " << e << '\n';
+            return -1;
+        }
     }
     
     int ipap_message_add_field(ipap_message* message, uint16_t templid, uint32_t eno, uint16_t type)
@@ -60,10 +75,18 @@ extern "C"
         message->output();
     }
     
-    void ipap_message_include_data(ipap_message* message, uint16_t templid, 
+    int ipap_message_include_data(ipap_message* message, uint16_t templid,
                            ipap_data_record *data )
     {
-        message->include_data(templid, *data);
+        try
+        {
+
+            message->include_data(templid, *data);
+
+        } catch(ipap_bad_argument e) {
+            cout << "An exception occurred. Exception Nr. " << e << '\n';
+            return -1;
+        }
     }
  
     unsigned char * ipap_message_get_message(ipap_message* message)
@@ -78,7 +101,9 @@ extern "C"
     
     int ipap_message_ipap_import(ipap_message* message, unsigned char *buffer, size_t message_length )
     {
+        cout << "starting ipap_message_ipap_import" << endl;
         message->ipap_import(buffer, message_length);
+        cout << "ending ipap_message_ipap_import" << endl;
     }
     
     int ipap_message_get_domain(ipap_message* message)
@@ -98,7 +123,7 @@ extern "C"
 
     int ipap_message_get_message_length(ipap_message* message)
     {
-        return message->get_buff_len();
+        return message->get_lenght();
     }
 
     int ipap_message_get_version(ipap_message* message)
@@ -144,6 +169,41 @@ extern "C"
     ipap_data_record * ipap_message_get_data_record_at_pos(ipap_message* message, int pos)
     {
         message->get_data_record_at_pos(pos);
+    }
+
+    void ipap_message_set_syn(ipap_message* message, bool syn)
+    {
+        message->set_syn(syn);
+    }
+
+    bool ipap_message_get_syn(ipap_message* message)
+    {
+        message->get_syn();
+    }
+
+    void ipap_message_set_ack(ipap_message* message, bool ack)
+    {
+        message->set_ack(ack);
+    }
+
+    bool ipap_message_get_ack(ipap_message* message)
+    {
+        message->get_ack();
+    }
+
+    void ipap_message_set_fin(ipap_message* message, bool fin)
+    {
+        message->set_fin(fin);
+    }
+
+    bool ipap_message_get_fin(ipap_message* message)
+    {
+        message->get_fin();
+    }
+
+    void ipap_message_make_template(ipap_message* message, ipap_template* templ)
+    {
+        message->make_template(templ);
     }
 
     void ipap_message_destroy(ipap_message* message)

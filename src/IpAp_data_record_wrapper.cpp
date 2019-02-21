@@ -35,6 +35,19 @@ extern "C"
             return NULL; /* field not found */
         }
     }
+
+    ipap_field_key* ipap_data_record_get_field_at_pos(ipap_data_record *data_record, int pos)
+    {
+        try
+        {
+            return new ipap_field_key(data_record->get_field_at_pos(pos));
+
+        } catch(ipap_bad_argument e){
+            return NULL; /* field not found */
+        }
+    }
+
+
     
     uint16_t ipap_data_record_get_length(ipap_data_record *data_record, int eno, int ftype)
     {

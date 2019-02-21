@@ -4,7 +4,7 @@
 
     This file is part of IP Auction Processing protocol (IPAP).
 
-    IPAP is free software; you can redistribute it and/or modify 
+    IPAP is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by 
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
@@ -1177,7 +1177,14 @@ ipap_message::include_data( uint16_t templid, ipap_data_record &data )
                                     temp_field.get_field_type().ftype);
         
         // This line generates an exception when the value for the field is not found.
-        ipap_value_field val = data.get_field(field_key);
+        try{
+            ipap_value_field val = data.get_field(field_key);
+        } catch(ipap_bad_argument e) {
+            log->elog(ch,"The field with eno:%d and ftype:%d was not included in data",
+                    field_key.get_eno(), field_key.get_ftype());
+
+            throw ipap_bad_argument("invalid data record");
+        }
     }
                 
     data_list.push_back(data);
@@ -1236,6 +1243,7 @@ ipap_message::get_message(void) const
     else
         return NULL;
 }
+
 
 bool 
 ipap_message::get_require_output(void) const
@@ -1333,7 +1341,7 @@ ipap_message::ipap_parse_hdr( unsigned char *mes, int offset )
           log->dlog(ch, "Header received - lengh:%d exporttime %d seqno:%d domainid:%d flags:%d", _length, _exporttime, _seqno, _domainid, _flags );
 
           /* Initialize the message object */
-          init(_domainid, _version); 
+          init(_domainid, _version);
           message->version = _version;
           message->set_flags(_flags);
           message->length = _length;
@@ -1344,7 +1352,8 @@ ipap_message::ipap_parse_hdr( unsigned char *mes, int offset )
           break;
 
       default:
-          message->version = -1;
+          log->elog(ch, "Invalid Message Version");
+          cout << "before throw" << endl;
           throw ipap_bad_argument("Invalid Message Version");
     }
 

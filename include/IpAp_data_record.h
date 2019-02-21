@@ -96,6 +96,13 @@ public:
      */
     ipap_value_field * get_field_pointer(int eno, int ftype);
 
+    /**
+     * Return the field value at pos position.
+     *
+     * It only works when you make repeated calls without inserting or deleting fields.
+     */
+    ipap_field_key get_field_at_pos(int pos);
+
     /** 
      * Return the field value based on components of the field key
      */
@@ -147,6 +154,8 @@ public:
     * Not equal to operator. 
     */ 
     bool operator != (const ipap_data_record &rhs) const;
+
+
     
     fieldDataListIter_t begin();
     

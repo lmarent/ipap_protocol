@@ -595,6 +595,12 @@ class ipap_message
        * Gets the buffer allocated length
        */
        int get_buff_len() { return message->buffer_lenght; }
+
+       /*
+       *
+       * Gets the message length
+       */
+       int get_lenght() { return message->length; }
 };
 
 

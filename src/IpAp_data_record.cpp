@@ -93,6 +93,7 @@ ipap_data_record::get_field(ipap_field_key &param)
     fieldDataListIter_t it;
     it = fields.find(param);
     if (it == fields.end()){
+
         throw ipap_bad_argument("Parameter field was not found");
     }
     else{
@@ -127,6 +128,25 @@ ipap_data_record::get_field(int eno, int ftype) const
 {
     const ipap_field_key key = ipap_field_key(eno, ftype);
     return get_field(key);
+}
+
+ipap_field_key
+ipap_data_record::get_field_at_pos(int pos)
+{
+
+    int pos_tmp = 0;
+
+    fieldDataListConstIter_t iter;
+    for (iter = fields.begin(); iter != fields.end(); ++iter)
+    {
+         if (pos_tmp == pos)
+         {
+              return iter->first;
+         }
+    }
+
+    throw ipap_bad_argument("Field at pos %d was not found", pos);
+
 }
 
 ipap_value_field*

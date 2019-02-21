@@ -302,23 +302,23 @@ ipap_template::getTemplateTypeMandatoryFields(ipap_templ_type_t templType)
 
         // Fill data ask  fields
         set<ipap_field_key> d_ask_fields;
-        d_bid_fields.insert(ipap_field_key(0,IPAP_FT_IDAUCTION));
-        o_bid_fields.insert(ipap_field_key(0,IPAP_FT_IDBIDDINGOBJECT));
-        d_bid_fields.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
-        d_bid_fields.insert(ipap_field_key(0,IPAP_FT_AUCTIONINGOBJECTSTATUS));
-        d_bid_fields.insert(ipap_field_key(0,IPAP_FT_BIDDINGOBJECTTYPE));
+        d_ask_fields.insert(ipap_field_key(0,IPAP_FT_IDAUCTION));
+        d_ask_fields.insert(ipap_field_key(0,IPAP_FT_IDBIDDINGOBJECT));
+        d_ask_fields.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
+        d_ask_fields.insert(ipap_field_key(0,IPAP_FT_AUCTIONINGOBJECTSTATUS));
+        d_ask_fields.insert(ipap_field_key(0,IPAP_FT_BIDDINGOBJECTTYPE));
 
         // Fill option ask fields
         set<ipap_field_key> o_ask_fields;
-        o_bid_fields.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
-        o_bid_fields.insert(ipap_field_key(0,IPAP_FT_STARTSECONDS));
-        o_bid_fields.insert(ipap_field_key(0,IPAP_FT_ENDSECONDS));
-        o_bid_fields.insert(ipap_field_key(0,IPAP_FT_INTERVALSECONDS));
-        o_bid_fields.insert(ipap_field_key(0,IPAP_FT_IDRESOURCE));
-        o_bid_fields.insert(ipap_field_key(0,IPAP_FT_IPVERSION));
-        o_bid_fields.insert(ipap_field_key(0,IPAP_FT_SOURCEIPV4ADDRESS));
-        o_bid_fields.insert(ipap_field_key(0,IPAP_FT_SOURCEIPV6ADDRESS));
-        o_bid_fields.insert(ipap_field_key(0,IPAP_FT_SOURCEAUCTIONPORT));
+        o_ask_fields.insert(ipap_field_key(0,IPAP_FT_IDRECORD));
+        o_ask_fields.insert(ipap_field_key(0,IPAP_FT_STARTSECONDS));
+        o_ask_fields.insert(ipap_field_key(0,IPAP_FT_ENDSECONDS));
+        o_ask_fields.insert(ipap_field_key(0,IPAP_FT_INTERVALSECONDS));
+        o_ask_fields.insert(ipap_field_key(0,IPAP_FT_IDRESOURCE));
+        o_ask_fields.insert(ipap_field_key(0,IPAP_FT_IPVERSION));
+        o_ask_fields.insert(ipap_field_key(0,IPAP_FT_SOURCEIPV4ADDRESS));
+        o_ask_fields.insert(ipap_field_key(0,IPAP_FT_SOURCEIPV6ADDRESS));
+        o_ask_fields.insert(ipap_field_key(0,IPAP_FT_SOURCEAUCTIONPORT));
 
 
         ipap_template::templateMandatoryFields = ipap_create_map<ipap_templ_type_t, set<ipap_field_key> >
@@ -331,9 +331,14 @@ ipap_template::getTemplateTypeMandatoryFields(ipap_templ_type_t templType)
                 (IPAP_SETID_ALLOC_OBJECT_TEMPLATE,d_bid_fields)
                 (IPAP_OPTNS_ALLOC_OBJECT_TEMPLATE,o_bid_fields);
     }
-    
+
     templateKeyIterList_t iter;
     iter = ipap_template::templateMandatoryFields.find(templType);
+
+    if (iter == ipap_template::templateMandatoryFields.end()){
+        throw ipap_bad_argument("IpAp template: type %d not valid", (int) templType);
+    }
+
     return iter->second;
 }
 

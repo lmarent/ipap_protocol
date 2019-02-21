@@ -386,7 +386,26 @@ class ipap_field
         * 		   _length	  - number of characters to copy from the _valuechar pointer
         *  @throw   ipap_exception The length of field is not eight bytes
         */
-        ipap_value_field * get_ipap_value_field_ptr(char *_valuechar, int _length);
+        ipap_value_field * get_ipap_value_field_ptr(const char *_valuechar, int _length);
+
+
+        /**
+        *  Get the field value pointer from a field of type ip address v4
+        *  verifies that the field is of type char
+        *  @param  _valuechar - Value that is going to be assigned
+        * 		   _length	  - number of characters to copy from the _valuechar pointer
+        *  @throw   ipap_exception The length of field is not eight bytes
+        */
+        ipap_value_field * get_ipap_value_field_ipv4_ptr(const char *_valuechar, int _length);
+
+        /**
+        *  Get the field value pointer from a field of type ip address v6
+        *  verifies that the field is of type char
+        *  @param  _valuechar - Value that is going to be assigned
+        * 		   _length	  - number of characters to copy from the _valuechar pointer
+        *  @throw   ipap_exception The length of field is not eight bytes
+        */
+        ipap_value_field * get_ipap_value_field_ipv6_ptr(const char *_valuechar, int _length);
 
         /** Get the field value from a field of type unit8_t
         *  verifies that the field is of type char

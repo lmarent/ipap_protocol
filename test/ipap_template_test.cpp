@@ -143,6 +143,12 @@ void IpAp_Templates_Test::testAssign()
 	ipap_object_type_t obj_type = ipap_template::getObjectType(IPAP_SETID_AUCTION_TEMPLATE);
 	
 	CPPUNIT_ASSERT(obj_type == IPAP_AUCTION);
-	
+
+    int field_count = template1->getTemplateTypeMandatoryFieldSize(IPAP_OPTNS_ASK_OBJECT_TEMPLATE);
+
+    cout << "field count:" << field_count << endl;
+    CPPUNIT_ASSERT(field_count == 9);
+
+
 }
 // EOF

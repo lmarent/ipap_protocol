@@ -48,6 +48,7 @@ class IpAp_Data_Record_Test : public CppUnit::TestFixture {
     ipap_field field1;
     ipap_field field2;
     ipap_field field3;
+    ipap_field field4;
     
     ipap_field_container field_container;
     ipap_data_record *data;
@@ -76,6 +77,7 @@ void IpAp_Data_Record_Test::testAssign()
     uint8_t value8 = 1;
     uint32_t value32 = 3;
     uint8_t valuebyte0[5] = "1234";
+    char valuechar[5] = "esto";
     int num_fields = 0;
     int num_field_length = 0;
 
@@ -89,13 +91,19 @@ void IpAp_Data_Record_Test::testAssign()
     ipap_value_field fvalue2 = field2.get_ipap_value_field(value32);
     data->insert_field(0, IPAP_FT_AUCTIONINGTIMESECONDS, fvalue2);
 
-    //Address 4
+    // Address 4
     field3 = field_container.get_field( 0, IPAP_FT_SOURCEIPV4ADDRESS );
     ipap_value_field fvalue3 = field3.get_ipap_value_field((uint8_t *) valuebyte0, 4);
     data->insert_field(0, IPAP_FT_SOURCEIPV4ADDRESS, fvalue3);
 
+    //
+    field4 = field_container.get_field( 0, IPAP_FT_IDRECORD );
+    ipap_value_field *fvalue4 = field4.get_ipap_value_field_ptr((char *) valuechar, 4);
+    data->insert_field(0, IPAP_FT_IDRECORD, *fvalue4);
+
+
     num_fields = data->get_num_fields();
-    CPPUNIT_ASSERT( num_fields == 3 );
+    CPPUNIT_ASSERT( num_fields == 4 );
 
     ipap_value_field fieltmp = data->get_field(0, IPAP_FT_AUCTIONINGTIMESECONDS);
     CPPUNIT_ASSERT( fieltmp.get_value_int32() == value32 );
