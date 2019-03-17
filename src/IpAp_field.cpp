@@ -477,19 +477,25 @@ ipap_field::ipap_snprint_string( char * str, size_t size,
     char *in = in_field.get_value_string();
     int len = in_field.get_length();
 
+    cout << "len:" << len << "size:" << size << endl;
+
     for( i=len-1; i>=0; i-- ) {
         if ( in[i] == '\0' ) {
+
+            cout << "entro 1" << endl;
             return snprintf( str, size, "%s", in );
         }
     }
-    
+
     if ( len < size ) {
         memcpy( str, in, len );
         str[len] = '\0';
+        cout << "entro 2" << endl;
         return len;
     }
 
-    return snprintf( str, size, "%s", in );
+    int characters = snprintf( str, size, "%s", in );
+    return characters;
 }
 
 int 
@@ -673,7 +679,7 @@ ipap_field::decode( uint8_t *in,
 //
 int ipap_field::nCharacters( ipap_value_field &in )
 {
-    char sbuf[4];
+    char *sbuf = (char *) malloc(sizeof(char) * 2);
     int ndigits = 0;
     
     if ( field_type.coding == IPAP_CODING_INT ) {
@@ -695,7 +701,7 @@ int ipap_field::nCharacters( ipap_value_field &in )
        ndigits = ipap_snprint_ipaddr(sbuf,1,in);
     }
     else if ( field_type.coding == IPAP_CODING_STRING ) {
-       ndigits = ipap_snprint_string(sbuf,1,in);
+       ndigits = in.get_length();
     }
     else {
        ndigits = (in.get_length() + 1 ) * 2;
@@ -704,12 +710,15 @@ int ipap_field::nCharacters( ipap_value_field &in )
     if (string(sbuf).compare("err") == 0){
         throw ipap_bad_argument("Error trying to print ipap value field");
     }
+
+    free(sbuf);
     return ndigits;
 }
 
 int ipap_field::snprint( char * str, size_t size, 
                                 ipap_value_field &in)
 {	
+
     if ( field_type.coding == IPAP_CODING_INT ) {
         ipap_snprint_int(str,size,in);
     }
@@ -729,6 +738,7 @@ int ipap_field::snprint( char * str, size_t size,
         ipap_snprint_ipaddr(str,size,in);
     }
     else if ( field_type.coding == IPAP_CODING_STRING ) {
+
         ipap_snprint_string(str,size,in);
     }
     else {
@@ -1035,9 +1045,8 @@ string
 ipap_field::writeValue(ipap_value_field &in)
 {
 
-    size_t field_len = (size_t) in.get_length() + 1;
     int char_size;
-    
+
     // The pointer to char * can require a number of characters depending 
     // on the type of encoding, so it is required to verify how many 
     // are required and then it can be written.
@@ -1047,12 +1056,31 @@ ipap_field::writeValue(ipap_value_field &in)
     char * buffer = (char *) malloc(sizeof(char) * char_size);
     snprint(buffer, char_size, in );
     string val_return(buffer);
-    
-    
+
     free(buffer);
-    
+
     return val_return;
 }
+
+char *
+ipap_field::writeValue(ipap_value_field &in, char* result, size_t resultMaxLength)
+{
+
+    // The pointer to char * can require a number of characters depending
+    // on the type of encoding, so it is required to verify how many
+    // are required and then it can be written.
+
+    cout << "in write Value" << endl;
+    int char_size = nCharacters( in ) + 1;
+
+    assert(char_size == resultMaxLength);
+
+    snprint(result, resultMaxLength, in );
+
+    return result;
+
+}
+
 
 ipap_value_field
 ipap_field::parseINT(string in)
@@ -1105,7 +1133,7 @@ ipap_field::parseUINT(string in)
     uint16_t val16;
     uint32_t val32;
     uint64_t val64;
-        
+
     ipap_value_field val_return;
     switch (get_field_type().length)
     {
@@ -1129,9 +1157,11 @@ ipap_field::parseUINT(string in)
         val64 = nllui;
         val_return.set_value_int64(val64);
         break;
+
       default:
           break;
     }	
+
     return val_return;
 }
 
@@ -1290,10 +1320,11 @@ ipap_field::parseBytes(string in)
 ipap_value_field 
 ipap_field::parse(string in )
 {
+
     switch (field_type.coding)
     { 
-        
-        case IPAP_CODING_INT:  
+
+        case IPAP_CODING_INT:
             return parseINT(in);
             break;
     

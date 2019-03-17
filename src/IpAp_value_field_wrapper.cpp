@@ -91,12 +91,16 @@ extern "C"
     {
         return field_value->get_length();
     }
-    
+
+    void ipap_value_field_print(ipap_value_field* field_value)
+    {
+        field_value->print();
+    }
+
     void ipap_value_field_destroy (ipap_value_field* field_value){
         field_value->~ipap_value_field();
     }
 
-    
 }
 
 #endif IPAP_VALUE_FIELD_WRAPPER_H

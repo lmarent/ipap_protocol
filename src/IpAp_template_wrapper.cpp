@@ -1,3 +1,4 @@
+
 #include "IpAp_template.h"
 #include "IpAp_field_key.h"
 #include "IpAp_field.h"
@@ -26,11 +27,30 @@ extern "C"
 
     }
     
+    ipap_field_key* ipap_template_get_template_type_key(ipap_template *template_obj, ipap_templ_type_t templType, int index)
+    {
+        return template_obj->getTemplateTypeKeysVector(templType, index);
+    }
+
+    int ipap_template_get_template_type_keys_size(ipap_template *template_obj, int templType)
+    {
+
+        try
+        {
+
+            return template_obj->getTemplateTypeKeysSize((ipap_templ_type_t) templType);
+
+        } catch(ipap_bad_argument e){
+            return -1;
+        }
+
+    }
+
     ipap_field_key* ipap_template_get_template_type_mandatory_field(ipap_template *template_obj, ipap_templ_type_t templType, int index)
     {
         return template_obj->getTemplateTypeMandatoryFieldVector(templType, index);
     }
-    
+
     void ipap_template_set_id(ipap_template *template_obj,uint16_t _tid)
     {
         template_obj->set_id(_tid);
@@ -94,16 +114,36 @@ extern "C"
     {
         return template_obj->getObjectTemplateTypesSize((ipap_object_type_t) objectType);
     }
+
+
+    int ipap_template_get_object_type(ipap_template *template_obj, uint8_t template_type)
+    {
+
+        try
+        {
+            return template_obj->getObjectType((ipap_templ_type_t) template_type);
+
+        } catch(ipap_bad_argument e){
+            return IPAP_INVALID;
+        }
+
+    }
     
     int ipap_template_get_object_template_types_at_pos(ipap_template *template_obj, uint8_t objectType, int index)
     {
         template_obj->getObjectTemplateTypesAtPos((ipap_object_type_t) objectType, index);
     }
-    
+
+    bool ipap_template_is_equal(ipap_template *template_obj, ipap_template *template_objb)
+    {
+        return template_obj->operator==(*template_objb);
+    }
+
     void ipap_template_destroy(ipap_template *template_obj)
     {
         template_obj->~ipap_template();
     }
+
 }
 
 #endif // IPAP_TEMPLATE_WRAPPER_H

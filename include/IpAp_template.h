@@ -304,7 +304,21 @@ class ipap_template
         ipap_field_key* getTemplateTypeMandatoryFieldVector(ipap_templ_type_t templType, int index);
         
         int getTemplateTypeMandatoryFieldSize(ipap_templ_type_t templType);
-        
+
+        /**
+         * 	\short gets a particular key in position index associated with a template type
+         *  \arg   templType - Template type
+         *  \arg   index - Position of the key to get.
+        */
+        ipap_field_key* getTemplateTypeKeysVector(ipap_templ_type_t templType, int index);
+
+        /**
+         * 	\short get the number of keys associated with a template type
+         *  \arg   templType - Template type
+        */
+        int getTemplateTypeKeysSize(ipap_templ_type_t templType);
+
+
         /** 
          * 	\short get the set of template types associated with an object type
          *  \arg   objectType - Object type 

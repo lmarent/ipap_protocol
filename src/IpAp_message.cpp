@@ -1353,7 +1353,6 @@ ipap_message::ipap_parse_hdr( unsigned char *mes, int offset )
 
       default:
           log->elog(ch, "Invalid Message Version");
-          cout << "before throw" << endl;
           throw ipap_bad_argument("Invalid Message Version");
     }
 

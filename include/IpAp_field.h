@@ -477,6 +477,16 @@ class ipap_field
         */
         string writeValue(ipap_value_field &in);
 
+
+        /** Put a fieldvalue into a buffer giveb.
+            It takes the field type from the field object for who is call is method.
+        * @param  in - value to put
+        * @param result - buffer where we have to put the information
+        * resultMaxLength- max lenght of the buffer. in this case the user has call previously the function
+                           nCharacters and build the buffer of that len.
+        */
+        char* writeValue(ipap_value_field &in, char* result, size_t resultMaxLength);
+
         /** 
         *  Get a fieldvalue of type int from another string. 
         *  @param  in - value represented in string.

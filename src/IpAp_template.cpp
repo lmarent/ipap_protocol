@@ -367,6 +367,31 @@ ipap_template::getTemplateTypeMandatoryFieldVector(ipap_templ_type_t templType, 
 }
 
 
+int
+ipap_template::getTemplateTypeKeysSize(ipap_templ_type_t templType)
+{
+    set<ipap_field_key> tFields = getTemplateTypeKeys(templType);
+
+    return tFields.size();
+}
+
+ipap_field_key*
+ipap_template::getTemplateTypeKeysVector(ipap_templ_type_t templType, int index)
+{
+    set<ipap_field_key> tFields = getTemplateTypeKeys(templType);
+
+    if (index >= tFields.size())
+    {
+        return NULL;
+    }
+    else {
+        std::vector<ipap_field_key> output(tFields.begin(), tFields.end());
+        ipap_field_key* ret = new ipap_field_key(output[index]);
+        return ret;
+    }
+}
+
+
 set<ipap_templ_type_t> 
 ipap_template::getObjectTemplateTypes(ipap_object_type_t objectType)
 {

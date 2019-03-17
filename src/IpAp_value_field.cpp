@@ -74,7 +74,7 @@ void
 ipap_value_field::set_value_vchar(const char * _valuechar, int _length)
 {
 
-    valuechar = (char *)malloc(sizeof(char *) * _length);
+    valuechar = (char *) malloc(sizeof(char *) * _length);
     memcpy ( valuechar, _valuechar, _length );
     length = _length;
 }

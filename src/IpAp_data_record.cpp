@@ -57,7 +57,8 @@ void
 ipap_data_record::insert_field(int eno, int ftype, 
                                ipap_value_field &value)
 {
-    ipap_field_key key = ipap_field_key(eno, ftype);	
+
+    ipap_field_key key = ipap_field_key(eno, ftype);
     insert_field(key, value);
 
 }
@@ -66,7 +67,8 @@ void
 ipap_data_record::insert_field(int eno, int ftype, 
                                ipap_value_field *value)
 {
-    ipap_field_key key = ipap_field_key(eno, ftype);	
+
+    ipap_field_key key = ipap_field_key(eno, ftype);
     insert_field(key, *value);
 
 }
@@ -76,6 +78,7 @@ ipap_data_record::insert_field(ipap_field_key &param,
                                ipap_value_field &value)
 {
     fields.insert( std::pair<ipap_field_key, ipap_value_field>(param,value) );
+
 }
 
 
@@ -143,6 +146,7 @@ ipap_data_record::get_field_at_pos(int pos)
          {
               return iter->first;
          }
+         pos_tmp = pos_tmp + 1;
     }
 
     throw ipap_bad_argument("Field at pos %d was not found", pos);

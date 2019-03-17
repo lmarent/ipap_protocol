@@ -18,7 +18,10 @@ extern "C"
     void ipap_data_record_insert_field(ipap_data_record *data_record, 
                                        int eno, int ftype, ipap_value_field *value)
     {
-        data_record->insert_field(eno,ftype,value);
+        cout << "In data record insert field" << endl;
+
+        ipap_value_field *new_value = new ipap_value_field(*value);
+        data_record->insert_field(eno,ftype,*new_value);
     }
     
     int ipap_data_record_get_num_fields(ipap_data_record *data_record)

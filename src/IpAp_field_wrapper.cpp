@@ -82,10 +82,17 @@ extern "C"
         return field->get_ipap_value_field_ptr(_valuebyte, _length);
     }
 
-    ipap_value_field * ipap_field_parse(ipap_field* field, char *_valuechar)
+    ipap_value_field * ipap_field_parse(ipap_field* field, const char *_valuechar)
     {
         string val(_valuechar);
-        return new ipap_value_field(field->parse(val));
+        cout << "value given:" << val << endl;
+        try{
+
+            return new ipap_value_field(field->parse(val));
+
+        } catch (ipap_bad_argument &e){
+            return NULL;
+        }
     }
 
 
@@ -94,9 +101,14 @@ extern "C"
         return field->get_field_name();
     }
 
-    const char* ipap_field_write_value(ipap_field* field, ipap_value_field* value)
+    char* ipap_field_write_value(ipap_field* field, ipap_value_field* value, char* result, size_t resultMaxLength)
     {
-        return field->writeValue(*value).c_str();
+        field->writeValue(*value, result, resultMaxLength);
+    }
+
+    int ipap_field_number_characters(ipap_field* field, ipap_value_field* value)
+    {
+        return field->nCharacters(*value);
     }
 
     const char* ipap_field_get_xml_name(ipap_field* field)
