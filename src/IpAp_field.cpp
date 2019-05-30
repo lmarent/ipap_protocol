@@ -477,12 +477,9 @@ ipap_field::ipap_snprint_string( char * str, size_t size,
     char *in = in_field.get_value_string();
     int len = in_field.get_length();
 
-    cout << "len:" << len << "size:" << size << endl;
-
     for( i=len-1; i>=0; i-- ) {
         if ( in[i] == '\0' ) {
 
-            cout << "entro 1" << endl;
             return snprintf( str, size, "%s", in );
         }
     }
@@ -490,7 +487,6 @@ ipap_field::ipap_snprint_string( char * str, size_t size,
     if ( len < size ) {
         memcpy( str, in, len );
         str[len] = '\0';
-        cout << "entro 2" << endl;
         return len;
     }
 
@@ -1070,7 +1066,6 @@ ipap_field::writeValue(ipap_value_field &in, char* result, size_t resultMaxLengt
     // on the type of encoding, so it is required to verify how many
     // are required and then it can be written.
 
-    cout << "in write Value" << endl;
     int char_size = nCharacters( in ) + 1;
 
     assert(char_size == resultMaxLength);

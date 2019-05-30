@@ -83,6 +83,8 @@ extern "C"
 
             message->include_data(templid, *data);
 
+            return 1;
+
         } catch(ipap_bad_argument e) {
             cout << "An exception occurred. Exception Nr. " << e << '\n';
             return -1;
@@ -101,9 +103,7 @@ extern "C"
     
     int ipap_message_ipap_import(ipap_message* message, unsigned char *buffer, size_t message_length )
     {
-        cout << "starting ipap_message_ipap_import" << endl;
         message->ipap_import(buffer, message_length);
-        cout << "ending ipap_message_ipap_import" << endl;
     }
     
     int ipap_message_get_domain(ipap_message* message)

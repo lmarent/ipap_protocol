@@ -182,9 +182,7 @@ ipap_message::~ipap_message( void )
 
     close( );
     g_tstart = 0;
-    
-    std::cout << "destroy ipap_message" << std::endl;
-    
+
 }
 
 /*
@@ -398,7 +396,6 @@ ipap_message::get_field_definition_ptr( int eno, int type )
 
     } catch(ipap_bad_argument &e){
 
-        cout << "field not found" << endl;
         return NULL;
     }
 }
