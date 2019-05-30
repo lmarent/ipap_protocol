@@ -732,8 +732,8 @@ void ipap_message::_write_hdr( void )
     message->exporttime = now;
     message->offset += hsize;
 
-    log->dlog(ch, "_write_hdr version:%d exporttime=%d offset:%d flags:%d",
-                        message->version, message->exporttime, message->offset, flags);
+    log->dlog(ch, "_write_hdr version:%d exporttime=%d offset:%d flags:%d seq_nbr:%u",
+                        message->version, message->exporttime, message->offset, flags, message->seqno);
 
 }
 
@@ -903,6 +903,7 @@ ipap_message::output(void)
         throw ipap_bad_argument("Error: The message is not initialized");
     }
     else{
+				
         if (require_output == true)
         {
             // Clear the internal buffer.
@@ -918,7 +919,7 @@ ipap_message::output(void)
 
                 output_set( templ->get_template_id() );
             }
-
+						
             // Calculate message header information and put it on the buffer.
             _write_hdr( );
             
@@ -983,7 +984,8 @@ ipap_message::output_set( uint16_t templid )
         newset_f = 1;
         datasetlen = 4;
     }
-                
+
+              
     // insert the data records associated with the template.
     for ( int data_index= 0; data_index < data_list.size(); data_index++)
     {
@@ -1106,8 +1108,6 @@ ipap_message::output_set( uint16_t templid )
             message->offset += buflen;
             message->cs_bytes += buflen;
             finish_cs( );
-            if ( message->version == IPAP_VERSION )
-                message->seqno ++;
         }
 
 
@@ -1335,7 +1335,7 @@ ipap_message::ipap_parse_hdr( unsigned char *mes, int offset )
               READ32_NOENCODE(_domainid, mes+16);
           }
 
-          log->dlog(ch, "Header received - lengh:%d exporttime %d seqno:%d domainid:%d flags:%d", _length, _exporttime, _seqno, _domainid, _flags );
+          log->dlog(ch, "Header received - lengh:%d exporttime %d seqno:%u domainid:%u flags:%d", _length, _exporttime, _seqno, _domainid, _flags );
 
           /* Initialize the message object */
           init(_domainid, _version);

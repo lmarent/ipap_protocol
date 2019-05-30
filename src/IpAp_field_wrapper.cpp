@@ -85,8 +85,8 @@ extern "C"
     ipap_value_field * ipap_field_parse(ipap_field* field, const char *_valuechar)
     {
         string val(_valuechar);
-        cout << "value given:" << val << endl;
-        try{
+        try
+        {
 
             return new ipap_value_field(field->parse(val));
 
